@@ -1,0 +1,91 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="TitoliEBottoniGrandi">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="MeseCalendario">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham_book</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="MenuTendina" parent="Widget.AppCompat.Spinner">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">19sp</item>
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Titoletti">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="NumeriniCalendario">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham_book</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="LetterineCalendario">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham_book</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+
+    <style name="Descrizioni">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham_book</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+
+    <style name="BottoniPiccoli">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">@font/gotham</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="customTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">TitoliEBottoniGrandi</item>
+    </style>
+
+    <style name="horizontalScrollBarStyle">
+        <item name="android:scrollbarAlwaysDrawHorizontalTrack">true</item>
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+        <item name="android:scrollbars">horizontal</item>
+        <item name="android:fadeScrollbars">false</item>
+    </style>
+
+
+</resources>

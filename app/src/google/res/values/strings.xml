@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_signin">Accedi con Google</string>
+    <string name="default_notification_channel_id">1001</string>
+    <string name="notification_id">1010101</string>
+    <string name="channel_name">Palco Channel</string>
+    <string name="channel_description">Notification Palco</string>
+</resources>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Palco</string>
+    <string name="info_text">Cliccando sul pulsante “Continua” confermi di aver letto ed accettato i “termini e condizioni” del software.\nL’App PALCO è ideata e sviluppata da Antonino Fiumara.\n UX/UI: Stefano M. Scarlatti.</string>
+    <string name="login">Accedi</string>
+    <string name="register">registrazione</string>
+    <string name="email">e-mail</string>
+    <string name="password">password</string>
+    <string name="register_hint">Non sei registrato? Effettua la</string>
+    <string name="server_error">Ops... c\'è stato un problema</string>
+    <string name="enter_username">Inserisci l\'e-mail</string>
+    <string name="enter_password">Inserisci la password</string>
+    <string name="repeat_password">Conferma la password</string>
+    <string name="email_error">Inserire un indirizzo e-mail valido</string>
+    <string name="password_error">La password deve contenere almeno un numero una maiuscola e un carattere speciale</string>
+    <string name="password_mismatch_error">Le password non coincidono</string>
+    <string name="registration_failed">Registrazione fallita</string>
+    <string name="registration_user_already_exist">Utente già registrato</string>
+    <string name="registration_email_not_valid">Inserire un indirizzo e-mail esistente</string>
+    <string name="concerti_nazionali">Italia</string>
+    <string name="concerti_locali">Città</string>
+    <string name="concerti_internazionali">Mondo</string>
+    <string name="no_data">Non ci sono concerti nel giorno selezionato</string>
+    <string name="listen_button_string">Ascolta</string>
+    <string name="share_string">Condividi</string>
+    <string name="back_string">Indietro</string>
+    <string name="close_button_string">Chiudi</string>
+    <string name="city_select">Elenco città italiane. Seleziona una città dall\'elenco.</string>
+    <string name="city_selected">Città selezionata : %1$s. Fai tap quì per cambiare città</string>
+
+</resources>
