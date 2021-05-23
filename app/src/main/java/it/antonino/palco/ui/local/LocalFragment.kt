@@ -50,7 +50,7 @@ class LocalFragment : Fragment() {
     private var sharedPreferences: SharedPreferences? = null
     private var adapter: CustomAdapter? = null
     private var cityAdapter: CityListAdapter? = null
-    private var layoutManager: LinearLayoutManager? = null
+    private var concertilayoutManager: LinearLayoutManager? = null
 
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     var cityList = ArrayList<String>()
@@ -106,20 +106,15 @@ class LocalFragment : Fragment() {
             LinearLayoutManager.HORIZONTAL
         )
         dividerItemDecoration.setDrawable(ResourcesCompat.getDrawable(resources, R.drawable.card_view_divider, null)!!)
-        layoutManager = LinearLayoutManager(
+        concertilayoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        //layoutManager?.isSmoothScrollbarEnabled = true
-        concerts_list.layoutManager = layoutManager
+        concerts_list.layoutManager = concertilayoutManager
         concerts_list?.setHasFixedSize(true)
         concerts_list?.addItemDecoration(dividerItemDecoration)
 
-        val layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL,
-            false)
         val snapHelper = CustomSnapHelper()
         snapHelper.attachToRecyclerView(concerts_list)
 
@@ -166,18 +161,6 @@ class LocalFragment : Fragment() {
             }
         })
 
-
-        city_recycler.layoutManager = layoutManager
-        city_recycler?.setHasFixedSize(true)
-
-        city_recycler?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                //super.onScrolled(recyclerView, dx, dy)
-                cityPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                Log.d("Antonino", "Position : ${cityPosition}")
-            }
-        })
-
     }
 
     private val cityObserver = Observer<ArrayList<City?>?> {
@@ -188,10 +171,17 @@ class LocalFragment : Fragment() {
                 }
                 cityAdapter = CityListAdapter(cityList) {
                     (activity as MainActivity).showProgress()
-                    city_recycler.visibility = View.INVISIBLE
+                    val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    layoutParams.weight = 0.1F
+                    header.layoutParams = layoutParams
                     header.text = getString(R.string.city_selected, it)
                     viewModel.getConcertiNazionaliByCity(it,Password(sharedPreferences?.getString("password","")!!)).observe(viewLifecycleOwner, concertiObserver)
                 }
+                val layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.VERTICAL,
+                    false)
+                city_recycler.layoutManager = layoutManager
                 city_recycler.adapter = cityAdapter
             }
         }
@@ -273,6 +263,7 @@ class LocalFragment : Fragment() {
         calendar_view.visibility = View.VISIBLE
         nested_concerti_list.visibility = View.VISIBLE
         city_recycler.visibility = View.INVISIBLE
+        arrow_container.visibility = View.GONE
     }
 
     private fun hideConcerti() {
@@ -280,6 +271,10 @@ class LocalFragment : Fragment() {
         monthLayout.visibility = View.INVISIBLE
         calendar_view.visibility = View.INVISIBLE
         city_recycler.visibility = View.VISIBLE
+        arrow_container.visibility = View.VISIBLE
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.weight = 0.05F
+        header.layoutParams = layoutParams
     }
 
     private fun hideConcertiList() {
