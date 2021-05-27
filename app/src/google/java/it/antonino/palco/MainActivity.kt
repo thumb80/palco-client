@@ -68,7 +68,7 @@ class MainActivity: AppCompatActivity() {
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount >= 0) {
             if (System.currentTimeMillis() - timeStamp < 500)
-                System.exit(0)
+                this.finishAffinity()
             else {
                 timeStamp = System.currentTimeMillis()
                 Toast.makeText(this, "Premere due volte per uscire dall'app", Toast.LENGTH_SHORT).show()
