@@ -35,6 +35,7 @@ import it.antonino.palco.ext.dpToPixels
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.Password
+import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_national.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.DateTimeUtils
@@ -132,15 +133,6 @@ class NationalFragment: Fragment() {
                     adapter?.setSelectedItem(it)
                 }
 
-                /*when ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == position) {
-                    true -> {
-                        cardContainer?.background = ResourcesCompat.getDrawable(resources,R.drawable.card_view_background_white,null)
-                    }
-                    else -> cardContainer?.background = ResourcesCompat.getDrawable(resources,R.drawable.card_view_background_grey,null)
-                 }
-
-                if (dx == 0 && dy == 0)
-                    cardContainer?.background = ResourcesCompat.getDrawable(resources,R.drawable.card_view_background_white,null)*/
             }
         })
 
@@ -199,7 +191,7 @@ class NationalFragment: Fragment() {
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!checkObject(concerto)) {
+            if (!PalcoUtils().checkObject(concerto)) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)
@@ -214,7 +206,6 @@ class NationalFragment: Fragment() {
         times.add(0,"")
         //bills.add(0,"")
 
-        //position?.let { adapter?.setSelectedItem(it) }
         adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
 
             if (!BuildConfig.BUY_TICKET) {
@@ -250,20 +241,6 @@ class NationalFragment: Fragment() {
     private fun hideEmpty() {
         no_data.visibility = View.INVISIBLE
         concerti_recycler?.visibility = View.VISIBLE
-    }
-
-    //TODO return true also if event is before Instant.now()
-    private fun checkObject(concerto: JsonElement): Boolean {
-        return concerto.asJsonObject.get("artist").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("place").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("city").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("time").asString.isNullOrEmpty()
-                //|| concerto.asJsonObject.get("time").asString?.let { getDateTime(it)?.before(DateTimeUtils.toDate(Instant.now())) } == true
-    }
-
-    fun getDateTime(time: String): Date? {
-        val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-        return insdf.parse(time)
     }
 
 }

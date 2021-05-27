@@ -31,6 +31,7 @@ import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.Password
+import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_local.*
 import kotlinx.android.synthetic.main.fragment_local.calendar_view
 import kotlinx.android.synthetic.main.fragment_local.monthLayout
@@ -40,6 +41,8 @@ import kotlinx.android.synthetic.main.fragment_local.no_data
 import kotlinx.android.synthetic.main.fragment_local.prevMonth
 import kotlinx.android.synthetic.main.fragment_national.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -122,42 +125,30 @@ class LocalFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val view = snapHelper.findSnapView(recyclerView.layoutManager)
-                val cardContainer = view?.findViewById<LinearLayout>(R.id.cardContainer)
                 position = view?.let { recyclerView.getChildAdapterPosition(it) }
                 position?.let {
                     adapter?.setSelectedItem(it)
                 }
                 lastPosition = position!!
-                /*if (dx > 1000)
-                    recyclerView.smoothScrollToPosition(position!!)*/
+
                 if ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() < 0)
                     return
                 else if ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0)  {
-                    monthView?.text = simpleDateFormat.format(getDateTime(adapter?.times?.get(1)!!)!!)
-                    calendar_view.setCurrentDate(getDateTime(adapter?.times?.get(1)!!)!!)
+                    monthView?.text = simpleDateFormat.format(PalcoUtils().getDateTime(adapter?.times?.get(1)!!)!!)
+                    calendar_view.setCurrentDate(PalcoUtils().getDateTime(adapter?.times?.get(1)!!)!!)
                 }
                 else  {
-                    monthView?.text = simpleDateFormat.format(getDateTime(adapter?.times?.get(
+                    monthView?.text = simpleDateFormat.format(PalcoUtils().getDateTime(adapter?.times?.get(
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                     )!!)!!)
                     calendar_view.setCurrentDate(
-                        getDateTime(
+                        PalcoUtils().getDateTime(
                             adapter?.times?.get(
                                 (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                             )!!
                         )
                     )
                 }
-
-                /*when ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == position) {
-                    true -> {
-                        cardContainer?.background = ResourcesCompat.getDrawable(resources,R.drawable.card_view_background_white,null)
-                    }
-                    else -> cardContainer?.background = ResourcesCompat.getDrawable(resources,R.drawable.card_view_background_grey,null)
-                }
-
-                if (dx == 0 && dy == 0)
-                    cardContainer?.background = ResourcesCompat.getDrawable(resources,R.drawable.card_view_background_white,null)*/
             }
         })
 
@@ -203,7 +194,7 @@ class LocalFragment : Fragment() {
                 val cities = ArrayList<String>()
                 //val bills = ArrayList<String?>()
                 for (concerto in it) {
-                    if (!checkObject(concerto)) {
+                    if (!PalcoUtils().checkObject(concerto)) {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
@@ -241,7 +232,7 @@ class LocalFragment : Fragment() {
                 dotsLocalItemDecoration?.let { it_decoration -> concerts_list?.addItemDecoration(it_decoration) }
                 concerts_list.adapter = adapter
 
-                monthView?.text = simpleDateFormat.format(getDateTime(adapter?.times?.get(1)!!)!!)
+                monthView?.text = simpleDateFormat.format(PalcoUtils().getDateTime(adapter?.times?.get(1)!!)!!)
 
                 header.setOnClickListener {
                     calendar_view?.removeAllEvents()
@@ -286,23 +277,6 @@ class LocalFragment : Fragment() {
     private fun showConcertiList() {
         concerts_list.visibility = View.VISIBLE
         no_data.visibility = View.INVISIBLE
-    }
-
-    private fun getDateTime(time: String): Date? {
-        val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-        val calendar = Calendar.getInstance()
-        calendar.time = insdf.parse(time)
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-        return calendar.time
-    }
-
-    //TODO return true also if event is before Instant.now()
-    private fun checkObject(concerto: Concerto?): Boolean {
-        return concerto?.getArtist().isNullOrEmpty()
-                || concerto?.getCity().isNullOrEmpty()
-                || concerto?.getPlace().isNullOrEmpty()
-                || concerto?.getTime().isNullOrEmpty()
-                //|| concerto?.getTime()?.let { getDateTime(it)?.before(DateTimeUtils.toDate(Instant.now())) } == true
     }
 
     private fun displayCurrentEvents(date: Date) {
