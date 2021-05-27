@@ -30,7 +30,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="24">
+            android:layout_weight="18">
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/city_nested_view"
@@ -99,14 +99,13 @@
             <com.github.sundeepk.compactcalendarview.CompactCalendarView
                 android:id="@+id/calendar_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_300"
+                android:layout_height="0dp"
                 android:paddingTop="@dimen/dp_12"
                 android:paddingLeft="@dimen/dp_12"
                 android:paddingRight="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
                 android:visibility="gone"
                 tools:visibility="visible"
-                app:compactCalendarTargetHeight="@dimen/dp_300"
                 app:compactCalendarDisplayOtherMonthDays="true"
                 app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
                 app:compactCalendarOtherMonthDaysTextColor="@color/colorGrey"
