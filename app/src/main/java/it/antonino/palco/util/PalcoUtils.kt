@@ -15,6 +15,11 @@ class PalcoUtils {
         return insdf.parse(time)
     }
 
+    private fun getOnlyDate(time: String): Date? {
+        val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+        return insdf.parse(time)
+    }
+
     fun getDateTime(time: String): Date? {
         val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
         val calendar = Calendar.getInstance()
@@ -28,8 +33,6 @@ class PalcoUtils {
                 || concerto?.getCity().isNullOrEmpty()
                 || concerto?.getPlace().isNullOrEmpty()
                 || concerto?.getTime().isNullOrEmpty()
-                || concerto?.getTime()?.let { getDate(it)?.before(
-            DateTimeUtils.toDate(Instant.now())) } == true
     }
 
     fun checkObject(concerto: JsonElement): Boolean {
@@ -37,7 +40,6 @@ class PalcoUtils {
                 || concerto.asJsonObject.get("place").asString.isNullOrEmpty()
                 || concerto.asJsonObject.get("city").asString.isNullOrEmpty()
                 || concerto.asJsonObject.get("time").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("time").asString?.let { getDate(it)?.before(DateTimeUtils.toDate(Instant.now())) } == true
     }
 
 }
