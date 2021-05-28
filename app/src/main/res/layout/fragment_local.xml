@@ -55,7 +55,7 @@
                 android:layout_width="@dimen/dp_334"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_16"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:visibility="gone"
                 tools:visibility="visible"
