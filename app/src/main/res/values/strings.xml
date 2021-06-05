@@ -23,6 +23,7 @@
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Condividi</string>
     <string name="back_string">Indietro</string>
+    <string name="maps_string">Maps</string>
     <string name="close_button_string">Chiudi</string>
     <string name="city_select">Elenco città italiane. Seleziona una città dall\'elenco.</string>
     <string name="city_selected">Città selezionata : %1$s. Fai tap quì per cambiare città</string>

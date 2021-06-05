@@ -39,6 +39,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.maps.MapsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".services.PalcoFirebaseMessagingService"
             android:exported="false"
@@ -56,7 +62,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="it.antonino.palco.provider"

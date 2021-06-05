@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import it.antonino.palco.R
 import it.antonino.palco.model.ConcertRow
+import it.antonino.palco.ui.maps.MapsActivity
 import kotlinx.android.synthetic.main.custom_dialog.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -42,6 +43,12 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
 
         dialogView.back_button.setOnClickListener {
             dismiss()
+        }
+
+        dialogView.maps_button.setOnClickListener {
+            val intent = Intent(context, MapsActivity::class.java)
+            intent.putExtra("place", concertRow.place)
+            startActivity(intent)
         }
 
         dialogView.share_button.setOnClickListener {

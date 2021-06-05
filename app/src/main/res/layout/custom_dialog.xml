@@ -36,6 +36,21 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
+        android:id="@+id/maps_button"
+        android:layout_width="@dimen/dp_240"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_marginBottom="@dimen/dp_64"
+        android:paddingEnd="@dimen/dp_12"
+        android:background="@drawable/button_background_white"
+        android:drawableEnd="@drawable/ic_triangle"
+        android:fontFamily="@font/gotham_bold"
+        android:text="@string/maps_string"
+        app:layout_constraintTop_toBottomOf="@+id/share_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
         android:id="@+id/back_button"
         android:layout_width="@dimen/dp_240"
         android:layout_height="wrap_content"
@@ -46,7 +61,7 @@
         android:drawableEnd="@drawable/ic_triangle"
         android:fontFamily="@font/gotham_bold"
         android:text="@string/back_string"
-        app:layout_constraintTop_toBottomOf="@+id/share_button"
+        app:layout_constraintTop_toBottomOf="@+id/maps_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

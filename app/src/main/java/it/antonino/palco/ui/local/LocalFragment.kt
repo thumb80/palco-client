@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,16 +32,7 @@ import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.Password
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_local.*
-import kotlinx.android.synthetic.main.fragment_local.calendar_view
-import kotlinx.android.synthetic.main.fragment_local.monthLayout
-import kotlinx.android.synthetic.main.fragment_local.monthView
-import kotlinx.android.synthetic.main.fragment_local.nextMonth
-import kotlinx.android.synthetic.main.fragment_local.no_data
-import kotlinx.android.synthetic.main.fragment_local.prevMonth
-import kotlinx.android.synthetic.main.fragment_national.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
