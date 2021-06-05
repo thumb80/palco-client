@@ -48,6 +48,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
         dialogView.maps_button.setOnClickListener {
             val intent = Intent(context, MapsActivity::class.java)
             intent.putExtra("place", concertRow.place)
+            intent.putExtra("artist", concertRow.artist)
             startActivity(intent)
         }
 
