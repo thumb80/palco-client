@@ -25,10 +25,10 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     val TAG = MainActivity::class.java.name
+    private var timeStamp: Long = 0
 
     private var progressBarHolder: ProgressBarHolder? = null
     private var sharedPreferences: SharedPreferences? = null
-    //private var fusedLocationProviderClient: FusedLocationProviderClient? = null
 
     private val viewModel: MainViewModel by viewModel()
 

@@ -5,12 +5,15 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import it.antonino.palco.R
+import java.io.IOException
+import java.util.*
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -18,7 +21,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var place: String? = null
     private var artist: String? = null
-    private lateinit var addresses: List<Address>
+    private var addresses: List<Address> = listOf()
 
     val TAG = MapsActivity::class.java.canonicalName
 
@@ -35,8 +38,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val geodecoder = Geocoder(this)
-        addresses = geodecoder.getFromLocationName(place,10)
+        val geodecoder = Geocoder(this, Locale.getDefault())
+        try {
+            addresses = geodecoder.getFromLocationName(place,10)
+        }
+        catch (e: IOException) {
+            Log.d(TAG, "Cannot parse location")
+        }
 
     }
 
@@ -80,6 +88,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.uiSettings.isRotateGesturesEnabled = true
             mMap.uiSettings.isTiltGesturesEnabled = true
             mMap.uiSettings.isScrollGesturesEnabled = true
+        }
+        else {
+            Toast.makeText(this, "Ops.. c'è stato un problema", Toast.LENGTH_LONG).show()
+            this.onBackPressed()
         }
     }
 }
