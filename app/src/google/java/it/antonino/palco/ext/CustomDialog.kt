@@ -36,6 +36,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
             val intent = Intent(context, MapsActivity::class.java)
             intent.putExtra("place", concertRow.place)
             intent.putExtra("artist", concertRow.artist)
+            intent.putExtra("city", concertRow.city)
             startActivity(intent)
         }
 

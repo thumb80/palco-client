@@ -21,6 +21,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var place: String? = null
     private var artist: String? = null
+    private var city: String? = null
     private var addresses: List<Address> = listOf()
 
     val TAG = MapsActivity::class.java.canonicalName
@@ -30,6 +31,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         place = intent.extras?.getString("place")
         artist = intent.extras?.getString("artist")
+        city = intent.extras?.getString("city")
 
         setContentView(R.layout.activity_maps)
 
@@ -40,7 +42,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val geodecoder = Geocoder(this, Locale.getDefault())
         try {
-            addresses = geodecoder.getFromLocationName(place,10)
+            addresses = geodecoder.getFromLocationName(place?.plus(" $city"), 10)
         }
         catch (e: IOException) {
             Log.d(TAG, "Cannot parse location")
