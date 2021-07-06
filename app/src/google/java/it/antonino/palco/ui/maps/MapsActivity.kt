@@ -35,7 +35,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         setContentView(R.layout.activity_maps)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -82,7 +81,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (addresses.size > 0) {
             // Add a marker in Sydney and move the camera
             val place = LatLng(addresses.get(0).latitude, addresses.get(0).longitude)
-            mMap.addMarker(MarkerOptions().position(place).title("${this.artist} in ${this.place}"))
+            mMap.addMarker(MarkerOptions().position(place).title("${this.artist} a ${this.place}"))
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, zoomIn))
 
             mMap.uiSettings.setAllGesturesEnabled(true)

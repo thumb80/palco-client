@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import it.antonino.palco.R
 import it.antonino.palco.model.ConcertRow
+import it.antonino.palco.ui.maps.MapsActivity
 import kotlinx.android.synthetic.huawei.custom_dialog.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -29,6 +30,14 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
         val builder = AlertDialog.Builder(activity)
         val inflater = requireActivity().layoutInflater
         val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+
+        dialogView.maps_button.setOnClickListener {
+            val intent = Intent(context, MapsActivity::class.java)
+            intent.putExtra("place", concertRow.place)
+            intent.putExtra("artist", concertRow.artist)
+            intent.putExtra("city", concertRow.city)
+            startActivity(intent)
+        }
 
         dialogView.listen_button.setOnClickListener {
             val intent = Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH).apply {
