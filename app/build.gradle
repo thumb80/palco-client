@@ -8,6 +8,9 @@ plugins {
     id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -80,9 +83,9 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField('String', 'BASE_URL', baseUrl)
-        it.buildConfigField('String', 'DISCOGS_API_KEY', dicogsApiKey)
-        it.buildConfigField('String', 'DISCOGS_SECRET', discogsSecret)
+        it.buildConfigField('String', 'BASE_URL', properties.get("baseUrl"))
+        it.buildConfigField('String', 'DISCOGS_API_KEY', properties.get("dicogsApiKey"))
+        it.buildConfigField('String', 'DISCOGS_SECRET', properties.get("discogsSecret"))
     }
 
     buildTypes {
