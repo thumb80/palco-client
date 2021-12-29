@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
+import it.antonino.palco.ui.international.InternationalFragment
 import it.antonino.palco.ui.local.LocalFragment
 import it.antonino.palco.ui.national.NationalFragment
 
@@ -12,18 +13,20 @@ class ConcertiAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdap
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return  NationalFragment()
+            0 -> return NationalFragment()
             1 -> return LocalFragment()
+            2 -> return InternationalFragment()
         }
         return Fragment()
     }
 
-    override fun getCount(): Int = 2
+    override fun getCount(): Int = 3
 
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> return PalcoApplication.instance.resources.getString(R.string.concerti_nazionali)
             1 -> return PalcoApplication.instance.resources.getString(R.string.concerti_locali)
+            2 -> return PalcoApplication.instance.resources.getString(R.string.concerti_internazionali)
         }
         return ""
     }

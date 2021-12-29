@@ -8,6 +8,7 @@ import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.repository.GoogleRepository
+import it.antonino.palco.ui.international.InternationalViewModel
 import it.antonino.palco.ui.login.LoginViewModel
 import it.antonino.palco.ui.local.LocalViewModel
 import it.antonino.palco.ui.national.NationalViewModel
@@ -68,6 +69,7 @@ val appModule = module {
     viewModel { MainViewModel(get()) }
     viewModel { NationalViewModel(get()) }
     viewModel { LocalViewModel(get()) }
+    viewModel { InternationalViewModel(get()) }
 
 }
 

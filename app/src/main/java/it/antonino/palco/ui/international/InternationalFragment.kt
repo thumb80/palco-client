@@ -1,4 +1,4 @@
-package it.antonino.palco.ui.national
+package it.antonino.palco.ui.international
 
 import android.content.Context
 import android.graphics.Color
@@ -38,11 +38,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+class InternationalFragment: Fragment() {
 
-class NationalFragment: Fragment() {
-
-    private val TAG = NationalFragment::class.simpleName
-    private val viewModel: NationalViewModel by viewModel()
+    private val viewModel: InternationalViewModel by viewModel()
     private var adapter: CustomAdapter? = null
 
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
@@ -67,7 +65,7 @@ class NationalFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        return inflater.inflate(R.layout.fragment_national, container, false)
+        return inflater.inflate(R.layout.fragment_international, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -140,7 +138,7 @@ class NationalFragment: Fragment() {
 
         (activity as MainActivity).showProgress()
         val sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
+        viewModel.getConcertiInternazionali().observe(viewLifecycleOwner, concertiObserver)
 
     }
 
