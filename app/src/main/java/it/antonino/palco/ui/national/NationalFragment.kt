@@ -146,7 +146,7 @@ class NationalFragment: Fragment() {
 
         (activity as MainActivity).showProgress()
         val sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        viewModel.getConcertiNazionali(Password(sharedPreferences?.getString("password","")!!)).observe(viewLifecycleOwner, concertiObserver)
+        viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
 
     }
 

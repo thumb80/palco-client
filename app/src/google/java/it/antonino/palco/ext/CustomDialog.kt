@@ -79,7 +79,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                         val intent = Intent(Intent.ACTION_SEND)
                         intent.type = "image/*"
                         intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
-                        intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} \n clicca su link per maggiori dettagli https://palco.accesscam.org:3000/home")
+                        intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} \n clicca sul link per maggiori dettagli https://palco.mywire.org")
                         intent.putExtra(Intent.EXTRA_STREAM, contentUri)
                         context?.startActivity(Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto"))
                         dismiss()

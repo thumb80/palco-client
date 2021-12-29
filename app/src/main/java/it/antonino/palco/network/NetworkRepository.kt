@@ -40,9 +40,9 @@ class NetworkRepository(
         return responseCode
     }
 
-    fun getConcertiNazionali(password: Password) : MutableLiveData<ArrayList<Concerto?>?> {
+    fun getConcertiNazionali() : MutableLiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionali(password).enqueue(
+        val response = networkAPI.getConcertiNazionali().enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
@@ -140,9 +140,9 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getConcertiNazionaliByCity(city: String,password: Password) : MutableLiveData<ArrayList<Concerto?>?> {
+    fun getConcertiNazionaliByCity(city: String) : MutableLiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByCity(city,password).enqueue(
+        val response = networkAPI.getConcertiNazionaliByCity(city).enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
@@ -240,9 +240,9 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getCities(password: Password) : MutableLiveData<ArrayList<City?>?> {
+    fun getCities() : MutableLiveData<ArrayList<City?>?> {
         var responseObject = MutableLiveData<ArrayList<City?>?>()
-        val response = networkAPI.getCities(password).enqueue(
+        val response = networkAPI.getCities().enqueue(
             object : Callback<ArrayList<City?>?> {
                 override fun onFailure(call: Call<ArrayList<City?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")

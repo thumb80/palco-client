@@ -27,18 +27,18 @@ class LocalViewModel(
 
     private var sharedPreferences: SharedPreferences? = null
 
-    fun getCities(password: Password): LiveData<ArrayList<City?>?> {
+    fun getCities(): LiveData<ArrayList<City?>?> {
         var responseObject = MutableLiveData<ArrayList<City?>?>()
         viewModelScope.launch {
-            responseObject = networkRepository.getCities(password)
+            responseObject = networkRepository.getCities()
         }
         return responseObject
     }
 
-    fun getConcertiNazionaliByCity(city: String,password: Password): LiveData<ArrayList<Concerto?>?> {
+    fun getConcertiNazionaliByCity(city: String): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
-            responseObject = networkRepository.getConcertiNazionaliByCity(city,password)
+            responseObject = networkRepository.getConcertiNazionaliByCity(city)
         }
         return responseObject
     }

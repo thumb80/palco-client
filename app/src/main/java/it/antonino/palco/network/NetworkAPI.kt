@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import it.antonino.palco.model.*
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -12,58 +13,58 @@ interface NetworkAPI {
     @POST("registration")
     fun registration(@Body user: User): Call<JsonObject>
 
-    @POST("concerti")
-    fun getConcertiNazionali(@Body password: Password): Call<ArrayList<Concerto?>?>
+    @GET("concerti")
+    fun getConcertiNazionali(): Call<ArrayList<Concerto?>?>
 
-    @POST("concertistranieri")
+    @GET("concertistranieri")
     fun getConcertiStranieri(): Call<ArrayList<Concerto?>?>
 
-    @POST("concerti/{mese}")
+    @GET("concerti/{mese}")
     fun getConcertiNazionaliByMonth(@Path("mese") mese: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concerti/{mese}/{city}")
+    @GET("concerti/{mese}/{city}")
     fun  getConcertiNazionaliByMonthAndCity(@Path("mese") mese: String, @Path("city") city: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concerticitta/{city}")
-    fun getConcertiNazionaliByCity(@Path("city") city: String,@Body password: Password): Call<ArrayList<Concerto?>?>
+    @GET("concerticitta/{city}")
+    fun getConcertiNazionaliByCity(@Path("city") city: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertiartisti/{artist}")
+    @GET("concertiartisti/{artist}")
     fun getConcertiNazionaliByArtist(@Path("artist") artist: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertidettaglio/{time}")
+    @GET("concertidettaglio/{time}")
     fun getConcertiNazionaliByTime(@Path("time") time: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertidettaglio/{time}/{city}")
+    @GET("concertidettaglio/{time}/{city}")
     fun getConcertiNazionaliByTimeAndCity(@Path("time") time: String, @Path("city") city: String): Call<ArrayList<Concerto?>?>
 
-    @POST("cities")
-    fun getCities(@Body password: Password): Call<ArrayList<City?>?>
+    @GET("cities")
+    fun getCities(): Call<ArrayList<City?>?>
 
-    @POST("artists")
+    @GET("artists")
     fun getNationalArtists(): Call<ArrayList<Artist?>?>
 
-    @POST("concertistranieri/{mese}")
+    @GET("concertistranieri/{mese}")
     fun getConcertiStranieriByMonth(@Path("mese") mese: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertistranieri/{mese}/{city}")
+    @GET("concertistranieri/{mese}/{city}")
     fun  getConcertiStranieriByMonthAndCity(@Path("mese") mese: String, @Path("city") city: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertistraniericitta/{city}")
+    @GET("concertistraniericitta/{city}")
     fun getConcertiStranieriByCity(@Path("city") city: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertistranieriartisti/{artist}")
+    @GET("concertistranieriartisti/{artist}")
     fun getConcertiStranieriByArtist(@Path("artist") artist: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertistranieridettaglio/{time}")
+    @GET("concertistranieridettaglio/{time}")
     fun getConcertiStranieriByTime(@Path("time") time: String): Call<ArrayList<Concerto?>?>
 
-    @POST("concertistranieridettaglio/{time}/{city}")
+    @GET("concertistranieridettaglio/{time}/{city}")
     fun getConcertiStranieriByTimeAndCity(@Path("time") time: String, @Path("city") city: String): Call<ArrayList<Concerto?>?>
 
-    @POST("straniericities")
+    @GET("straniericities")
     fun getStranieriCities(): Call<ArrayList<City?>?>
 
-    @POST("stranieriartists")
+    @GET("stranieriartists")
     fun getStranierilArtists(): Call<ArrayList<Artist?>?>
 
 }

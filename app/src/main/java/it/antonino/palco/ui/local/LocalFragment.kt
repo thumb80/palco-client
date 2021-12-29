@@ -69,7 +69,7 @@ class LocalFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getCities(Password(sharedPreferences?.getString("password","")!!)).observe(viewLifecycleOwner, cityObserver)
+        viewModel.getCities().observe(viewLifecycleOwner, cityObserver)
 
         calendar_view.setLocale(TimeZone.getTimeZone("it"), Locale.ITALY)
         calendar_view.setUseThreeLetterAbbreviation(true)
@@ -156,7 +156,7 @@ class LocalFragment : Fragment() {
                     layoutParams.weight = 0.1F
                     header.layoutParams = layoutParams
                     header.text = getString(R.string.city_selected, it)
-                    viewModel.getConcertiNazionaliByCity(it,Password(sharedPreferences?.getString("password","")!!)).observe(viewLifecycleOwner, concertiObserver)
+                    viewModel.getConcertiNazionaliByCity(it).observe(viewLifecycleOwner, concertiObserver)
                 }
                 val layoutManager = LinearLayoutManager(
                     context,

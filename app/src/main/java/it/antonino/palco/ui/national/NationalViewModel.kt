@@ -14,10 +14,10 @@ class NationalViewModel(
     private val networkRepository: NetworkRepository
 )   : ViewModel() {
 
-    fun getConcertiNazionali(password: Password): LiveData<ArrayList<Concerto?>?> {
+    fun getConcertiNazionali(): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
-            responseObject = networkRepository.getConcertiNazionali(password)
+            responseObject = networkRepository.getConcertiNazionali()
         }
         return responseObject
     }
