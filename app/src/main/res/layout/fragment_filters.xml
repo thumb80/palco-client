@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="it.antonino.palco.ui.filters.FiltersViewModel" />
+        <variable
+            name="view"
+            type="it.antonino.palco.ui.filters.FiltersFragment" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/remove_button"
+            android:text="@={viewModel.concertsSizeObservable}"
+            android:textColor="@color/colorWhite"/>
+
+        <Button
+            android:id="@+id/remove_button"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_16"
+            android:text="@string/filters_remove"
+            android:textSize="@dimen/sp_8"
+            android:paddingEnd="@dimen/dp_12"
+            android:drawableEnd="@drawable/ic_triangle"
+            android:background="@drawable/button_background_white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/header_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewpager_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_44"
+        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/filters_tab_layout"
+                android:background="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:layout_gravity="top"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="@dimen/dp_8"
+                app:tabIndicatorColor="@color/colorPrimary"
+                app:tabTextAppearance="@style/customTabText"/>
+
+            <it.antonino.palco.ext.CustomViewPager
+                android:id="@+id/filters_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5">
+
+            </it.antonino.palco.ext.CustomViewPager>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/concerti_filters_recycler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/dp_12"
+                    android:paddingRight="@dimen/dp_12"
+                    android:paddingLeft="@dimen/dp_12"
+                    android:layout_marginStart="@dimen/dp_48"
+                    android:layout_marginEnd="@dimen/dp_48"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/concerto_card_view"/>
+
+                <TextView
+                    android:id="@+id/no_data_filters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/gotham_bold"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/no_data"
+                    android:layout_gravity="center_horizontal"
+                    tools:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

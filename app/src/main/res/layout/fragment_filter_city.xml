@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="18">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/city_nested_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/city_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                tools:itemCount="40"
+                tools:listitem="@layout/city_list"
+                app:layout_constraintTop_toBottomOf="@+id/header"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/arrow_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:gravity="bottom|center_horizontal"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/colorWhite">
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="@dimen/dp_16"
+            android:layout_height="@dimen/dp_8"
+            android:src="@drawable/ic_arrow"/>
+
+    </LinearLayout>
+
+</LinearLayout>

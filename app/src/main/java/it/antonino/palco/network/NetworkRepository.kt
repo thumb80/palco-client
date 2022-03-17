@@ -465,7 +465,7 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getStranierilArtists() : MutableLiveData<ArrayList<Artist?>?> {
+    fun getStranieriArtists() : MutableLiveData<ArrayList<Artist?>?> {
         var responseObject = MutableLiveData<ArrayList<Artist?>?>()
         val response = networkAPI.getStranierilArtists().enqueue(
             object : Callback<ArrayList<Artist?>?> {

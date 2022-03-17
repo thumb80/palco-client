@@ -17,8 +17,15 @@
     <string name="registration_user_already_exist">Utente già registrato</string>
     <string name="registration_email_not_valid">Inserire un indirizzo e-mail esistente</string>
     <string name="concerti_nazionali">Italia</string>
-    <string name="concerti_locali">Città</string>ù
+    <string name="concerti_locali">Città</string>
     <string name="concerti_internazionali">Europa</string>
+    <string name="filters">Filtri</string>
+    <string name="filters_text">Filtri di ricerca avanzata</string>
+    <string name="filters_month">mese</string>
+    <string name="filters_city">località</string>
+    <string name="filters_artist">artista</string>
+    <string name="filters_remove">Rimuovi filtri</string>
+    <string name="filters_result">Trovati %1$s concerti</string>
     <string name="no_data">Non ci sono concerti nel giorno selezionato</string>
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Condividi</string>

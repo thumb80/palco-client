@@ -15,7 +15,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
     }
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
-        holder.bind(city?.get(position)!!,listener)
+        holder.bind(city?.get(position)!!, listener)
     }
 
     override fun getItemCount(): Int = city!!.size

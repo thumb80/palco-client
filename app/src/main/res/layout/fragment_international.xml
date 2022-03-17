@@ -3,137 +3,200 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:background="@color/colorPrimary"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/dp_8"
-    tools:context=".ui.national.NationalFragment">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/monthLayout"
-        android:layout_width="@dimen/dp_334"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/dp_16"
-        android:layout_marginBottom="@dimen/dp_8"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/calendar_view">
-
-        <Button
-            android:id="@+id/prevMonth"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/ic_icon_left">
-
-        </Button>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            style="@style/MeseCalendario"
-            android:id="@+id/monthView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textAlignment="center"
-            tools:text="@string/app_name"
-            android:gravity="center_horizontal"/>
+            android:fontFamily="@font/gotham_book"
+            android:textSize="@dimen/sp_12"
+            android:background="@color/colorWhite"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/city_select"
+            android:paddingTop="@dimen/dp_8"
+            android:paddingBottom="@dimen/dp_8"/>
 
-        <Button
-            android:id="@+id/nextMonth"
-            android:layout_width="@dimen/dp_24"
-            android:layout_height="@dimen/dp_24"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_icon_right">
-
-        </Button>
-
-    </RelativeLayout>
-
-    <com.github.sundeepk.compactcalendarview.CompactCalendarView
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingTop="@dimen/dp_12"
-        android:paddingLeft="@dimen/dp_12"
-        android:paddingRight="@dimen/dp_12"
-        android:layout_marginTop="@dimen/dp_12"
-        app:compactCalendarDisplayOtherMonthDays="true"
-        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
-        app:compactCalendarOtherMonthDaysTextColor="@color/colorGrey"
-        app:compactCalendarTextSize="@dimen/sp_12"
-        app:compactCalendarBackgroundColor="@color/colorPrimary"
-        app:compactCalendarTextColor="@color/colorWhite"
-        app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorAccent"
-        app:compactCalendarCurrentDayBackgroundColor="@color/colorAccent"
-        app:compactCalendarMultiEventIndicatorColor="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/monthLayout"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="@dimen/dp_2"
-        android:layout_height="@dimen/dp_2"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.45"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <androidx.core.widget.NestedScrollView
-        style="@style/horizontalScrollBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        android:scrollbars="horizontal"
-        android:layout_marginTop="@dimen/dp_16"
-        app:layout_constraintTop_toBottomOf="@+id/guideline"
-        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="18">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/concerti_recycler"
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/city_nested_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/city_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    tools:itemCount="40"
+                    tools:listitem="@layout/city_list"
+                    app:layout_constraintTop_toBottomOf="@+id/header"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <RelativeLayout
+                android:id="@+id/monthLayout"
+                android:layout_width="@dimen/dp_334"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/calendar_view">
+
+                <Button
+                    android:id="@+id/prevMonth"
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/ic_icon_left">
+
+                </Button>
+
+
+                <TextView
+                    style="@style/MeseCalendario"
+                    android:id="@+id/monthView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    tools:text="@string/app_name"
+                    android:gravity="center_horizontal"/>
+
+                <Button
+                    android:id="@+id/nextMonth"
+                    android:layout_width="@dimen/dp_24"
+                    android:layout_height="@dimen/dp_24"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_icon_right">
+
+                </Button>
+
+            </RelativeLayout>
+
+            <com.github.sundeepk.compactcalendarview.CompactCalendarView
+                android:id="@+id/calendar_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:paddingTop="@dimen/dp_12"
+                android:paddingLeft="@dimen/dp_12"
+                android:paddingRight="@dimen/dp_12"
+                android:layout_marginTop="@dimen/dp_12"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:compactCalendarDisplayOtherMonthDays="true"
+                app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
+                app:compactCalendarOtherMonthDaysTextColor="@color/colorGrey"
+                app:compactCalendarTextSize="@dimen/sp_12"
+                app:compactCalendarBackgroundColor="@color/colorPrimary"
+                app:compactCalendarTextColor="@color/colorWhite"
+                app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorAccent"
+                app:compactCalendarCurrentDayBackgroundColor="@color/colorAccent"
+                app:compactCalendarMultiEventIndicatorColor="@color/colorAccent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/monthLayout"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"/>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="@dimen/dp_2"
+                android:layout_height="@dimen/dp_2"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nested_concerti_list"
+                style="@style/horizontalScrollBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/dp_12"
-                android:paddingRight="@dimen/dp_12"
-                android:paddingLeft="@dimen/dp_12"
-                android:layout_marginStart="@dimen/dp_48"
-                android:layout_marginEnd="@dimen/dp_48"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:itemCount="4"
-                tools:listitem="@layout/concerto_card_view"/>
-
-            <TextView
-                android:id="@+id/no_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:fillViewport="true"
                 android:visibility="gone"
-                android:textAlignment="center"
-                android:fontFamily="@font/gotham_bold"
-                android:textSize="@dimen/sp_14"
-                android:textColor="@color/colorWhite"
-                android:text="@string/no_data"
-                android:layout_gravity="center_horizontal"
                 tools:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@+id/guideline"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/concerts_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:padding="@dimen/dp_12"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/concerto_card_view"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/no_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/gotham_bold"
+                        android:textSize="@dimen/sp_14"
+                        android:textColor="@color/colorWhite"
+                        android:text="@string/no_data"
+                        android:layout_gravity="center_horizontal"
+                        tools:visibility="visible"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        <LinearLayout
+            android:id="@+id/arrow_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.7"
+            android:gravity="bottom|center_horizontal"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/colorWhite">
 
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_8"
+                android:src="@drawable/ic_arrow"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
