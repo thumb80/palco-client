@@ -30,6 +30,7 @@
             android:layout_height="0dp"
             android:layout_weight="18"
             android:orientation="vertical"
+            android:background="@color/colorWhite"
             app:layout_constraintTop_toBottomOf="@+id/filter_header_month"
             >
 

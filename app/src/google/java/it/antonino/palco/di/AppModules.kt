@@ -9,6 +9,7 @@ import it.antonino.palco.network.NetworkAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.repository.GoogleRepository
 import it.antonino.palco.ui.europe.EuropeViewModel
+import it.antonino.palco.ui.filter.FilterViewModel
 import it.antonino.palco.ui.login.LoginViewModel
 import it.antonino.palco.ui.local.LocalViewModel
 import it.antonino.palco.ui.national.NationalViewModel
@@ -70,6 +71,7 @@ val appModule = module {
     viewModel { NationalViewModel(get()) }
     viewModel { LocalViewModel(get()) }
     viewModel { EuropeViewModel(get()) }
+    viewModel { FilterViewModel(get()) }
 
 }
 
