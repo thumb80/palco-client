@@ -18,7 +18,7 @@
     <string name="registration_email_not_valid">Inserire un indirizzo e-mail esistente</string>
     <string name="concerti_nazionali">Italia</string>
     <string name="concerti_locali">Città</string>
-    <string name="concerti_internazionali">Mondo</string>
+    <string name="concerti_internazionali">Europa</string>
     <string name="no_data">Non ci sono concerti nel giorno selezionato</string>
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Condividi</string>

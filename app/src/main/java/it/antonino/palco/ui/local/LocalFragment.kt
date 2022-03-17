@@ -29,7 +29,6 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.model.Password
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_local.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,7 +47,6 @@ class LocalFragment : Fragment() {
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     var cityList = ArrayList<String>()
     private var position : Int? = null
-    private var cityPosition: Int? = null
     private var dotsLocalItemDecoration: DotsLocalItemDecoration? = null
     private var lastPosition = 0
 
