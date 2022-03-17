@@ -19,6 +19,10 @@
     <string name="concerti_nazionali">Italia</string>
     <string name="concerti_locali">Città</string>
     <string name="concerti_internazionali">Europa</string>
+    <string name="concerti_filter">Filtri</string>
+    <string name="filter_month">Mese</string>
+    <string name="filter_city">Città</string>
+    <string name="filter_artist">Artista</string>
     <string name="no_data">Non ci sono concerti nel giorno selezionato</string>
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Condividi</string>
@@ -27,5 +31,11 @@
     <string name="close_button_string">Chiudi</string>
     <string name="city_select">Elenco città italiane. Seleziona una città dall\'elenco.</string>
     <string name="city_selected">Città selezionata : %1$s. Fai tap quì per cambiare città</string>
+    <string name="filter_month_select">Elenco mesi. Seleziona un mese dell\'elenco</string>
+    <string name="filter_month_selected">Mese selezionato : %1$s. Fai tap quì per cambiare mese</string>
+    <string name="filter_city_selected">Città selezionata : %1$s. Fai tap quì per cambiare città</string>
+    <string name="filter_artist_selected">Artista selezionato : %1$s. Fai tap quì per cambiare artista</string>
+    <string name="filter_city_select">Elenco città. Seleziona una città dall\'elenco</string>
+    <string name="filter_artist_select">Elenco artisti. Seleziona un artista dall\'elenco</string>
 
 </resources>
