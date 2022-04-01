@@ -22,7 +22,7 @@ class NationalViewModel(
         return responseObject
     }
 
-    fun getArtistThumb(artist: String) : LiveData<JsonObject?> {
+    fun getArtistThumb(artist: String?) : LiveData<JsonObject?> {
         var responseObject = MutableLiveData<JsonObject?>()
         viewModelScope.launch {
             responseObject = networkRepository.getArtistThumb(artist)

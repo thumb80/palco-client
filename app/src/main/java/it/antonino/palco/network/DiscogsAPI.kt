@@ -10,7 +10,7 @@ interface DiscogsAPI {
 
     @GET("https://api.discogs.com/database/search")
     fun getArtistThumb(
-        @Query("q") artist: String,
+        @Query("q") artist: String?,
         @Query("key") discogsApiKey: String = BuildConfig.DISCOGS_API_KEY,
         @Query("secret") discogsSecret: String = BuildConfig.DISCOGS_SECRET
     ): Call<JsonObject>

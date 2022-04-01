@@ -77,18 +77,16 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         city.text = item.city
         time.text = item.time
 
-        viewModel.getArtistThumb(item.artist!!).observeForever {
+        viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false)  {
-                //artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 artistThumb = it.get("results")?.asJsonArray?.filter {
                     (it as JsonObject).get("type").asJsonPrimitive.equals(JsonPrimitive("artist"))
                 }?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
+                //TODO fix image height
                 Glide.with(this)
                     .load(artistThumb)
                     .transform(RoundedCorners(6))
-                    .centerInside()
-                    //.fitCenter()
                     .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
                     .listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(

@@ -490,7 +490,7 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getArtistThumb(artist: String) : MutableLiveData<JsonObject?> {
+    fun getArtistThumb(artist: String?) : MutableLiveData<JsonObject?> {
         var responseObject = MutableLiveData<JsonObject?>()
         val response = discogsAPI.getArtistThumb(artist).enqueue(
             object : Callback<JsonObject?> {

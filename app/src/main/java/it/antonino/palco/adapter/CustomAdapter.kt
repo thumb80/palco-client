@@ -96,9 +96,8 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         place.text = item.place
         city.text = item.city
 
-        viewModel.getArtistThumb(item.artist!!).observeForever {
+        viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false)  {
-                //artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 artistThumb = it.get("results")?.asJsonArray?.filter {
                     (it as JsonObject).get("type").asJsonPrimitive.equals(JsonPrimitive("artist"))
                 }?.get(0)?.asJsonObject?.get("cover_image")?.asString
@@ -106,7 +105,6 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 Glide.with(this)
                     .load(artistThumb)
                     .transform(RoundedCorners(6))
-                    //.fitCenter()
                     .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
                     .listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
