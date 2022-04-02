@@ -141,7 +141,6 @@ class FilterCityFragment : Fragment() {
                 filter_concert_city_list.addItemDecoration(dividerItemDecoration)
 
                 filter_header_city.setOnClickListener {
-                    //filter_header_city.text = getString(R.string.filter_month_select)
                     hideConcerti()
                 }
 
