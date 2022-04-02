@@ -34,16 +34,22 @@
             app:layout_constraintTop_toBottomOf="@+id/filter_header_month"
             >
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/dummy"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_64"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/filter_month_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:padding="@dimen/dp_12"
                 android:orientation="vertical"
                 tools:listitem="@layout/city_list"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dummy"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView

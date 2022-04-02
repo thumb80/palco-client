@@ -20,7 +20,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
-        versionName "1.7"
+        versionName "2.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -128,7 +128,7 @@ dependencies {
     googleImplementation 'com.google.firebase:firebase-analytics'
     googleImplementation 'com.google.firebase:firebase-crashlytics-ktx'
     googleImplementation 'com.google.firebase:firebase-messaging-ktx'
-    googleImplementation 'com.google.firebase:firebase-messaging-directboot:21.0.1'
+    googleImplementation 'com.google.firebase:firebase-messaging-directboot:23.0.2'
     googleImplementation 'com.google.android.gms:play-services-auth:19.0.0'
     huaweiImplementation 'com.facebook.android:facebook-android-sdk:4.42.0'
     huaweiImplementation 'com.huawei.agconnect:agconnect-core:1.5.2.300'
