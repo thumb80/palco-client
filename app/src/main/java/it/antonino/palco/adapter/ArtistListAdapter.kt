@@ -8,42 +8,40 @@ import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.Artist
-import it.antonino.palco.model.City
 import kotlinx.android.synthetic.main.city_list.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+class ArtistListAdapter(val artists: ArrayList<Artist>?, val  listener: (String) -> Unit)
+    : RecyclerView.Adapter<ArtistViewHolder>(), Filterable {
 
-class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Unit)
-    : RecyclerView.Adapter<CityViewHolder>(), Filterable{
-
-    val initialCityDataList = ArrayList<City>().apply {
-        city?.let { addAll(it) }
+    val initialCityDataList = ArrayList<Artist>().apply {
+        artists?.let { addAll(it) }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
-        return CityViewHolder(parent.inflate(R.layout.city_list))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
+        return ArtistViewHolder(parent.inflate(R.layout.city_list))
     }
 
-    override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
-        holder.bind(city?.get(position)?.getCity()!!,listener)
+    override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
+        holder.bind(artists?.get(position)?.getArtist()!!, listener)
     }
 
-    override fun getItemCount(): Int = city?.size ?: 0
+    override fun getItemCount(): Int = artists?.size ?: 0
 
     override fun getFilter(): Filter {
-        return cityFilter
+        return artistFilter
     }
 
-    private val cityFilter = object : Filter() {
+    private val artistFilter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val filteredList: ArrayList<City?> = ArrayList()
+            val filteredList: ArrayList<Artist?> = ArrayList()
             if (constraint == null || constraint.isEmpty()) {
                 initialCityDataList.let { filteredList.addAll(it) }
             } else {
                 val query = constraint.toString().trim().toLowerCase()
                 initialCityDataList.forEach {
-                    if (it.getCity().toLowerCase(Locale.ROOT).contains(query)) {
+                    if (it.getArtist().toLowerCase(Locale.ROOT).contains(query)) {
                         filteredList.add(it)
                     }
                 }
@@ -55,8 +53,8 @@ class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Uni
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             if (results?.values is ArrayList<*>) {
-                city?.clear()
-                city?.addAll(results.values as ArrayList<City>)
+                artists?.clear()
+                artists?.addAll(results.values as ArrayList<Artist>)
                 notifyDataSetChanged()
             }
         }
@@ -64,7 +62,7 @@ class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Uni
 
 }
 
-class CityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class ArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: String, listener: (String) -> Unit) = with(itemView) {
         city.text = item
         setOnClickListener { listener(item) }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
+import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
@@ -25,8 +27,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FilterArtistFragment : Fragment() {
 
     private val viewModel: FilterViewModel by viewModel()
-    private var artistList = ArrayList<String>()
-    private var artistAdapter: CityListAdapter? = null
+    private var artistList = ArrayList<Artist>()
+    private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
@@ -47,6 +49,21 @@ class FilterArtistFragment : Fragment() {
         viewModel.getNationalArtists().observe(viewLifecycleOwner, artistObserver)
         viewModel.getInternationalArtists().observe(viewLifecycleOwner, artistObserver)
 
+        hideConcerti()
+
+        search_bar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                artistAdapter?.filter?.filter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                artistAdapter?.filter?.filter(newText)
+                return true
+            }
+
+        })
+
     }
 
     private val artistObserver = Observer<ArrayList<Artist?>?> {
@@ -54,11 +71,13 @@ class FilterArtistFragment : Fragment() {
         when (!it.isNullOrEmpty()) {
             true -> {
                 for (artist in it) {
-                    if (!artistList.contains(artist?.getArtist()))
-                        artist?.getArtist()?.let { it_artist -> artistList.add(it_artist) }
+                    if (!artistList.contains(artist))
+                        artist?.let { it_artist -> artistList.add(it_artist) }
                 }
-                artistList.sortBy { it }
-                artistAdapter = CityListAdapter(artistList) {
+                artistList.sortBy { it.getArtist() }
+                artistAdapter = ArtistListAdapter(artistList) {
+
+                    filter_header_artist.text = getString(R.string.filter_artist_selected, it)
 
                     viewModel.getNationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
                     viewModel.getInternationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
@@ -121,7 +140,7 @@ class FilterArtistFragment : Fragment() {
                 filter_concert_artist_list.addItemDecoration(dividerItemDecoration)
 
                 filter_header_artist.setOnClickListener {
-                    filter_header_artist.text = getString(R.string.filter_month_select)
+                    //filter_header_artist.text = getString(R.string.filter_artist_select)
                     hideConcerti()
                 }
 
@@ -132,11 +151,15 @@ class FilterArtistFragment : Fragment() {
 
     private fun showConcerti() {
         filter_artist_list.visibility = View.GONE
+        search_bar.visibility = View.GONE
+        filter_header_artist.visibility = View.VISIBLE
         filter_concert_artist_list.visibility = View.VISIBLE
     }
 
     private fun hideConcerti() {
         filter_artist_list.visibility = View.VISIBLE
+        search_bar.visibility = View.VISIBLE
+        filter_header_artist.visibility = View.GONE
         filter_concert_artist_list.visibility = View.GONE
     }
 

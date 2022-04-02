@@ -16,6 +16,7 @@ import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.FilterConcertiAdapter
+import it.antonino.palco.adapter.MonthListAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.Months
@@ -30,7 +31,7 @@ class FilterMonthFragment : Fragment() {
 
     private val viewModel: FilterViewModel by viewModel()
     private var monthList = ArrayList<String>()
-    private var monthAdapter : CityListAdapter? = null
+    private var monthAdapter : MonthListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
@@ -53,7 +54,7 @@ class FilterMonthFragment : Fragment() {
         }
 
 
-        monthAdapter = CityListAdapter(monthList) {
+        monthAdapter = MonthListAdapter(monthList) {
 
             val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             layoutParams.weight = 0.1F

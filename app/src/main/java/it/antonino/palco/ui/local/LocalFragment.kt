@@ -45,7 +45,7 @@ class LocalFragment : Fragment() {
     private var concertilayoutManager: LinearLayoutManager? = null
 
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
-    var cityList = ArrayList<String>()
+    private var cityList = ArrayList<City>()
     private var position : Int? = null
     private var dotsLocalItemDecoration: DotsLocalItemDecoration? = null
     private var lastPosition = 0
@@ -146,7 +146,7 @@ class LocalFragment : Fragment() {
         when (!it.isNullOrEmpty()) {
             true -> {
                 for (city in it) {
-                    cityList.add(city?.getCity()!!)
+                    cityList.add(city!!)
                 }
                 cityAdapter = CityListAdapter(cityList) {
                     (activity as MainActivity).showProgress()

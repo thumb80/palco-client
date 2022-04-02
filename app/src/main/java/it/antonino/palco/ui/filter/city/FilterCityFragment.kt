@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,13 +20,15 @@ import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.filter.FilterViewModel
 import it.antonino.palco.util.PalcoUtils
+import kotlinx.android.synthetic.main.filter_artist_fragment.*
 import kotlinx.android.synthetic.main.filter_city_fragment.*
+import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
 
     private val viewModel: FilterViewModel by viewModel()
-    private var cityList = ArrayList<String>()
+    private var cityList = ArrayList<City>()
     private var cityAdapter: CityListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
@@ -47,6 +50,21 @@ class FilterCityFragment : Fragment() {
         viewModel.getNationalCities().observe(viewLifecycleOwner, cityObserver)
         viewModel.getInternationalCities().observe(viewLifecycleOwner, cityObserver)
 
+        hideConcerti()
+
+        search_bar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                cityAdapter?.filter?.filter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                cityAdapter?.filter?.filter(newText)
+                return true
+            }
+
+        })
+
     }
 
     private val cityObserver = Observer<ArrayList<City?>?> {
@@ -54,11 +72,13 @@ class FilterCityFragment : Fragment() {
         when (!it.isNullOrEmpty()) {
             true -> {
                 for (city in it) {
-                    if (!cityList.contains(city?.getCity()))
-                        city?.getCity()?.let { it_city -> cityList.add(it_city) }
+                    if (!cityList.contains(city))
+                        city?.let { it_city -> cityList.add(it_city) }
                 }
-                cityList.sortBy { it }
+                cityList.sortBy { it.getCity() }
                 cityAdapter = CityListAdapter(cityList) {
+
+                    filter_header_city.text = getString(R.string.filter_city_selected, it)
 
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
                     viewModel.getInternationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
@@ -121,7 +141,7 @@ class FilterCityFragment : Fragment() {
                 filter_concert_city_list.addItemDecoration(dividerItemDecoration)
 
                 filter_header_city.setOnClickListener {
-                    filter_header_city.text = getString(R.string.filter_month_select)
+                    //filter_header_city.text = getString(R.string.filter_month_select)
                     hideConcerti()
                 }
 
@@ -132,11 +152,15 @@ class FilterCityFragment : Fragment() {
 
     private fun showConcerti() {
         filter_city_list.visibility = View.GONE
+        search_bar.visibility = View.GONE
+        filter_header_city.visibility = View.VISIBLE
         filter_concert_city_list.visibility = View.VISIBLE
     }
 
     private fun hideConcerti() {
         filter_city_list.visibility = View.VISIBLE
+        search_bar.visibility = View.VISIBLE
+        filter_header_city.visibility = View.GONE
         filter_concert_city_list.visibility = View.GONE
     }
 
