@@ -41,36 +41,42 @@ class DotsItemDecoration(
         val adapter = parent.adapter ?: return
         val itemCount = adapter.itemCount
 
-        if (itemCount == 2) {
-            return
-        }
-
         // center horizontally, calculate width and subtract half from center
         val totalLength = (radius * 2 * itemCount).toFloat()
         val paddingBetweenItems = (Math.max(0, itemCount - 2) * indicatorItemPadding).toFloat()
         val indicatorTotalWidth = totalLength + paddingBetweenItems
         val indicatorStartX = (parent.width - indicatorTotalWidth) / 2f
-
         // center vertically in the allotted space
         val indicatorPosY = parent.y + indicatorItemPadding.toFloat()
-        drawInactiveDots(c, indicatorStartX, indicatorPosY, itemCount - 1)
 
-        activePosition =
-            if ((parent.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition() < 0)
-                (parent.layoutManager as LinearLayoutManager?)!!.findLastVisibleItemPosition()
-            else
-                (parent.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
-
-        if (activePosition == RecyclerView.NO_POSITION) {
+        if (itemCount == 2) {
             return
         }
+        else if (itemCount > 24) {
+            val indicatorStart = parent.width / 2f
+            drawActive(c, indicatorStart, indicatorPosY, itemCount)
+        }
 
-        // find offset of active page if the user is scrolling
-        val activeChild = parent.layoutManager!!.findViewByPosition(activePosition) ?: return
-        if (activePosition == 0)
-            drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
-        else
-            drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition - 1)
+        else {
+            drawInactiveDots(c, indicatorStartX, indicatorPosY, itemCount - 1)
+
+            activePosition =
+                if ((parent.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition() < 0)
+                    (parent.layoutManager as LinearLayoutManager?)!!.findLastVisibleItemPosition()
+                else
+                    (parent.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
+
+            if (activePosition == RecyclerView.NO_POSITION) {
+                return
+            }
+
+            // find offset of active page if the user is scrolling
+            val activeChild = parent.layoutManager!!.findViewByPosition(activePosition) ?: return
+            if (activePosition == 0)
+                drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
+            else
+                drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition - 1)
+        }
     }
 
     private fun drawInactiveDots(
@@ -89,13 +95,29 @@ class DotsItemDecoration(
     }
 
     private fun drawActiveDot(
-        c: Canvas, indicatorStartX: Float, indicatorPosY: Float,
+        c: Canvas,
+        indicatorStartX: Float,
+        indicatorPosY: Float,
         highlightPosition: Int
     ) {
         // width of item indicator including padding
         val itemWidth = (radius * 2 + indicatorItemPadding).toFloat()
         val highlightStart = indicatorStartX + radius + itemWidth * highlightPosition
         c.drawCircle(highlightStart, indicatorPosY, radius.toFloat(), activePaint)
+    }
+
+    private fun drawActive(
+        c: Canvas,
+        indicatorStartX: Float,
+        indicatorPosY: Float,
+        itemCount: Int
+    ) {
+        val paint = Paint()
+        paint.color = activePaint.color
+        paint.style = Paint.Style.FILL
+        paint.textSize = indicatorHeight.toFloat()
+        paint.textAlign = Paint.Align.CENTER
+        c.drawText("Ci sono $itemCount concerti", indicatorStartX, indicatorPosY, paint)
     }
 
     override fun getItemOffsets(
