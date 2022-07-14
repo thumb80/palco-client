@@ -18,16 +18,14 @@ import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.ui.filter.FilterViewModel
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_artist_fragment.*
 import kotlinx.android.synthetic.main.filter_city_fragment.*
-import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
 
-    private val viewModel: FilterViewModel by viewModel()
+    private val viewModel: SharedViewModel by viewModel()
     private var cityList = ArrayList<City>()
     private var cityAdapter: CityListAdapter? = null
     private var adapter: CustomFilterAdapter? = null

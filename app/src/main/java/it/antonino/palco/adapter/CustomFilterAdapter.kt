@@ -16,15 +16,11 @@ import com.google.gson.JsonPrimitive
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
-import it.antonino.palco.ui.national.NationalViewModel
-import kotlinx.android.synthetic.main.concerto_filter_view.view.artist
-import kotlinx.android.synthetic.main.concerto_filter_view.view.artist_image
-import kotlinx.android.synthetic.main.concerto_filter_view.view.city
-import kotlinx.android.synthetic.main.concerto_filter_view.view.place
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.concerto_filter_view.view.*
 import org.koin.java.KoinJavaComponent
 
-private val viewModel: NationalViewModel by KoinJavaComponent.inject(NationalViewModel::class.java)
+private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
 private var artistThumb: String? = null
 private var selectedItems = emptyArray<Int?>()

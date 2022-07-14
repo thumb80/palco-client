@@ -20,12 +20,11 @@ import it.antonino.palco.R
 import it.antonino.palco.ext.dpToPixels
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
-import it.antonino.palco.ui.national.NationalViewModel
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.concerto_card_view.view.*
 import org.koin.java.KoinJavaComponent.inject
-import java.net.URLEncoder
 
-private val viewModel: NationalViewModel by inject(NationalViewModel::class.java)
+private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
 private var artistThumb: String? = null
 private var selectedItems = emptyArray<Int?>()

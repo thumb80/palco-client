@@ -30,6 +30,7 @@ import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_national.*
 import org.threeten.bp.DateTimeUtils
@@ -40,7 +41,7 @@ import kotlin.collections.ArrayList
 
 class EuropeFragment: Fragment() {
 
-    private val viewModel: EuropeViewModel by viewModel()
+    private val viewModel: SharedViewModel by viewModel()
 
     private var adapter: CustomAdapter? = null
 
@@ -184,7 +185,11 @@ class EuropeFragment: Fragment() {
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!PalcoUtils().checkObject(concerto)) {
+            if (!PalcoUtils().checkObject(concerto)  &&
+                concerto.asJsonObject?.get("artist")?.asString?.isEmpty() != null &&
+                concerto.asJsonObject?.get("place")?.asString?.isEmpty() != null &&
+                concerto.asJsonObject?.get("city")?.asString?.isEmpty() != null &&
+                concerto.asJsonObject?.get("time")?.asString?.isEmpty() != null) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)

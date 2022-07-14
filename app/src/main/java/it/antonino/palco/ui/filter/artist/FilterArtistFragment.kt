@@ -14,19 +14,18 @@ import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
-import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Artist
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.ui.filter.FilterViewModel
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_artist_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterArtistFragment : Fragment() {
 
-    private val viewModel: FilterViewModel by viewModel()
+    private val viewModel: SharedViewModel by viewModel()
     private var artistList = ArrayList<Artist>()
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterAdapter? = null

@@ -29,6 +29,7 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_local.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,7 +39,7 @@ import kotlin.collections.ArrayList
 
 class LocalFragment : Fragment() {
 
-    private val viewModel: LocalViewModel by viewModel()
+    private val viewModel: SharedViewModel by viewModel()
     private var sharedPreferences: SharedPreferences? = null
     private var adapter: CustomAdapter? = null
     private var cityAdapter: CityListAdapter? = null

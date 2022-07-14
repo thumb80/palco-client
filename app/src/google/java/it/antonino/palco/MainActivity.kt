@@ -77,12 +77,12 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun showProgress() {
-        runOnUiThread { progressBarHolder!!.show() }
+        progressBarHolder!!.show()
 
     }
 
     fun hideProgress() {
-        runOnUiThread { progressBarHolder!!.hide() }
+        progressBarHolder!!.hide()
     }
 
     private val uploadObserver = Observer<String?> {

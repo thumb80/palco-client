@@ -36,10 +36,10 @@ class PalcoUtils {
     }
 
     fun checkObject(concerto: JsonElement): Boolean {
-        return concerto.asJsonObject.get("artist").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("place").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("city").asString.isNullOrEmpty()
-                || concerto.asJsonObject.get("time").asString.isNullOrEmpty()
+        return concerto.asJsonObject?.get("artist")?.asString?.isEmpty() == true
+                || concerto.asJsonObject?.get("place")?.asString?.isEmpty() == true
+                || concerto.asJsonObject?.get("city")?.asString?.isEmpty() == true
+                || concerto.asJsonObject?.get("time")?.asString?.isEmpty() == true
     }
 
 }

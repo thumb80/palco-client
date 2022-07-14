@@ -1,10 +1,10 @@
 package it.antonino.palco.common
 
 import android.content.Context
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
-import okhttp3.CertificatePinner
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
+import okhttp3.*
+import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.lang.AssertionError
@@ -113,9 +113,24 @@ class CustomTrust(context: Context) {
             throw RuntimeException(e)
         }
         client = OkHttpClient.Builder()
+            /*.cache(
+                Cache(
+                File(PalcoApplication.instance.cacheDir, "http_cache"),
+                // $0.05 worth of phone storage in 2020
+                50L * 1024L * 1024L // 50 MiB
+                )
+            )*/
+            .addInterceptor { chain ->
+                val request = chain.request()
+                    .newBuilder()
+                    .header("Connection", "close")
+                    .build()
+                chain.proceed(request)
+            }
             .sslSocketFactory(sslSocketFactory, trustManager)
             .connectTimeout(45, TimeUnit.SECONDS)
             .readTimeout(45, TimeUnit.SECONDS)
+            .writeTimeout(45, TimeUnit.SECONDS)
             .protocols(Arrays.asList(Protocol.HTTP_1_1))
             .build()
     }

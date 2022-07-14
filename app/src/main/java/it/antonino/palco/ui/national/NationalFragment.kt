@@ -3,7 +3,6 @@ package it.antonino.palco.ui.national
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +10,15 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
@@ -31,10 +27,9 @@ import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.ext.CustomDialog
-import it.antonino.palco.ext.dpToPixels
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.model.Password
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_national.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,13 +37,12 @@ import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class NationalFragment: Fragment() {
 
     private val TAG = NationalFragment::class.simpleName
-    private val viewModel: NationalViewModel by viewModel()
+    private val viewModel: SharedViewModel by viewModel()
     private var adapter: CustomAdapter? = null
 
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
@@ -191,7 +185,11 @@ class NationalFragment: Fragment() {
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!PalcoUtils().checkObject(concerto)) {
+            if (!PalcoUtils().checkObject(concerto) &&
+                concerto.asJsonObject?.get("artist")?.asString?.isEmpty() != null &&
+                concerto.asJsonObject?.get("place")?.asString?.isEmpty() != null &&
+                concerto.asJsonObject?.get("city")?.asString?.isEmpty() != null &&
+                concerto.asJsonObject?.get("time")?.asString?.isEmpty() != null) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)

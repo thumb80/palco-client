@@ -8,11 +8,8 @@ import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.repository.GoogleRepository
-import it.antonino.palco.ui.europe.EuropeViewModel
-import it.antonino.palco.ui.filter.FilterViewModel
 import it.antonino.palco.ui.login.LoginViewModel
-import it.antonino.palco.ui.local.LocalViewModel
-import it.antonino.palco.ui.national.NationalViewModel
+import it.antonino.palco.ui.viewmodel.SharedViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -47,6 +44,7 @@ val appModule = module {
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
                 .build())
             .baseUrl(BuildConfig.BASE_URL)
             .build()
@@ -68,10 +66,7 @@ val appModule = module {
     // ViewModel Dependencies
     viewModel { LoginViewModel(get()) }
     viewModel { MainViewModel(get()) }
-    viewModel { NationalViewModel(get()) }
-    viewModel { LocalViewModel(get()) }
-    viewModel { EuropeViewModel(get()) }
-    viewModel { FilterViewModel(get()) }
+    viewModel { SharedViewModel(get()) }
 
 }
 
