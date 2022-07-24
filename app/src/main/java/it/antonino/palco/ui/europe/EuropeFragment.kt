@@ -185,11 +185,7 @@ class EuropeFragment: Fragment() {
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!PalcoUtils().checkObject(concerto)  &&
-                concerto.asJsonObject?.get("artist")?.asString?.isEmpty() != null &&
-                concerto.asJsonObject?.get("place")?.asString?.isEmpty() != null &&
-                concerto.asJsonObject?.get("city")?.asString?.isEmpty() != null &&
-                concerto.asJsonObject?.get("time")?.asString?.isEmpty() != null) {
+            if (!PalcoUtils().checkObject(concerto)) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)

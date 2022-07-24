@@ -101,33 +101,16 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     (it as JsonObject).get("type").asJsonPrimitive.equals(JsonPrimitive("artist"))
                 }?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
-                Glide.with(this)
-                    .load(artistThumb)
-                    .transform(RoundedCorners(6))
-                    .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
-                            return false
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    })
-                    .into(artist_image)
+                if (artistThumb?.contains(".gif") == true){
+                    artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+                }else{
+                    Glide
+                        .with(this)
+                        .load(artistThumb)
+                        .transform(RoundedCorners(6))
+                        .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+                        .into(artist_image)
+                }
             }
             else
                 artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
