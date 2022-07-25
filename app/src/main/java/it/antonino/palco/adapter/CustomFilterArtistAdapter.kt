@@ -17,26 +17,22 @@ import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.concerto_card_view.view.*
 import kotlinx.android.synthetic.main.concerto_filter_view.view.*
-import kotlinx.android.synthetic.main.concerto_filter_view.view.artist
-import kotlinx.android.synthetic.main.concerto_filter_view.view.artist_image
-import kotlinx.android.synthetic.main.concerto_filter_view.view.city
-import kotlinx.android.synthetic.main.concerto_filter_view.view.place
 import org.koin.java.KoinJavaComponent
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
-private var artistThumb: String? = null
+private var placeThumb: String? = null
 private var selectedItems = emptyArray<Int?>()
 private var artistArray = arrayListOf<String>()
 
-class CustomFilterAdapter(
+class CustomFilterArtistAdapter(
     val artist: ArrayList<String>?,
     val place: ArrayList<String>?,
     val city: ArrayList<String>?,
     val times: ArrayList<String>? ,
-    val  listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<FilterViewHolder>() {
+    val  listener: (ConcertRow) -> Unit
+) : RecyclerView.Adapter<FilterArtistViewHolder>() {
 
     init {
         artistArray = artist!!
@@ -49,27 +45,24 @@ class CustomFilterAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {
-        return FilterViewHolder(parent.inflate(R.layout.concerto_filter_view))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterArtistViewHolder {
+        return FilterArtistViewHolder(parent.inflate(R.layout.concerto_filter_view))
     }
 
-    override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FilterArtistViewHolder, position: Int) {
         holder.bind(ConcertRow(
             artist?.get(position),
             place?.get(position),
             city?.get(position),
             times?.get(position),
-            artistThumb)
+            placeThumb)
             ,listener)
     }
 
     override fun getItemCount(): Int = artist?.size!!
-
-
 }
 
-
-class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class FilterArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: ConcertRow, listener: (ConcertRow) -> Unit) = with(itemView) {
 
@@ -78,22 +71,15 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         city.text = item.city
         time.text = item.time
 
-        viewModel.getArtistThumb(item.artist).observeForever {
-            if (it?.isJsonNull == false)  {
-                artistThumb = it.get("results")?.asJsonArray?.filter {
-                    (it as JsonObject).get("type").asJsonPrimitive.equals(JsonPrimitive("artist"))
-                }?.get(0)?.asJsonObject?.get("cover_image")?.asString
-                item.addArtistThumb(artistThumb)
-                if (artistThumb?.contains(".gif") == true){
-                    artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
-                }else{
-                    Glide
-                        .with(this)
-                        .load(artistThumb)
-                        .transform(RoundedCorners(6))
-                        .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
-                        .into(artist_image)
-                }
+        viewModel.getPlacePhoto(item.place!!).observeForever {
+            if (it?.isJsonNull == false) {
+                placeThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("urls")?.asJsonObject?.get("thumb")?.asString
+                item.addArtistThumb(placeThumb)
+                Glide.with(this)
+                    .load(placeThumb)
+                    .transform(RoundedCorners(6))
+                    .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+                    .into(artist_image)
             }
             else
                 artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))

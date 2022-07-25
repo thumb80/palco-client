@@ -7,6 +7,7 @@ import it.antonino.palco.common.CustomTrust
 import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkAPI
 import it.antonino.palco.network.NetworkRepository
+import it.antonino.palco.network.UnsplashAPI
 import it.antonino.palco.repository.GoogleRepository
 import it.antonino.palco.ui.login.LoginViewModel
 import it.antonino.palco.ui.viewmodel.SharedViewModel
@@ -16,6 +17,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -26,7 +28,7 @@ val appModule = module {
 
     // Network Dependencies
     single {
-        NetworkRepository.getInstance(get(),get())
+        NetworkRepository.getInstance(get(),get(),get())
     }
     single {
         GoogleRepository.getInstance(get())
@@ -61,6 +63,10 @@ val appModule = module {
     single {
         get<Retrofit>()
             .create(NetworkInterface::class.java)
+    }
+    single {
+        get<Retrofit>()
+            .create(UnsplashAPI::class.java)
     }
 
     // ViewModel Dependencies

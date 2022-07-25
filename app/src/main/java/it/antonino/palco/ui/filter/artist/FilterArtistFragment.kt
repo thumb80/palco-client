@@ -14,7 +14,7 @@ import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
-import it.antonino.palco.adapter.CustomFilterAdapter
+import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Artist
 import it.antonino.palco.model.Concerto
@@ -28,7 +28,7 @@ class FilterArtistFragment : Fragment() {
     private val viewModel: SharedViewModel by viewModel()
     private var artistList = ArrayList<Artist>()
     private var artistAdapter: ArtistListAdapter? = null
-    private var adapter: CustomFilterAdapter? = null
+    private var adapter: CustomFilterArtistAdapter? = null
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
     var times = ArrayList<String>()
@@ -109,7 +109,7 @@ class FilterArtistFragment : Fragment() {
                     }
                 }
 
-                adapter = CustomFilterAdapter(
+                adapter = CustomFilterArtistAdapter(
                     artisti,
                     places,
                     cities,

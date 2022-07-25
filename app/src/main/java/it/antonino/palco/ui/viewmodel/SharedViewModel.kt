@@ -31,6 +31,14 @@ class SharedViewModel(
         return responseObject
     }
 
+    fun getPlacePhoto(place: String) : LiveData<JsonObject?> {
+        var responseObject = MutableLiveData<JsonObject?>()
+        viewModelScope.launch {
+            responseObject = networkRepository.getPlacePhoto(place)
+        }
+        return responseObject
+    }
+
     fun getArtistThumb(artist: String?) : LiveData<JsonObject?> {
         var responseObject = MutableLiveData<JsonObject?>()
         viewModelScope.launch {

@@ -3,18 +3,23 @@ package it.antonino.palco.network
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
-import it.antonino.palco.common.SingletonHolderTwoInput
-import it.antonino.palco.model.*
+import it.antonino.palco.BuildConfig
+import it.antonino.palco.common.SinglettonHolderThreeInput
+import it.antonino.palco.model.Artist
+import it.antonino.palco.model.City
+import it.antonino.palco.model.Concerto
+import it.antonino.palco.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class NetworkRepository(
     private val networkAPI: NetworkAPI,
-    private val discogsAPI: DiscogsAPI
+    private val discogsAPI: DiscogsAPI,
+    private val unsplashAPI: UnsplashAPI
 ) {
 
-    companion object : SingletonHolderTwoInput<NetworkRepository, NetworkAPI, DiscogsAPI>(::NetworkRepository)
+    companion object : SinglettonHolderThreeInput<NetworkRepository, NetworkAPI, DiscogsAPI, UnsplashAPI>(::NetworkRepository)
 
     val TAG = NetworkRepository::class.java.simpleName
 
@@ -507,6 +512,28 @@ class NetworkRepository(
                     Log.d(TAG, "SUCCESS")
                     Log.d(TAG, "${response}")
                     responseObject.postValue(response.body())
+                }
+
+            }
+        )
+        Log.d(TAG, "$response")
+        return responseObject
+    }
+
+    fun getPlacePhoto(place: String) : MutableLiveData<JsonObject?> {
+        var responseObject = MutableLiveData<JsonObject?>()
+        val response = unsplashAPI.getPhoto("Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}", place).enqueue(
+            object : Callback<JsonObject?> {
+                override fun onResponse(call: Call<JsonObject?>, response: Response<JsonObject?>) {
+                    Log.d(TAG, "SUCCESS")
+                    Log.d(TAG, "${response}")
+                    responseObject.postValue(response.body())
+                }
+
+                override fun onFailure(call: Call<JsonObject?>, t: Throwable) {
+                    Log.d(TAG, "FAILURE")
+                    Log.d(TAG, "${t.toString()}")
+                    responseObject.postValue(null)
                 }
 
             }

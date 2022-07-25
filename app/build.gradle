@@ -12,13 +12,13 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "it.antonino.palco"
-        minSdkVersion 19
-        targetSdkVersion 30
+        minSdkVersion 21
+        targetSdkVersion 32
         versionCode 1
         versionName "2.1"
         multiDexEnabled true
@@ -86,6 +86,8 @@ android {
         it.buildConfigField('String', 'BASE_URL', properties.get("baseUrl"))
         it.buildConfigField('String', 'DISCOGS_API_KEY', properties.get("dicogsApiKey"))
         it.buildConfigField('String', 'DISCOGS_SECRET', properties.get("discogsSecret"))
+        it.buildConfigField('String', 'UNSPLASH_ACCESS_KEY', properties.get("unsplashAccessKey"))
+        it.buildConfigField('String', 'UNSPLASH_SECRET_KEY', properties.get("unsplashSecretKey"))
     }
 
     buildTypes {
@@ -123,6 +125,8 @@ dependencies {
     implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'com.github.tarek360.RichPath:animator:0.1.1'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.unsplash:unsplash-photopicker-android:1.0.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
     googleImplementation 'com.google.android.gms:play-services-maps:17.0.1'
     googleImplementation platform('com.google.firebase:firebase-bom:26.8.0')
     googleImplementation 'com.google.firebase:firebase-analytics'
