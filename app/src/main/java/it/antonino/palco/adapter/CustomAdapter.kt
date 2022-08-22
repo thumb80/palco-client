@@ -97,9 +97,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false)  {
-                artistThumb = it.get("results")?.asJsonArray?.filter {
-                    (it as JsonObject).get("type").asJsonPrimitive.equals(JsonPrimitive("artist"))
-                }?.get(0)?.asJsonObject?.get("cover_image")?.asString
+                artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
                     artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
