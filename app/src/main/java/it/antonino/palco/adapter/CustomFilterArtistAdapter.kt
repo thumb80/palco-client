@@ -1,18 +1,11 @@
 package it.antonino.palco.adapter
 
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
