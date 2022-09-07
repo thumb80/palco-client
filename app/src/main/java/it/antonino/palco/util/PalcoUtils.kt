@@ -9,17 +9,6 @@ import java.util.*
 
 class PalcoUtils {
 
-    private fun getDate(time: String): Date? {
-        val insdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ITALY)
-        val time = time.plus("T23:59:59")
-        return insdf.parse(time)
-    }
-
-    private fun getOnlyDate(time: String): Date? {
-        val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-        return insdf.parse(time)
-    }
-
     fun getDateTime(time: String): Date? {
         val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
         val calendar = Calendar.getInstance()
