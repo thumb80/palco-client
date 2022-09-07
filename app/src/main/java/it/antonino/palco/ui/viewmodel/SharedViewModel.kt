@@ -12,9 +12,6 @@ class SharedViewModel(
     private val networkRepository: NetworkRepository
 ): ViewModel() {
 
-    val _city: MediatorLiveData<String> = MediatorLiveData()
-    val city: LiveData<String> = _city
-
     fun getConcertiNazionali(): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
