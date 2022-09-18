@@ -36,7 +36,7 @@ class CustomFilterAdapter(
     val place: ArrayList<String>?,
     val city: ArrayList<String>?,
     val times: ArrayList<String>? ,
-    val  listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<FilterViewHolder>() {
+    val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<FilterViewHolder>() {
 
     init {
         artistArray = artist!!
@@ -79,7 +79,7 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         time.text = item.time
 
         viewModel.getArtistThumb(item.artist).observeForever {
-            if (it?.isJsonNull == false)  {
+            if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                 artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
@@ -93,8 +93,17 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         .into(artist_image)
                 }
             }
-            else
-                artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+            else {
+                artistThumb = null
+                item.addArtistThumb(artistThumb)
+                artist_image.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.placeholder_scheda,
+                        null
+                    )
+                )
+            }
         }
 
 

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.app.SearchManager
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -56,35 +57,57 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
 
         dialogView.share_button.setOnClickListener {
 
-            Glide.with(requireContext()).asBitmap().load(concertRow.artistThumb)
-                .into(object: CustomTarget<Bitmap>() {
+            if (concertRow.artistThumb != null)
+                Glide.with(requireContext()).asBitmap().load(concertRow.artistThumb)
+                    .into(object: CustomTarget<Bitmap>() {
 
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        // do your stuff, you can load placeholder image here
-                    }
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                            // do your stuff, you can load placeholder image here
+                        }
 
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
 
 
-                        val cachePath = File(requireContext().cacheDir, "images")
-                        cachePath.mkdirs() // don't forget to make the directory
-                        val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
-                        resource.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        stream.close()
+                            val cachePath = File(requireContext().cacheDir, "images")
+                            cachePath.mkdirs() // don't forget to make the directory
+                            val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
+                            resource.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                            stream.close()
 
-                        val imagePath = File(requireContext().cacheDir, "images")
-                        val newFile = File(imagePath, "image.png")
-                        val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
+                            val imagePath = File(requireContext().cacheDir, "images")
+                            val newFile = File(imagePath, "image.png")
+                            val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
 
-                        val intent = Intent(Intent.ACTION_SEND)
-                        intent.type = "image/*"
-                        intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
-                        intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} \n clicca sul link per maggiori dettagli https://palco.mywire.org")
-                        intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                        context?.startActivity(Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto"))
-                        dismiss()
-                    }
-                })
+                            val intent = Intent(Intent.ACTION_SEND)
+                            intent.type = "image/*"
+                            intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
+                            intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} il ${concertRow.time} \n clicca sul link per maggiori dettagli https://palco.mywire.org")
+                            intent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                            context?.startActivity(Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto"))
+                            dismiss()
+                        }
+                    })
+            else {
+                val cachePath = File(requireContext().cacheDir, "images")
+                cachePath.mkdirs() // don't forget to make the directory
+                val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
+                BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, 100, stream)
+                stream.close()
+
+                val imagePath = File(requireContext().cacheDir, "images")
+                val newFile = File(imagePath, "image.png")
+                val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
+                intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} il ${concertRow.time} \n clicca sul link per maggiori dettagli https://palco.mywire.org")
+                intent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                context?.startActivity(Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto"))
+                dismiss()
+            }
+
+
         }
 
         builder.setView(dialogView)

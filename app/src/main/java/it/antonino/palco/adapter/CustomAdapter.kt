@@ -96,7 +96,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         city.text = item.city
 
         viewModel.getArtistThumb(item.artist).observeForever {
-            if (it?.isJsonNull == false)  {
+            if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                 artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
@@ -110,8 +110,17 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         .into(artist_image)
                 }
             }
-            else
-                artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+            else {
+                artistThumb = null
+                item.addArtistThumb(artistThumb)
+                artist_image.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.placeholder_scheda,
+                        null
+                    )
+                )
+            }
         }
 
 

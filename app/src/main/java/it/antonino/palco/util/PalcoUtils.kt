@@ -21,14 +21,21 @@ class PalcoUtils {
         return concerto?.getArtist().isNullOrEmpty()
                 || concerto?.getCity().isNullOrEmpty()
                 || concerto?.getPlace().isNullOrEmpty()
-                || concerto?.getTime().isNullOrEmpty()
+                || concerto?.getTime().isNullOrEmpty() || comareDate(concerto?.getTime() ?: "")
     }
 
     fun checkObject(concerto: JsonElement): Boolean {
-        return concerto.asJsonObject?.get("artist")?.asString?.isEmpty() == true
+        return (concerto.asJsonObject?.get("artist")?.asString?.isEmpty() == true
                 || concerto.asJsonObject?.get("place")?.asString?.isEmpty() == true
                 || concerto.asJsonObject?.get("city")?.asString?.isEmpty() == true
-                || concerto.asJsonObject?.get("time")?.asString?.isEmpty() == true
+                || concerto.asJsonObject?.get("time")?.asString?.isEmpty() == true) || comareDate(concerto.asJsonObject?.get("time")?.asString ?: "")
+    }
+
+    fun comareDate(date: String): Boolean {
+        val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+        val calendar = Calendar.getInstance()
+        calendar.time = insdf.parse(date)
+        return calendar.time.before(DateTimeUtils.toDate(Instant.now().minusMillis(86400000)))
     }
 
 }

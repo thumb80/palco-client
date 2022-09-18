@@ -150,14 +150,14 @@ class NationalFragment: Fragment() {
                 (activity as MainActivity).hideProgress()
                 calendar_view.removeAllEvents()
                 for (concerto in it) {
-                    val event = Event(
-                        Color.rgb(241, 90, 36),
-                        concerto?.let {
-                            it.getTime().getDate()
-                        }!! + 86400000,
-                        concerto
-                    )
-                    calendar_view.addEvent(event)
+                    if (concerto?.getTime()?.let { time -> PalcoUtils().comareDate(time) } == false) {
+                        val event = Event(
+                            Color.rgb(241, 90, 36),
+                            concerto.getTime().getDate() + 86400000,
+                            concerto
+                        )
+                        calendar_view.addEvent(event)
+                    }
                 }
                 displayCurrentEvents(currentDayInstance.time)
             }
