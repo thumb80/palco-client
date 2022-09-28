@@ -150,7 +150,7 @@ class NationalFragment: Fragment() {
                 (activity as MainActivity).hideProgress()
                 calendar_view.removeAllEvents()
                 for (concerto in it) {
-                    if (concerto?.getTime()?.let { time -> PalcoUtils().comareDate(time) } == false) {
+                    if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
                         val event = Event(
                             Color.rgb(241, 90, 36),
                             concerto.getTime().getDate() + 86400000,
@@ -185,7 +185,7 @@ class NationalFragment: Fragment() {
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!PalcoUtils().checkObject(concerto)) {
+            if (!PalcoUtils.checkObject(concerto)) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)

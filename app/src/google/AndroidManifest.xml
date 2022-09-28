@@ -27,6 +27,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -36,13 +37,15 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.maps.MapsActivity"
+        <activity
+            android:name=".ui.maps.MapsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

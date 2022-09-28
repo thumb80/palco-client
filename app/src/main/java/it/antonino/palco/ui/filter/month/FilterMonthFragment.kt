@@ -90,7 +90,7 @@ class FilterMonthFragment : Fragment() {
                 showConcerti()
 
                 for (concerto in it) {
-                    if (!PalcoUtils().checkObject(concerto)) {
+                    if (!PalcoUtils.checkObject(concerto)) {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())

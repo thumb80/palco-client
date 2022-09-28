@@ -181,16 +181,14 @@ class EuropeFragment: Fragment() {
         val artisti: ArrayList<String> = ArrayList(events.size)
         val places: ArrayList<String> = ArrayList(events.size)
         val cities: ArrayList<String> = ArrayList(events.size)
-        //val bills: ArrayList<String?> = ArrayList(events.size)
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!PalcoUtils().checkObject(concerto)) {
+            if (!PalcoUtils.checkObject(concerto)) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)
                 times.add(concerto.asJsonObject.get("time").asString)
-                //bills.add(concerto.asJsonObject.get("bill").asString)
             }
         }
 
@@ -198,7 +196,6 @@ class EuropeFragment: Fragment() {
         places.add(0,"")
         cities.add(0,"")
         times.add(0,"")
-        //bills.add(0,"")
 
         adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
 
@@ -207,8 +204,6 @@ class EuropeFragment: Fragment() {
                 dialog.show(childFragmentManager,null)
             }
             else {
-                //val dialog = CustomDialog(concertRow)
-                //dialog.show(childFragmentManager,null)
                 Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
             }
 
