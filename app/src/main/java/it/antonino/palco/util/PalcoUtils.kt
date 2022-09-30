@@ -44,12 +44,20 @@ class PalcoUtils {
             val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
             val calendar = Calendar.getInstance()
             val calendarLastDayOfMonth = Calendar.getInstance()
-
-            calendar.time = insdf.parse(date) as Date
-            calendarLastDayOfMonth.set(Calendar.DAY_OF_MONTH, 1)
-            calendarLastDayOfMonth.set(Calendar.MONTH, calendar.time.month + 2)
-            calendarLastDayOfMonth.set(Calendar.YEAR, calendar.time.year)
-            return calendar.time.equals(DateTimeUtils.toDate(Instant.ofEpochMilli(calendarLastDayOfMonth.timeInMillis)))
+            return if (date != "") {
+                calendar.time = insdf.parse(date) as Date
+                calendarLastDayOfMonth.set(Calendar.DAY_OF_MONTH, 1)
+                calendarLastDayOfMonth.set(Calendar.MONTH, calendar.time.month + 2)
+                calendarLastDayOfMonth.set(Calendar.YEAR, calendar.time.year)
+                calendar.time.equals(
+                    DateTimeUtils.toDate(
+                        Instant.ofEpochMilli(
+                            calendarLastDayOfMonth.timeInMillis
+                        )
+                    )
+                )
+            } else
+                false
         }
 
     }
