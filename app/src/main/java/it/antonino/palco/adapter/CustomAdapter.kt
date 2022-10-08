@@ -31,8 +31,12 @@ private var selectedItems = emptyArray<Int?>()
 private var artistArray = arrayListOf<String>()
 
 
-class CustomAdapter(val artist: ArrayList<String>?,val place: ArrayList<String>?, val city: ArrayList<String>?, val times: ArrayList<String>? ,/*val bill: ArrayList<String?>?,*/  val  listener: (ConcertRow) -> Unit)
-    : RecyclerView.Adapter<ViewHolder>() {
+class CustomAdapter(
+    val artist: ArrayList<String>?,
+    val place: ArrayList<String>?,
+    val city: ArrayList<String>?,
+    val times: ArrayList<String>? ,
+    val  listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     init {
         artistArray = artist!!
@@ -86,7 +90,10 @@ class CustomAdapter(val artist: ArrayList<String>?,val place: ArrayList<String>?
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: ConcertRow, listener: (ConcertRow) -> Unit) = with(itemView) {
-        val layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,ConstraintLayout.LayoutParams.MATCH_PARENT)
+        val layoutParams = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.WRAP_CONTENT,
+            ConstraintLayout.LayoutParams.MATCH_PARENT
+        )
         layoutParams.width = 260.dpToPixels()
         mainContainer.layoutParams = layoutParams
         mainContainer.visibility = View.VISIBLE
@@ -97,16 +104,27 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
-                artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
+                artistThumb = it.get("results")
+                    ?.asJsonArray
+                    ?.get(0)
+                    ?.asJsonObject
+                    ?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
-                    artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+                    artist_image.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.placeholder_scheda, null)
+                    )
                 }else{
                     Glide
                         .with(this)
                         .load(artistThumb)
                         .transform(RoundedCorners(6))
-                        .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+                        .error(ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.placeholder_scheda, null)
+                        )
                         .into(artist_image)
                 }
             }
@@ -131,8 +149,12 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun bindNullItem() = with(itemView) {
-        val layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT,ConstraintLayout.LayoutParams.MATCH_PARENT)
-        layoutParams.width = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.width/14
+        val layoutParams = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.WRAP_CONTENT,
+            ConstraintLayout.LayoutParams.MATCH_PARENT
+        )
+        layoutParams.width = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+                                                                            .defaultDisplay.width/14
         mainContainer.layoutParams = layoutParams
         mainContainer.visibility = View.INVISIBLE
     }

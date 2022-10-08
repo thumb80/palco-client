@@ -26,21 +26,24 @@ class PalcoUtils {
             return concerto?.getArtist().isNullOrEmpty()
                     || concerto?.getCity().isNullOrEmpty()
                     || concerto?.getPlace().isNullOrEmpty()
-                    || concerto?.getTime().isNullOrEmpty() || compareDate(concerto?.getTime() ?: "")
+                    || concerto?.getTime().isNullOrEmpty()
+                    || compareDate(concerto?.getTime() ?: "")
         }
 
         fun checkObject(concerto: JsonElement): Boolean {
             return (concerto.asJsonObject?.get("artist")?.asString?.isEmpty() == true
                     || concerto.asJsonObject?.get("place")?.asString?.isEmpty() == true
                     || concerto.asJsonObject?.get("city")?.asString?.isEmpty() == true
-                    || concerto.asJsonObject?.get("time")?.asString?.isEmpty() == true) || compareDate(concerto.asJsonObject?.get("time")?.asString ?: "")
+                    || concerto.asJsonObject?.get("time")?.asString?.isEmpty() == true)
+                    || compareDate(concerto.asJsonObject?.get("time")?.asString ?: "")
         }
 
         fun compareDate(date: String): Boolean {
             val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
             val calendar = Calendar.getInstance()
             calendar.time = insdf.parse(date) as Date
-            return calendar.time.before(DateTimeUtils.toDate(Instant.now().minusMillis(86400000)))
+            return calendar.time.before(DateTimeUtils.toDate(Instant.now()
+                .minusMillis(86400000)))
         }
 
         fun compareLastDayOfMonth(date: String): Boolean {
@@ -48,8 +51,11 @@ class PalcoUtils {
                 var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 var parsedDate = LocalDate.parse(date, dateTimeFormatter)
                 var lastDayOfMonthDate = LocalDate.parse(date, dateTimeFormatter)
-                lastDayOfMonthDate = lastDayOfMonthDate.withDayOfMonth(lastDayOfMonthDate.month.length(lastDayOfMonthDate.isLeapYear))
-                return Math.abs(lastDayOfMonthDate.toEpochDay() - parsedDate.toEpochDay()) == (0).toLong()
+                lastDayOfMonthDate = lastDayOfMonthDate
+                    .withDayOfMonth(lastDayOfMonthDate.month.length(lastDayOfMonthDate.isLeapYear))
+                return Math.abs(
+                    lastDayOfMonthDate.toEpochDay() - parsedDate.toEpochDay()
+                ) == (0).toLong()
             } else
                 false
         }

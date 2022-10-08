@@ -23,28 +23,6 @@ class NetworkRepository(
 
     val TAG = NetworkRepository::class.java.simpleName
 
-    fun doRegister(user: User) : MutableLiveData<Pair<Int?, String?>> {
-        var responseCode = MutableLiveData<Pair<Int?,String?>>()
-        val response = networkAPI.registration(user).enqueue(
-            object : Callback<JsonObject> {
-                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseCode.postValue(Pair(null,null))
-                }
-
-                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseCode.postValue(Pair(response.code(),response.body().toString()))
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseCode
-    }
-
     fun getConcertiNazionali() : MutableLiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         val response = networkAPI.getConcertiNazionali().enqueue(
@@ -522,7 +500,10 @@ class NetworkRepository(
 
     fun getPlacePhoto(place: String) : MutableLiveData<JsonObject?> {
         var responseObject = MutableLiveData<JsonObject?>()
-        val response = unsplashAPI.getPhoto("Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}", place).enqueue(
+        val response = unsplashAPI.getPhoto(
+            "Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}",
+            place
+        ).enqueue(
             object : Callback<JsonObject?> {
                 override fun onResponse(call: Call<JsonObject?>, response: Response<JsonObject?>) {
                     Log.d(TAG, "SUCCESS")
