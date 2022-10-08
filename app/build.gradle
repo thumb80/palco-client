@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "it.antonino.palco"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 32
         versionCode 1
         versionName "2.1"
