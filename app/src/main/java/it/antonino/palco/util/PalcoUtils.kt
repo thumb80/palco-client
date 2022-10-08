@@ -4,8 +4,11 @@ import com.google.gson.JsonElement
 import it.antonino.palco.model.Concerto
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class PalcoUtils {
 
@@ -41,21 +44,12 @@ class PalcoUtils {
         }
 
         fun compareLastDayOfMonth(date: String): Boolean {
-            val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-            val calendar = Calendar.getInstance()
-            val calendarLastDayOfMonth = Calendar.getInstance()
             return if (date != "") {
-                calendar.time = insdf.parse(date) as Date
-                calendarLastDayOfMonth.set(Calendar.DAY_OF_MONTH, 1)
-                calendarLastDayOfMonth.set(Calendar.MONTH, calendar.time.month + 2)
-                calendarLastDayOfMonth.set(Calendar.YEAR, calendar.time.year)
-                calendar.time.equals(
-                    DateTimeUtils.toDate(
-                        Instant.ofEpochMilli(
-                            calendarLastDayOfMonth.timeInMillis
-                        )
-                    )
-                )
+                var dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                var parsedDate = LocalDate.parse(date, dateTimeFormatter)
+                var lastDayOfMonthDate = LocalDate.parse(date, dateTimeFormatter)
+                lastDayOfMonthDate = lastDayOfMonthDate.withDayOfMonth(lastDayOfMonthDate.month.length(lastDayOfMonthDate.isLeapYear))
+                return Math.abs(lastDayOfMonthDate.toEpochDay() - parsedDate.toEpochDay()) == (0).toLong()
             } else
                 false
         }
