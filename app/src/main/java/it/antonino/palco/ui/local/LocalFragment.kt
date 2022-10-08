@@ -125,16 +125,12 @@ class LocalFragment : Fragment() {
                 if ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() < 0)
                     return
                 else if ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0)  {
-                    println("$TAG position 0 : ${adapter?.times?.get(1)}")
                     monthView?.text = simpleDateFormat.format(PalcoUtils.getDateTime(adapter?.times?.get(1)!!)!!)
                     calendar_view.setCurrentDate(PalcoUtils.getDateTime(adapter?.times?.get(1)!!)!!)
                 }
                 else if (PalcoUtils.compareLastDayOfMonth(adapter?.times?.get(
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                 )!!)){
-                    println("$TAG lastDayOfMonth : ${adapter?.times?.get(
-                        (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-                    )!!}")
                     monthView?.text = simpleDateFormat.format(PalcoUtils.getDateTime(adapter?.times?.get(
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     )!!)!!)
@@ -143,10 +139,6 @@ class LocalFragment : Fragment() {
                     )!!))
                 }
                 else  {
-                    println("$TAG others : ${adapter?.times?.get(
-                        (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-                    )!!}")
-                    println("$TAG others :")
                     monthView?.text = simpleDateFormat.format(PalcoUtils.getDateTime(adapter?.times?.get(
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                     )!!)!!)
