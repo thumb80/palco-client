@@ -470,8 +470,6 @@ potential-bugs:
     active: false
   UnconditionalJumpStatementInLoop:
     active: false
-  UnnecessaryNotNullCheck:
-    active: false
   UnnecessaryNotNullOperator:
     active: true
   UnnecessarySafeCall:
@@ -494,8 +492,6 @@ potential-bugs:
 
 style:
   active: true
-  AlsoCouldBeApply:
-    active: false
   CanBeNonNullable:
     active: false
   CascadingCallWrapping:
