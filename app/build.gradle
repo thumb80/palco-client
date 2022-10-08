@@ -118,7 +118,7 @@ android {
 configurations {
     detekt
 }
-// Detekt
+// Detekt Task
 def detektTask = tasks.register("detekt", JavaExec) {
     main = "io.gitlab.arturbosch.detekt.cli.Main"
     classpath = configurations.detekt
