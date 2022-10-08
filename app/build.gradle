@@ -102,6 +102,17 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        exclude("kotlin/reflect/*")
+        exclude("META-INF/*")
+        exclude("kotlin/coroutines/*")
+        exclude("kotlin/internal/*")
+        exclude("kotlin/kotlin.kotlin_builtins")
+        exclude("kotlin/ranges/*")
+        exclude("kotlin/collections/*")
+        exclude("kotlin/annotation/*")
+    }
+
 }
 
 def detektTask = tasks.register("detekt", JavaExec) {
