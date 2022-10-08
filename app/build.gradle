@@ -115,6 +115,10 @@ android {
 
 }
 
+configurations {
+    detekt
+}
+
 def detektTask = tasks.register("detekt", JavaExec) {
     main = "io.gitlab.arturbosch.detekt.cli.Main"
     classpath = configurations.detekt
