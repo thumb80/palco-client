@@ -6,15 +6,13 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.ColorInt
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import it.antonino.palco.ext.dpToPixels
 import org.jetbrains.annotations.NotNull
+import it.antonino.palco.util.Constant.defaultDisplayFactor
+import it.antonino.palco.util.Constant.maximumCardNumber
 
 class DotsItemDecoration(
     radius: Int,
@@ -52,7 +50,7 @@ class DotsItemDecoration(
         if (itemCount == 2) {
             return
         }
-        else if (itemCount > 24) {
+        else if (itemCount > maximumCardNumber) {
             val indicatorStart = parent.width / 2f
             drawActive(c, indicatorStart, indicatorPosY, itemCount)
         }
@@ -71,7 +69,7 @@ class DotsItemDecoration(
             }
 
             // find offset of active page if the user is scrolling
-            val activeChild = parent.layoutManager!!.findViewByPosition(activePosition) ?: return
+            parent.layoutManager!!.findViewByPosition(activePosition) ?: return
             if (activePosition == 0)
                 drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
             else
@@ -88,9 +86,11 @@ class DotsItemDecoration(
         // width of item indicator including padding
         val itemWidth = (radius * 2 + indicatorItemPadding).toFloat()
         var start = indicatorStartX + radius
-        for (i in 0 until itemCount) {
+        var x = 0
+        while (x < itemCount) {
             c.drawCircle(start, indicatorPosY, radius.toFloat(), inactivePaint)
             start += itemWidth
+            x++
         }
     }
 
@@ -127,21 +127,9 @@ class DotsItemDecoration(
         @NotNull state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        //val layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,RecyclerView.LayoutParams.MATCH_PARENT)
-
         if (parent.getChildAdapterPosition(view) == parent.adapter?.itemCount!! - 1)
-            outRect.right = (parent.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.width/14
-        /*if (parent.getChildAdapterPosition(view) == 0) {
-            // Invalidate decorations when this view width has changed
-            // If we have more items, use the spacing provided
-            outRect.centerX()
-            if (parent.adapter?.itemCount!! > 1) {
-                outRect.left = 24.dpToPixels()
-                outRect.right = 24.dpToPixels()
-            }
-        } else {
-            outRect.right = 24.dpToPixels()
-        }*/
+            outRect.right = (parent.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+                .defaultDisplay.width/ defaultDisplayFactor
     }
 
     init {

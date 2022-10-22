@@ -20,7 +20,10 @@ import it.antonino.palco.model.Artist
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_artist_fragment.*
+import kotlinx.android.synthetic.main.filter_artist_fragment.search_bar
+import kotlinx.android.synthetic.main.filter_artist_fragment.filter_header_artist
+import kotlinx.android.synthetic.main.filter_artist_fragment.filter_artist_list
+import kotlinx.android.synthetic.main.filter_artist_fragment.filter_concert_artist_list
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterArtistFragment : Fragment() {
@@ -120,8 +123,6 @@ class FilterArtistFragment : Fragment() {
                         dialog.show(childFragmentManager,null)
                     }
                     else {
-                        //val dialog = CustomDialog(ConcertRow(concertRow.artist,concertRow.place,null,concertRow.bill,concertRow.artistThumb))
-                        //dialog.show(childFragmentManager,null)
                         Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -139,8 +140,7 @@ class FilterArtistFragment : Fragment() {
                 filter_concert_artist_list.addItemDecoration(dividerItemDecoration)
 
                 filter_header_artist.setOnClickListener {
-                    //filter_header_artist.text = getString(R.string.filter_artist_select)
-                    hideConcerti()
+                     hideConcerti()
                 }
 
             }

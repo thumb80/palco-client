@@ -1,7 +1,6 @@
 package it.antonino.palco.adapter
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -9,19 +8,19 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import it.antonino.palco.R
 import it.antonino.palco.ext.dpToPixels
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.concerto_card_view.view.*
+import it.antonino.palco.util.Constant.defaultDisplayFactor
+import it.antonino.palco.util.Constant.roundRadius
+import kotlinx.android.synthetic.main.concerto_card_view.view.mainContainer
+import kotlinx.android.synthetic.main.concerto_card_view.view.artist
+import kotlinx.android.synthetic.main.concerto_card_view.view.place
+import kotlinx.android.synthetic.main.concerto_card_view.view.city
+import kotlinx.android.synthetic.main.concerto_card_view.view.artist_image
 import org.koin.java.KoinJavaComponent.inject
 
 private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
@@ -120,7 +119,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     Glide
                         .with(this)
                         .load(artistThumb)
-                        .transform(RoundedCorners(6))
+                        .transform(RoundedCorners(roundRadius))
                         .error(ResourcesCompat.getDrawable(
                             resources,
                             R.drawable.placeholder_scheda, null)
@@ -154,9 +153,8 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             ConstraintLayout.LayoutParams.MATCH_PARENT
         )
         layoutParams.width = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-                                                                            .defaultDisplay.width/14
+                                                                            .defaultDisplay.width/defaultDisplayFactor
         mainContainer.layoutParams = layoutParams
         mainContainer.visibility = View.INVISIBLE
     }
-
 }

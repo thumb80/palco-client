@@ -4,20 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import it.antonino.palco.PalcoApplication
-import java.io.ByteArrayInputStream
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.SequenceInputStream
+import it.antonino.palco.util.Constant.densityPixelOffset
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.stream.Stream
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
 
 fun Int.dpToPixels(): Int {
-    return (this * PalcoApplication.instance.resources.displayMetrics.density + 0.5f).toInt()
+    return (this * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
 }
 
 fun String.getDate() : Long {

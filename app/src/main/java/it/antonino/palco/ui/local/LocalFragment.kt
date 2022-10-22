@@ -30,8 +30,25 @@ import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.util.Constant.blueColorRGB
+import it.antonino.palco.util.Constant.concertoTimeOffset
+import it.antonino.palco.util.Constant.greenColorRGB
+import it.antonino.palco.util.Constant.layoutWeight
+import it.antonino.palco.util.Constant.maxCardPosition
+import it.antonino.palco.util.Constant.minimumLayoutWeight
+import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.fragment_local.*
+import kotlinx.android.synthetic.main.fragment_local.calendar_view
+import kotlinx.android.synthetic.main.fragment_local.monthLayout
+import kotlinx.android.synthetic.main.fragment_local.monthView
+import kotlinx.android.synthetic.main.fragment_local.prevMonth
+import kotlinx.android.synthetic.main.fragment_local.nextMonth
+import kotlinx.android.synthetic.main.fragment_local.concerts_list
+import kotlinx.android.synthetic.main.fragment_local.header
+import kotlinx.android.synthetic.main.fragment_local.city_recycler
+import kotlinx.android.synthetic.main.fragment_local.nested_concerti_list
+import kotlinx.android.synthetic.main.fragment_local.arrow_container
+import kotlinx.android.synthetic.main.fragment_local.no_data
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,8 +67,6 @@ class LocalFragment : Fragment() {
     private var position : Int? = null
     private var dotsLocalItemDecoration: DotsLocalItemDecoration? = null
     private var lastPosition = 0
-
-    private var TAG = LocalFragment::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,7 +139,8 @@ class LocalFragment : Fragment() {
 
                 if ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() < 0)
                     return
-                else if ((recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0)  {
+                else if ((recyclerView.layoutManager as LinearLayoutManager)
+                        .findFirstCompletelyVisibleItemPosition() == 0)  {
                     monthView?.text = simpleDateFormat.format(PalcoUtils.getDateTime(adapter?.times?.get(1)!!)!!)
                     calendar_view.setCurrentDate(PalcoUtils.getDateTime(adapter?.times?.get(1)!!)!!)
                 }
@@ -144,8 +160,9 @@ class LocalFragment : Fragment() {
                     )!!)!!)
                     calendar_view.setCurrentDate(
                         PalcoUtils.getDateTime(adapter?.times?.get(
-                                (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-                            )!!                        )
+                                (recyclerView.layoutManager as LinearLayoutManager)
+                                    .findFirstCompletelyVisibleItemPosition()
+                            )!!)
                     )
                 }
             }
@@ -161,8 +178,11 @@ class LocalFragment : Fragment() {
                 }
                 cityAdapter = CityListAdapter(cityList) {
                     (activity as MainActivity).showProgress()
-                    val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    layoutParams.weight = 0.1F
+                    val layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    layoutParams.weight = layoutWeight
                     header.layoutParams = layoutParams
                     header.text = getString(R.string.city_selected, it)
                     viewModel.getConcertiNazionaliByCity(it).observe(viewLifecycleOwner, concertiObserver)
@@ -191,7 +211,6 @@ class LocalFragment : Fragment() {
                 var places = ArrayList<String>()
                 var times = ArrayList<String>()
                 val cities = ArrayList<String>()
-                //val bills = ArrayList<String?>()
                 for (concerto in it) {
                     if (!PalcoUtils.checkObject(concerto)) {
                         artisti.add(concerto?.getArtist()!!)
@@ -200,10 +219,10 @@ class LocalFragment : Fragment() {
                         times.add(concerto.getTime())
                         //bills.add(concerto.getBill())
                         val event = Event(
-                            Color.rgb(241, 90, 36),
+                            Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
                             concerto.let {
                                 it.getTime().getDate()
-                            } + 86400000,
+                            } + concertoTimeOffset,
                             concerto
                         )
                         calendar_view.addEvent(event)
@@ -222,8 +241,6 @@ class LocalFragment : Fragment() {
                         dialog.show(childFragmentManager,null)
                     }
                     else {
-                        //val dialog = CustomDialog(ConcertRow(concertRow.artist,concertRow.place,null,concertRow.bill,concertRow.artistThumb))
-                        //dialog.show(childFragmentManager,null)
                         Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
                     }
 
@@ -262,8 +279,11 @@ class LocalFragment : Fragment() {
         calendar_view.visibility = View.INVISIBLE
         city_recycler.visibility = View.VISIBLE
         arrow_container.visibility = View.VISIBLE
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        layoutParams.weight = 0.05F
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.weight = minimumLayoutWeight
         header.layoutParams = layoutParams
     }
 
@@ -286,7 +306,7 @@ class LocalFragment : Fragment() {
         }
         if (position == null || position == RecyclerView.NO_POSITION)
             hideConcertiList()
-        else if (position - lastPosition < 20) {
+        else if (position - lastPosition < maxCardPosition) {
             showConcertiList()
             concerts_list?.smoothScrollToPosition(position)
         }

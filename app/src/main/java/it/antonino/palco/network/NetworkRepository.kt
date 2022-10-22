@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import it.antonino.palco.BuildConfig
-import it.antonino.palco.common.SinglettonHolderThreeInput
+import it.antonino.palco.common.SingletonHolderThreeInput
 import it.antonino.palco.model.Artist
 import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,7 +18,12 @@ class NetworkRepository(
     private val unsplashAPI: UnsplashAPI
 ) {
 
-    companion object : SinglettonHolderThreeInput<NetworkRepository, NetworkAPI, DiscogsAPI, UnsplashAPI>(::NetworkRepository)
+    companion object : SingletonHolderThreeInput<
+            NetworkRepository,
+            NetworkAPI,
+            DiscogsAPI,
+            UnsplashAPI
+            >(::NetworkRepository)
 
     val TAG = NetworkRepository::class.java.simpleName
 

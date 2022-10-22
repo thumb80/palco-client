@@ -26,7 +26,7 @@ open class SingletonHolderTwoInput<out T, in A,B>(creator: (A,B) -> T) {
     }
 }
 
-open class SinglettonHolderThreeInput<out T, in A,B,C>(creator: (A,B,C) -> T) {
+open class SingletonHolderThreeInput<out T, in A,B,C>(creator: (A, B, C) -> T) {
 
     private var creator: ((A,B,C) -> T)? = creator
     @Volatile

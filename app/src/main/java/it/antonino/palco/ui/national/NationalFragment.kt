@@ -30,8 +30,17 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.util.Constant.blueColorRGB
+import it.antonino.palco.util.Constant.concertoTimeOffset
+import it.antonino.palco.util.Constant.greenColorRGB
+import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.fragment_national.*
+import kotlinx.android.synthetic.main.fragment_national.monthView
+import kotlinx.android.synthetic.main.fragment_national.calendar_view
+import kotlinx.android.synthetic.main.fragment_national.concerti_recycler
+import kotlinx.android.synthetic.main.fragment_national.nextMonth
+import kotlinx.android.synthetic.main.fragment_national.prevMonth
+import kotlinx.android.synthetic.main.fragment_national.no_data
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
@@ -41,7 +50,6 @@ import java.util.*
 
 class NationalFragment: Fragment() {
 
-    private val TAG = NationalFragment::class.simpleName
     private val viewModel: SharedViewModel by viewModel()
     private var adapter: CustomAdapter? = null
 
@@ -139,7 +147,6 @@ class NationalFragment: Fragment() {
         }
 
         (activity as MainActivity).showProgress()
-        val sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
 
     }
@@ -152,8 +159,8 @@ class NationalFragment: Fragment() {
                 for (concerto in it) {
                     if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
                         val event = Event(
-                            Color.rgb(241, 90, 36),
-                            concerto.getTime().getDate() + 86400000,
+                            Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
+                            concerto.getTime().getDate() + concertoTimeOffset,
                             concerto
                         )
                         calendar_view.addEvent(event)
@@ -190,7 +197,6 @@ class NationalFragment: Fragment() {
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)
                 times.add(concerto.asJsonObject.get("time").asString)
-                //bills.add(concerto.asJsonObject.get("bill").asString)
             }
         }
 
@@ -198,7 +204,6 @@ class NationalFragment: Fragment() {
         places.add(0,"")
         cities.add(0,"")
         times.add(0,"")
-        //bills.add(0,"")
 
         adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
 
@@ -207,8 +212,6 @@ class NationalFragment: Fragment() {
                 dialog.show(childFragmentManager,null)
             }
             else {
-                //val dialog = CustomDialog(concertRow)
-                //dialog.show(childFragmentManager,null)
                 Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
             }
 

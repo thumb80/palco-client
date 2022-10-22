@@ -7,11 +7,9 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
-import it.antonino.palco.model.Artist
 import it.antonino.palco.model.City
-import kotlinx.android.synthetic.main.city_list.view.*
+import kotlinx.android.synthetic.main.city_list.view.city
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Unit)

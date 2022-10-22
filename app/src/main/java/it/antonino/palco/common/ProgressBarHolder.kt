@@ -28,7 +28,10 @@ class ProgressBarHolder(
 
     init {
         this.imageViewLayout.addView(this.animationView)
-        this.matchParent = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        this.matchParent = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         this.matchParentOverlay = RelativeLayout.LayoutParams(matchParent)
         this.matchParentOverlay.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE)
         this.matchParentOverlay.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE)

@@ -1,26 +1,31 @@
 package it.antonino.palco.common
 
 import android.content.Context
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
-import okhttp3.*
-import java.io.File
+import it.antonino.palco.util.Constant.connectTimeout
+import it.antonino.palco.util.Constant.readTimeout
+import it.antonino.palco.util.Constant.writeTimeout
+import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import java.io.IOException
 import java.io.InputStream
-import java.lang.AssertionError
 import java.security.GeneralSecurityException
 import java.security.KeyStore
 import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
 import java.util.*
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.*
+import javax.net.ssl.X509TrustManager
+import javax.net.ssl.KeyManagerFactory
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.TrustManager
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.SSLContext
 
 
 class CustomTrust(context: Context) {
     val client: OkHttpClient
     private val context: Context
-
     /**
      * Returns an input stream containing one or more certificate PEM files. This implementation just
      * embeds the PEM files in Java strings; most applications will instead read this from a resource
@@ -53,9 +58,9 @@ class CustomTrust(context: Context) {
      * administrator.
      */
     @Throws(GeneralSecurityException::class)
-    private fun trustManagerForCertificates(`in`: InputStream): X509TrustManager {
+    private fun trustManagerForCertificates(inputStream: InputStream): X509TrustManager {
         val certificateFactory: CertificateFactory = CertificateFactory.getInstance("X.509")
-        val certificates: Collection<Certificate?> = certificateFactory.generateCertificates(`in`)
+        val certificates: Collection<Certificate?> = certificateFactory.generateCertificates(inputStream)
         if (certificates.isEmpty()) {
             throw IllegalArgumentException("expected non-empty set of trusted certificates")
         }
@@ -113,13 +118,6 @@ class CustomTrust(context: Context) {
             throw RuntimeException(e)
         }
         client = OkHttpClient.Builder()
-            /*.cache(
-                Cache(
-                File(PalcoApplication.instance.cacheDir, "http_cache"),
-                // $0.05 worth of phone storage in 2020
-                50L * 1024L * 1024L // 50 MiB
-                )
-            )*/
             .addInterceptor { chain ->
                 val request = chain.request()
                     .newBuilder()
@@ -128,9 +126,9 @@ class CustomTrust(context: Context) {
                 chain.proceed(request)
             }
             .sslSocketFactory(sslSocketFactory, trustManager)
-            .connectTimeout(45, TimeUnit.SECONDS)
-            .readTimeout(45, TimeUnit.SECONDS)
-            .writeTimeout(45, TimeUnit.SECONDS)
+            .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+            .readTimeout(readTimeout, TimeUnit.SECONDS)
+            .writeTimeout(writeTimeout, TimeUnit.SECONDS)
             .protocols(Arrays.asList(Protocol.HTTP_1_1))
             .build()
     }

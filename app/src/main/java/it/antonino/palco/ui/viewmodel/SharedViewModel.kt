@@ -1,6 +1,9 @@
 package it.antonino.palco.ui.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import it.antonino.palco.model.Artist
 import it.antonino.palco.model.City

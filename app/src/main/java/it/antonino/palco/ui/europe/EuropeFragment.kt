@@ -31,8 +31,17 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.util.Constant.blueColorRGB
+import it.antonino.palco.util.Constant.concertoTimeOffset
+import it.antonino.palco.util.Constant.greenColorRGB
+import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.fragment_national.*
+import kotlinx.android.synthetic.main.fragment_national.calendar_view
+import kotlinx.android.synthetic.main.fragment_national.no_data
+import kotlinx.android.synthetic.main.fragment_national.nextMonth
+import kotlinx.android.synthetic.main.fragment_national.monthView
+import kotlinx.android.synthetic.main.fragment_national.concerti_recycler
+import kotlinx.android.synthetic.main.fragment_national.prevMonth
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
@@ -139,7 +148,6 @@ class EuropeFragment: Fragment() {
         }
 
         (activity as MainActivity).showProgress()
-        val sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         viewModel.getConcertiInternazionali().observe(viewLifecycleOwner, concertiObserver)
 
     }
@@ -151,10 +159,10 @@ class EuropeFragment: Fragment() {
                 calendar_view.removeAllEvents()
                 for (concerto in it) {
                     val event = Event(
-                        Color.rgb(241, 90, 36),
+                        Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
                         concerto?.let {
                             it.getTime().getDate()
-                        }!! + 86400000,
+                        }!! + concertoTimeOffset,
                         concerto
                     )
                     calendar_view.addEvent(event)

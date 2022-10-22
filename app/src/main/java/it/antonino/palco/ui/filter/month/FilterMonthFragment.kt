@@ -19,8 +19,12 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.Months
 import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.util.Constant.maxMonthValue
+import it.antonino.palco.util.Constant.layoutWeight
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_month_fragment.*
+import kotlinx.android.synthetic.main.filter_month_fragment.filter_header_month
+import kotlinx.android.synthetic.main.filter_month_fragment.filter_month_list
+import kotlinx.android.synthetic.main.filter_month_fragment.filter_concert_list
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterMonthFragment : Fragment() {
@@ -52,19 +56,22 @@ class FilterMonthFragment : Fragment() {
 
         monthAdapter = MonthListAdapter(monthList) {
 
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.weight = 0.1F
+            val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            layoutParams.weight = layoutWeight
             filter_header_month.layoutParams = layoutParams
             filter_header_month.text = getString(R.string.filter_month_selected, it)
 
             viewModel.getNationalConcertsByMonth(
-                if (Months.valueOf(it).ordinal + 1 < 10)
+                if (Months.valueOf(it).ordinal + 1 < maxMonthValue)
                     "0"+(Months.valueOf(it).ordinal + 1).toString()
                 else
                     (Months.valueOf(it).ordinal + 1).toString()
             ).observe(viewLifecycleOwner, concertsObserver)
             viewModel.getInternationalConcertsByMonth(
-                if (Months.valueOf(it).ordinal + 1 < 10)
+                if (Months.valueOf(it).ordinal + 1 < maxMonthValue)
                     "0"+(Months.valueOf(it).ordinal + 1).toString()
                 else
                     (Months.valueOf(it).ordinal + 1).toString()
@@ -109,8 +116,6 @@ class FilterMonthFragment : Fragment() {
                         dialog.show(childFragmentManager,null)
                     }
                     else {
-                        //val dialog = CustomDialog(ConcertRow(concertRow.artist,concertRow.place,null,concertRow.bill,concertRow.artistThumb))
-                        //dialog.show(childFragmentManager,null)
                         Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
                     }
                 }

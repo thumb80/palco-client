@@ -1,28 +1,21 @@
 package it.antonino.palco.adapter
 
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.concerto_card_view.view.*
-import kotlinx.android.synthetic.main.concerto_filter_view.view.*
+import it.antonino.palco.util.Constant.roundRadius
 import kotlinx.android.synthetic.main.concerto_filter_view.view.artist
 import kotlinx.android.synthetic.main.concerto_filter_view.view.artist_image
-import kotlinx.android.synthetic.main.concerto_filter_view.view.city
 import kotlinx.android.synthetic.main.concerto_filter_view.view.place
+import kotlinx.android.synthetic.main.concerto_filter_view.view.time
+import kotlinx.android.synthetic.main.concerto_filter_view.view.city
 import org.koin.java.KoinJavaComponent
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
@@ -83,12 +76,15 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
-                    artist_image.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
+                    artist_image
+                        .setImageDrawable(
+                            ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null)
+                        )
                 }else{
                     Glide
                         .with(this)
                         .load(artistThumb)
-                        .transform(RoundedCorners(6))
+                        .transform(RoundedCorners(roundRadius))
                         .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
                         .into(artist_image)
                 }

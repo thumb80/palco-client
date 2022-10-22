@@ -41,7 +41,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val geodecoder = Geocoder(this, Locale.getDefault())
         try {
-            addresses = geodecoder.getFromLocationName(place?.plus(" $city"), 10)
+            addresses = place?.plus(" $city")?.let { geodecoder.getFromLocationName(it, 10) } as List<Address>
         }
         catch (e: IOException) {
             Log.d(TAG, "Cannot parse location")

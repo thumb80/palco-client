@@ -21,6 +21,8 @@ import com.bumptech.glide.request.transition.Transition
 import it.antonino.palco.R
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.maps.MapsActivity
+import it.antonino.palco.util.Constant.bitMapQuality
+import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.google.custom_dialog.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -71,7 +73,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                             val cachePath = File(requireContext().cacheDir, "images")
                             cachePath.mkdirs() // don't forget to make the directory
                             val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
-                            resource.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                            resource.compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
                             stream.close()
 
                             val imagePath = File(requireContext().cacheDir, "images")
@@ -91,7 +93,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                 val cachePath = File(requireContext().cacheDir, "images")
                 cachePath.mkdirs() // don't forget to make the directory
                 val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
-                BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, 100, stream)
+                BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
                 stream.close()
 
                 val imagePath = File(requireContext().cacheDir, "images")
@@ -101,9 +103,17 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "image/*"
                 intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
-                intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} il ${concertRow.time} \n clicca sul link per maggiori dettagli https://palco.mywire.org")
+                intent.putExtra(Intent.EXTRA_TEXT, getString(
+                    R.string.share_concert_string,
+                    concertRow.artist,
+                    concertRow.place,
+                    PalcoUtils.getDateTimeString(concertRow.time!!),
+                    getString(R.string.share_url))
+                )
                 intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                context?.startActivity(Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto"))
+                context?.startActivity(
+                    Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto")
+                )
                 dismiss()
             }
 

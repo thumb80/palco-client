@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.Artist
-import kotlinx.android.synthetic.main.city_list.view.*
+import kotlinx.android.synthetic.main.city_list.view.city
 import java.util.*
 import kotlin.collections.ArrayList
 

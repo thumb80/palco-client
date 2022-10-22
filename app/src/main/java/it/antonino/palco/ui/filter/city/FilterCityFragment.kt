@@ -20,7 +20,10 @@ import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_city_fragment.*
+import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
+import kotlinx.android.synthetic.main.filter_city_fragment.filter_header_city
+import kotlinx.android.synthetic.main.filter_city_fragment.filter_city_list
+import kotlinx.android.synthetic.main.filter_city_fragment.filter_concert_city_list
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
@@ -120,8 +123,6 @@ class FilterCityFragment : Fragment() {
                         dialog.show(childFragmentManager,null)
                     }
                     else {
-                        //val dialog = CustomDialog(ConcertRow(concertRow.artist,concertRow.place,null,concertRow.bill,concertRow.artistThumb))
-                        //dialog.show(childFragmentManager,null)
                         Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
                     }
                 }

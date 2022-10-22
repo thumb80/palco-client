@@ -9,6 +9,8 @@ import com.google.android.material.tabs.TabLayout
 import it.antonino.palco.R
 import it.antonino.palco.adapter.FilterConcertiAdapter
 import it.antonino.palco.ext.CustomViewPager
+import it.antonino.palco.util.Constant.currentItem
+import it.antonino.palco.util.Constant.offscreenPageLimit
 
 class FilterFragment : Fragment()  {
 
@@ -28,8 +30,8 @@ class FilterFragment : Fragment()  {
 
         viewPager.setPagingEnabled(false)
         viewPager.adapter = filterConcertiViewPagerAdapter
-        viewPager.setCurrentItem(0,true)
-        viewPager.offscreenPageLimit = 3
+        viewPager.setCurrentItem(currentItem,true)
+        viewPager.offscreenPageLimit = offscreenPageLimit
         tabLayout.setupWithViewPager(viewPager, true)
 
     }

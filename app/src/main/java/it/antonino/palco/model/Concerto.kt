@@ -11,10 +11,13 @@ data class Concerto(
     @SerializedName("place")
     private val place: String = "",
     @SerializedName("city")
-    private val city: String = "",
-    @SerializedName("bill")
-    private val bill: String = ""
+    private val city: String = ""
 ): Serializable {
+
+    companion object {
+        private const val serialVersionUID = 20180617104400L
+    }
+
     fun getArtist(): String {
         return artist
     }
@@ -30,7 +33,5 @@ data class Concerto(
     fun getCity(): String {
         return city
     }
-    fun getBill(): String {
-        return bill
-    }
+
 }

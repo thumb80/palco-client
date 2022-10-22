@@ -24,6 +24,7 @@ import it.antonino.palco.MainActivity
 import it.antonino.palco.MainViewModel
 import it.antonino.palco.R
 import it.antonino.palco.model.User
+import it.antonino.palco.util.Constant.delayMillis
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
 
@@ -37,20 +38,6 @@ class PalcoFirebaseMessagingService: FirebaseMessagingService(), KoinComponent, 
 
     override fun onMessageReceived(p0: RemoteMessage) {
         createNotificationChannel()
-
-        // Create an Intent for the activity you want to start
-        //val resultIntent = Intent(Intent.ACTION_VIEW)
-        //resultIntent.data = Uri.parse(p0.data["bill"])
-        // Create the TaskStackBuilder
-        /*val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
-            // Add the intent, which inflates the back stack
-            addNextIntentWithParentStack(resultIntent)
-            // Get the PendingIntent containing the entire back stack
-            getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-        }*/
-        /*val resultPendingIntent =
-            PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        */
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -88,15 +75,13 @@ class PalcoFirebaseMessagingService: FirebaseMessagingService(), KoinComponent, 
                     uploadObserver
                 )
             },
-            1000
+            delayMillis
         )
 
         Log.d(TAG, p0)
     }
 
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)

@@ -7,13 +7,11 @@ import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.os.Handler
 import android.view.Window
-import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.richpath.RichPath
-import com.richpathanimator.RichPathAnimator
-import kotlinx.android.synthetic.main.activity_splash.*
+import it.antonino.palco.util.Constant.delayMillis
+import kotlinx.android.synthetic.main.activity_splash.version_text
 
 class SplashActivity: AppCompatActivity() {
 
@@ -27,7 +25,9 @@ class SplashActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_splash)
 
-        version_text.text = sharedPreferences?.getString("VERSION", "") ?: packageManager.getPackageInfo(this.packageName, 0).versionName
+        version_text.text = sharedPreferences
+            ?.getString("VERSION", "") ?:
+            packageManager.getPackageInfo(this.packageName, 0).versionName
 
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
@@ -55,7 +55,7 @@ class SplashActivity: AppCompatActivity() {
                         finish()
                     }
                 }
-            }, 5000
+            }, delayMillis
         )
 
 
