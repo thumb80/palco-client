@@ -92,6 +92,9 @@ class FilterCityFragment : Fragment() {
                 filter_city_list.layoutManager = layoutManager
                 filter_city_list.adapter = cityAdapter
             }
+            else -> {
+                Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
+            }
         }
 
     }
@@ -143,6 +146,9 @@ class FilterCityFragment : Fragment() {
                     hideConcerti()
                 }
 
+            }
+            else -> {
+                Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
         }
 

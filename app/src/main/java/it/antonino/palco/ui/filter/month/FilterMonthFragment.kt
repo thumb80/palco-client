@@ -138,6 +138,9 @@ class FilterMonthFragment : Fragment() {
                 }
 
             }
+            else -> {
+                Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
+            }
         }
 
     }

@@ -65,6 +65,7 @@ class MainActivity: AppCompatActivity() {
 
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount >= 0) {
             if (System.currentTimeMillis() - timeStamp < 500)
@@ -90,7 +91,7 @@ class MainActivity: AppCompatActivity() {
             true -> {
                 sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", true)?.apply()
             }
-            false -> {
+            else -> {
                 sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", false)?.apply()
                 Toast.makeText(this, "Ops.. c'è stato un problema con il token", Toast.LENGTH_LONG)
                     .show()

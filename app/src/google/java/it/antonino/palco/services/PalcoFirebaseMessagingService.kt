@@ -107,7 +107,7 @@ class PalcoFirebaseMessagingService: FirebaseMessagingService(), KoinComponent, 
             true -> {
                 sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", true)?.apply()
             }
-            false -> {
+            else -> {
                 sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", false)?.apply()
                 Toast.makeText(this, "Ops.. c'è stato un problema con il token", Toast.LENGTH_LONG)
                     .show()

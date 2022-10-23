@@ -92,6 +92,9 @@ class FilterArtistFragment : Fragment() {
                 filter_artist_list.layoutManager = layoutManager
                 filter_artist_list.adapter = artistAdapter
             }
+            else -> {
+                Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
+            }
         }
 
     }
@@ -143,6 +146,9 @@ class FilterArtistFragment : Fragment() {
                      hideConcerti()
                 }
 
+            }
+            else -> {
+                Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
         }
 

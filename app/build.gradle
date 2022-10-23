@@ -26,6 +26,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("palco.keystore")
+            storePassword "antonino"
+            keyAlias "palco"
+            keyPassword "antonino"
+        }
+    }
+
     flavorDimensions "config", "version"
 
     productFlavors {
@@ -94,6 +103,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -111,6 +121,10 @@ android {
         exclude("kotlin/ranges/*")
         exclude("kotlin/collections/*")
         exclude("kotlin/annotation/*")
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
     }
 
 }
@@ -135,17 +149,17 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.22.0-RC1'
-    implementation 'androidx.core:core-ktx:1.5.0'
-    implementation 'androidx.fragment:fragment-ktx:1.3.4'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'org.koin:koin-core:2.1.6'
     implementation 'org.koin:koin-androidx-viewmodel:2.1.6'
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
