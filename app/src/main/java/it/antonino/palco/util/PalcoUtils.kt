@@ -22,7 +22,7 @@ object PalcoUtils {
 
     fun getDateTimeString(time: String): String? {
         val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-        val outsdf = SimpleDateFormat("EEEE dd MMM", Locale.ITALY)
+        val outsdf = SimpleDateFormat("EEEE dd MMMM y", Locale.ITALY)
         val calendar = Calendar.getInstance()
         calendar.time = insdf.parse(time)
         calendar.add(Calendar.DAY_OF_MONTH, 1)

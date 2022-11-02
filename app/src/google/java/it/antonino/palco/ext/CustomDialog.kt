@@ -71,7 +71,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
 
 
                             val cachePath = File(requireContext().cacheDir, "images")
-                            cachePath.mkdirs() // don't forget to make the directory
+                            cachePath.mkdirs()
                             val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
                             resource.compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
                             stream.close()
@@ -81,17 +81,27 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                             val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
 
                             val intent = Intent(Intent.ACTION_SEND)
-                            intent.type = "image/*"
-                            intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
-                            intent.putExtra(Intent.EXTRA_TEXT, "C'è un concerto \n ${concertRow.artist} a ${concertRow.city} il ${concertRow.time} \n clicca sul link per maggiori dettagli https://palco.mywire.org")
+                            intent.type = "text/*"
+                            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+                            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+                            intent.putExtra(Intent.EXTRA_TEXT, getString(
+                                R.string.share_concert_string,
+                                concertRow.artist,
+                                concertRow.place,
+                                PalcoUtils.getDateTimeString(concertRow.time!!),
+                                getString(R.string.share_url))
+                            )
                             intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                            context?.startActivity(Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto"))
+                            context?.startActivity(
+                                Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto")
+                            )
                             dismiss()
                         }
                     })
             else {
                 val cachePath = File(requireContext().cacheDir, "images")
-                cachePath.mkdirs() // don't forget to make the directory
+                cachePath.mkdirs()
                 val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
                 BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
                 stream.close()
@@ -101,8 +111,10 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                 val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
 
                 val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_SUBJECT,"Palco")
+                intent.type = "text/*"
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
                 intent.putExtra(Intent.EXTRA_TEXT, getString(
                     R.string.share_concert_string,
                     concertRow.artist,
