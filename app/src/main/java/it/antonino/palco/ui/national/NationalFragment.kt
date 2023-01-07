@@ -1,11 +1,13 @@
 package it.antonino.palco.ui.national
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -24,6 +26,7 @@ import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
+import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.ext.CustomDialog
@@ -35,12 +38,10 @@ import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.fragment_national.monthView
-import kotlinx.android.synthetic.main.fragment_national.calendar_view
-import kotlinx.android.synthetic.main.fragment_national.concerti_recycler
-import kotlinx.android.synthetic.main.fragment_national.nextMonth
-import kotlinx.android.synthetic.main.fragment_national.prevMonth
-import kotlinx.android.synthetic.main.fragment_national.no_data
+import kotlinx.android.synthetic.main.fragment_national.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
@@ -52,15 +53,18 @@ class NationalFragment: Fragment() {
 
     private val viewModel: SharedViewModel by viewModel()
     private var adapter: CustomAdapter? = null
-
+    private var cities: Set<String>? = null
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     private val currentDayInstance: Calendar = Calendar.getInstance(Locale.ITALY)
     private var layoutManager: LinearLayoutManager? = null
     private var position : Int? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
+    private var sharedPreferences: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        cities = sharedPreferences?.getStringSet("cities", null)
         dotsItemDecoration = DotsItemDecoration(
             resources.getDimension(R.dimen.dp_4).toInt(),
             resources.getDimension(R.dimen.dp_6).toInt(),
@@ -74,12 +78,16 @@ class NationalFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return inflater.inflate(R.layout.fragment_national, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (cities != null)
+            concerti_checkbox_layout.visibility = View.VISIBLE
+        else
+            concerti_checkbox_layout.visibility = View.GONE
 
         monthView?.text = simpleDateFormat.format(
             DateTimeUtils.toDate(
@@ -147,7 +155,17 @@ class NationalFragment: Fragment() {
         }
 
         (activity as MainActivity).showProgress()
-        viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
+
+        if (sharedPreferences?.getBoolean("isLocal", false) == true) {
+            concerti_locali.isChecked = true
+            concerti_nazionali.isChecked = false
+            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiLocaliObserver)
+        }
+        else {
+            concerti_locali.isChecked = false
+            concerti_nazionali.isChecked = true
+            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
+        }
 
     }
 
@@ -158,6 +176,31 @@ class NationalFragment: Fragment() {
                 calendar_view.removeAllEvents()
                 for (concerto in it) {
                     if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
+                        val event = Event(
+                            Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
+                            concerto.getTime().getDate() + concertoTimeOffset,
+                            concerto
+                        )
+                        calendar_view.addEvent(event)
+                    }
+                }
+                displayCurrentEvents(currentDayInstance.time)
+            }
+            else -> {
+                (activity as MainActivity).hideProgress()
+                Toast.makeText(context, R.string.server_error, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private val concertiLocaliObserver = Observer<ArrayList<Concerto?>?> {
+        when (!it.isNullOrEmpty()) {
+            true -> {
+                (activity as MainActivity).hideProgress()
+                calendar_view.removeAllEvents()
+                for (concerto in it) {
+                    if ((concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) &&
+                        (cities?.contains(concerto.getCity()) == true)) {
                         val event = Event(
                             Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
                             concerto.getTime().getDate() + concertoTimeOffset,
@@ -226,6 +269,8 @@ class NationalFragment: Fragment() {
             concerti_recycler?.adapter = null
             showEmpty()
         }
+
+        (activity as MainActivity).hideProgress()
     }
 
     private fun showEmpty() {
@@ -238,6 +283,33 @@ class NationalFragment: Fragment() {
     private fun hideEmpty() {
         no_data.visibility = View.INVISIBLE
         concerti_recycler?.visibility = View.VISIBLE
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onCheckedListener(checkBoxHolder: CheckBoxHolder) {
+        (activity as MainActivity).showProgress()
+        if (checkBoxHolder.isChecked) {
+            concerti_locali.isChecked = true
+            concerti_nazionali.isChecked = false
+            sharedPreferences?.edit()?.putBoolean("isLocal", true)?.apply()
+            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiLocaliObserver)
+        }
+        else {
+            concerti_locali.isChecked = false
+            concerti_nazionali.isChecked = true
+            sharedPreferences?.edit()?.putBoolean("isLocal", false)?.apply()
+            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
 }

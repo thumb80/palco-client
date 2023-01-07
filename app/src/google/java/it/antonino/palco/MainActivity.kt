@@ -1,24 +1,37 @@
 package it.antonino.palco
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.ProgressBarHolder
 import it.antonino.palco.model.User
 import it.antonino.palco.ui.ConcertiFragment
+import org.greenrobot.eventbus.EventBus
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class MainActivity: AppCompatActivity() {
 
     private val TAG = MainActivity::class.simpleName
-
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var progressBarHolder: ProgressBarHolder? = null
     private var user: User? = null
     private var sharedPreferences: SharedPreferences? = null
@@ -31,6 +44,48 @@ class MainActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions( this, arrayOf(ACCESS_COARSE_LOCATION), 1000)
+        }
+        else
+            try {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            val geocoder = Geocoder(this, Locale.getDefault())
+                            val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
+                            val upperAddresses = geocoder.getFromLocation(location.latitude + 0.05, location.longitude + 0.05, 10)
+                            val lowerAddresses = geocoder.getFromLocation(location.latitude - 0.05, location.longitude - 0.05, 10)
+                            val addresses = mutableListOf<Address>()
+                            centerAdresses?.forEach {
+                                addresses.add(it)
+                            }
+                            upperAddresses?.forEach {
+                                addresses.add(it)
+                            }
+                            lowerAddresses?.forEach {
+                                addresses.add(it)
+                            }
+                            val localities = collectLocations(addresses)
+                            sharedPreferences?.edit()?.putStringSet("cities", localities.toMutableSet())?.apply()
+                        }
+                        else
+                            Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, ConcertiFragment.newInstance())
+                            .commitNow()
+                    }
+            } catch (e: SecurityException) {
+                Log.w(TAG, "Cannot get last location")
+                Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+            }
 
         if (sharedPreferences?.getBoolean("firebaseTokenUploaded", false) == false) {
 
@@ -51,10 +106,6 @@ class MainActivity: AppCompatActivity() {
             })
         }
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, ConcertiFragment.newInstance())
-            .commitNow()
-
         val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
         val layoutColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
         progressBarHolder = ProgressBarHolder.Builder()
@@ -63,6 +114,53 @@ class MainActivity: AppCompatActivity() {
             .build(this)
 
 
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            1000 -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    try {
+                        fusedLocationClient.lastLocation
+                            .addOnSuccessListener { location : Location? ->
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    val geocoder = Geocoder(this, Locale.getDefault())
+                                    val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
+                                    val upperAddresses = geocoder.getFromLocation(location.latitude + 0.05, location.longitude + 0.05, 10)
+                                    val lowerAddresses = geocoder.getFromLocation(location.latitude - 0.05, location.longitude - 0.05, 10)
+                                    val addresses = mutableListOf<Address>()
+                                    centerAdresses?.forEach {
+                                        addresses.add(it)
+                                    }
+                                    upperAddresses?.forEach {
+                                        addresses.add(it)
+                                    }
+                                    lowerAddresses?.forEach {
+                                        addresses.add(it)
+                                    }
+                                    val localities = collectLocations(addresses)
+                                    sharedPreferences?.edit()?.putStringSet("cities", localities.toMutableSet())?.apply()
+                                }
+                                else
+                                    Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                                supportFragmentManager.beginTransaction()
+                                    .replace(R.id.container, ConcertiFragment.newInstance())
+                                    .commitNow()
+                            }
+                    } catch (e: SecurityException) {
+                        Log.w(TAG, "Cannot get last location")
+                        Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                    }
+                else
+                    Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     @Deprecated("Deprecated in Java")
@@ -95,6 +193,33 @@ class MainActivity: AppCompatActivity() {
                 sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", false)?.apply()
                 Toast.makeText(this, "Ops.. c'è stato un problema con il token", Toast.LENGTH_LONG)
                     .show()
+            }
+        }
+    }
+
+    private fun collectLocations(addresses: MutableList<Address>?): ArrayList<String> {
+        val ret = arrayListOf<String>()
+        addresses?.forEach {
+            if (it.locality != null && !ret.contains(it.locality))
+                ret.add(it.locality)
+        }
+        return ret
+    }
+
+    fun onCheckboxClicked(view: View) {
+        if (view is CheckBox) {
+            val checked: Boolean = view.isChecked
+            when (view.id) {
+                R.id.concerti_locali -> {
+                    if (checked) {
+                        EventBus.getDefault().post(CheckBoxHolder(true))
+                    }
+                }
+                R.id.concerti_nazionali -> {
+                    if (checked) {
+                        EventBus.getDefault().post(CheckBoxHolder(false))
+                    }
+                }
             }
         }
     }

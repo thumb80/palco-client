@@ -29,7 +29,7 @@ class CustomFilterArtistAdapter(
     val place: ArrayList<String>?,
     val city: ArrayList<String>?,
     val times: ArrayList<String>? ,
-    val  listener: (ConcertRow) -> Unit
+    val listener: (ConcertRow) -> Unit
 ) : RecyclerView.Adapter<FilterArtistViewHolder>() {
 
     init {
@@ -69,7 +69,7 @@ class FilterArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         city.text = item.city
         time.text = item.time
 
-        viewModel.getPlacePhoto(item.place!!).observeForever {
+        viewModel.getPlacePhoto(item.city!!).observeForever {
             if (it?.isJsonNull == false) {
                 placeThumb = it
                     .get("results")

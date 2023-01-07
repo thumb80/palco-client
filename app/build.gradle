@@ -169,6 +169,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.github.unsplash:unsplash-photopicker-android:1.0.1'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     googleImplementation 'com.google.android.gms:play-services-maps:17.0.1'
     googleImplementation platform('com.google.firebase:firebase-bom:26.8.0')
     googleImplementation 'com.google.firebase:firebase-analytics'
@@ -176,6 +177,7 @@ dependencies {
     googleImplementation 'com.google.firebase:firebase-messaging-ktx'
     googleImplementation 'com.google.firebase:firebase-messaging-directboot:23.0.2'
     googleImplementation 'com.google.android.gms:play-services-auth:19.0.0'
+    googleImplementation 'com.google.android.gms:play-services-location:21.0.1'
     huaweiImplementation 'com.facebook.android:facebook-android-sdk:4.42.0'
     huaweiImplementation 'com.huawei.agconnect:agconnect-core:1.5.2.300'
     huaweiImplementation 'com.huawei.hms:push:5.0.2.301'

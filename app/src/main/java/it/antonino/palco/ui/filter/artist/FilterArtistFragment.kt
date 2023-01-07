@@ -73,8 +73,11 @@ class FilterArtistFragment : Fragment() {
         when (!it.isNullOrEmpty()) {
             true -> {
                 for (artist in it) {
-                    if (!artistList.contains(artist))
-                        artist?.let { it_artist -> artistList.add(it_artist) }
+                    val myArtist = artist?.getArtist()?.split("+")?.get(0)
+                    if (checkArtistList(artist = Artist(myArtist!!), artistList = artistList))
+                        myArtist.let { it_artist ->
+                            artistList.add(Artist(it_artist))
+                        }
                 }
                 artistList.sortBy { it.getArtist() }
                 artistAdapter = ArtistListAdapter(artistList) {
@@ -152,6 +155,14 @@ class FilterArtistFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun checkArtistList(artist: Artist, artistList: ArrayList<Artist>): Boolean {
+        artistList.forEach {
+            if (it.getArtist().equals(artist.getArtist(), ignoreCase = true))
+                return false
+        }
+        return true
     }
 
     private fun showConcerti() {

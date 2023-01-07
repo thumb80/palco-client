@@ -39,4 +39,6 @@
     <string name="filter_artist_select">Elenco artisti. Seleziona un artista dall\'elenco</string>
     <string name="share_concert_string">C\'è un concerto \n %1$s a %2$s \n %3$s \n clicca sul link per maggiori dettagli %4$s</string>
     <string name="share_url">https://palco.mywire.org</string>
+    <string name="locali">locali</string>
+    <string name="nazionali">nazionali</string>
 </resources>
