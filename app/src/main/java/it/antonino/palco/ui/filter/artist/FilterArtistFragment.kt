@@ -20,10 +20,7 @@ import it.antonino.palco.model.Artist
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_artist_fragment.search_bar
-import kotlinx.android.synthetic.main.filter_artist_fragment.filter_header_artist
-import kotlinx.android.synthetic.main.filter_artist_fragment.filter_artist_list
-import kotlinx.android.synthetic.main.filter_artist_fragment.filter_concert_artist_list
+import kotlinx.android.synthetic.main.filter_artist_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterArtistFragment : Fragment() {
@@ -49,7 +46,7 @@ class FilterArtistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getNationalArtists().observe(viewLifecycleOwner, artistObserver)
-        viewModel.getInternationalArtists().observe(viewLifecycleOwner, artistObserver)
+        //viewModel.getInternationalArtists().observe(viewLifecycleOwner, artistObserver)
 
         hideConcerti()
 
@@ -73,19 +70,23 @@ class FilterArtistFragment : Fragment() {
         when (!it.isNullOrEmpty()) {
             true -> {
                 for (artist in it) {
-                    val myArtist = artist?.getArtist()?.split("+")?.get(0)
-                    if (checkArtistList(artist = Artist(myArtist!!), artistList = artistList))
-                        myArtist.let { it_artist ->
-                            artistList.add(Artist(it_artist))
-                        }
+                    if (checkArtistList(artist = Artist(artist = artist!!.getArtist()), artistList = artistList))
+                        if (artist.getArtist().contains("+"))
+                            artist.getArtist().split("+").get(0).let { it ->
+                                artistList.add(Artist(it.strip()))
+                            }
+                        else
+                            artist.getArtist().let { it ->
+                                artistList.add(Artist(it))
+                            }
                 }
-                artistList.sortBy { it.getArtist() }
+                artistList.sortBy { item -> item.getArtist() }
                 artistAdapter = ArtistListAdapter(artistList) {
 
                     filter_header_artist.text = getString(R.string.filter_artist_selected, it)
 
                     viewModel.getNationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
-                    viewModel.getInternationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
+                    //viewModel.getInternationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
 
                 }
                 val layoutManager = LinearLayoutManager(

@@ -11,7 +11,7 @@ import java.util.concurrent.Executors
 
 class PalcoApplication: Application() {
 
-    val executorService: ExecutorService = Executors.newFixedThreadPool(1)
+    val executorService: ExecutorService = Executors.newFixedThreadPool(4)
 
     companion object {
         lateinit var instance: PalcoApplication

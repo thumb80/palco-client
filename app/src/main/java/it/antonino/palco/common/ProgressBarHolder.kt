@@ -39,6 +39,7 @@ class ProgressBarHolder(
         this.overlayLayout = RelativeLayout(context)
         this.overlayLayout.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
             override fun onViewAttachedToWindow(v: View) {
+                overlayLayout.addView(v)
             }
 
             override fun onViewDetachedFromWindow(v: View) {
@@ -47,13 +48,17 @@ class ProgressBarHolder(
         })
     }
 
-    fun show() {
-        if (imageViewLayout.parent != null) return  // I can't add the layout twice
-        mainContent.addView(imageViewLayout, matchParent)
+    fun show(activity: Activity) {
+        activity.runOnUiThread {
+            if (imageViewLayout.parent != null) (imageViewLayout.parent as ViewGroup).removeView(imageViewLayout)
+            mainContent.addView(imageViewLayout, matchParent)
+        }
     }
 
-    fun hide() {
-        mainContent.removeView(imageViewLayout)
+    fun hide(activity: Activity) {
+        activity.runOnUiThread {
+            mainContent.removeView(imageViewLayout)
+        }
     }
 
     class Builder {

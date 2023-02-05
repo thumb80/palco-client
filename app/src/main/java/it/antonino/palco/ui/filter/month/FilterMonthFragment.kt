@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
@@ -70,12 +71,12 @@ class FilterMonthFragment : Fragment() {
                 else
                     (Months.valueOf(it).ordinal + 1).toString()
             ).observe(viewLifecycleOwner, concertsObserver)
-            viewModel.getInternationalConcertsByMonth(
+            /*viewModel.getInternationalConcertsByMonth(
                 if (Months.valueOf(it).ordinal + 1 < maxMonthValue)
                     "0"+(Months.valueOf(it).ordinal + 1).toString()
                 else
                     (Months.valueOf(it).ordinal + 1).toString()
-            ).observe(viewLifecycleOwner, concertsObserver)
+            ).observe(viewLifecycleOwner, concertsObserver)*/
 
             (activity as MainActivity).showProgress()
         }

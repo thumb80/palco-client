@@ -6,6 +6,7 @@
     <string name="channel_name">Palco Channel</string>
     <string name="channel_description">Notification Palco</string>
     <string name="no_location">Non è stato possibile localizzzare i concerti a te vicini</string>
+    <string name="gps_disabled">Attiva il GPS per localizzare i concerti a te vicini</string>
     <string name="locali">locali</string>
     <string name="nazionali">nazionali</string>
 </resources>

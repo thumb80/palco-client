@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -24,14 +25,18 @@ import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.ProgressBarHolder
 import it.antonino.palco.model.User
 import it.antonino.palco.ui.ConcertiFragment
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.runInterruptible
 import org.greenrobot.eventbus.EventBus
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import java.util.concurrent.ExecutorService
 
 class MainActivity: AppCompatActivity() {
 
     private val TAG = MainActivity::class.simpleName
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationManager: LocationManager
     private var progressBarHolder: ProgressBarHolder? = null
     private var user: User? = null
     private var sharedPreferences: SharedPreferences? = null
@@ -45,47 +50,56 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_main)
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions( this, arrayOf(ACCESS_COARSE_LOCATION), 1000)
-        }
-        else
-            try {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location : Location? ->
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            val geocoder = Geocoder(this, Locale.getDefault())
-                            val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
-                            val upperAddresses = geocoder.getFromLocation(location.latitude + 0.05, location.longitude + 0.05, 10)
-                            val lowerAddresses = geocoder.getFromLocation(location.latitude - 0.05, location.longitude - 0.05, 10)
-                            val addresses = mutableListOf<Address>()
-                            centerAdresses?.forEach {
-                                addresses.add(it)
-                            }
-                            upperAddresses?.forEach {
-                                addresses.add(it)
-                            }
-                            lowerAddresses?.forEach {
-                                addresses.add(it)
-                            }
-                            val localities = collectLocations(addresses)
-                            sharedPreferences?.edit()?.putStringSet("cities", localities.toMutableSet())?.apply()
-                        }
-                        else
-                            Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, ConcertiFragment.newInstance())
-                            .commitNow()
-                    }
-            } catch (e: SecurityException) {
-                Log.w(TAG, "Cannot get last location")
-                Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions( this, arrayOf(ACCESS_COARSE_LOCATION), 1000)
             }
+            else
+                try {
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location : Location? ->
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                val geocoder = Geocoder(this, Locale.getDefault())
+                                val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
+                                val upperAddresses = geocoder.getFromLocation(location.latitude + 0.05, location.longitude + 0.05, 10)
+                                val lowerAddresses = geocoder.getFromLocation(location.latitude - 0.05, location.longitude - 0.05, 10)
+                                val addresses = mutableListOf<Address>()
+                                centerAdresses?.forEach {
+                                    addresses.add(it)
+                                }
+                                upperAddresses?.forEach {
+                                    addresses.add(it)
+                                }
+                                lowerAddresses?.forEach {
+                                    addresses.add(it)
+                                }
+                                val localities = collectLocations(addresses)
+                                sharedPreferences?.edit()?.putStringSet("cities", localities.toMutableSet())?.apply()
+                            }
+                            else
+                                Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.container, ConcertiFragment.newInstance())
+                                .commitNow()
+                        }
+                } catch (e: SecurityException) {
+                    Log.w(TAG, "Cannot get last location")
+                    Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                }
+        else {
+            Toast.makeText(this, getString(R.string.gps_disabled), Toast.LENGTH_LONG).show()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, ConcertiFragment.newInstance())
+                .commitNow()
+        }
+
 
         if (sharedPreferences?.getBoolean("firebaseTokenUploaded", false) == false) {
 
@@ -176,12 +190,15 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun showProgress() {
-        progressBarHolder!!.show()
-
+        PalcoApplication.instance.executorService.execute {
+            progressBarHolder?.show(this)
+        }
     }
 
     fun hideProgress() {
-        progressBarHolder!!.hide()
+        PalcoApplication.instance.executorService.execute {
+            progressBarHolder?.hide(this)
+        }
     }
 
     private val uploadObserver = Observer<String?> {

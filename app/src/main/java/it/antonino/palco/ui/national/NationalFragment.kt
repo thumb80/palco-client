@@ -3,6 +3,7 @@ package it.antonino.palco.ui.national
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -60,10 +62,12 @@ class NationalFragment: Fragment() {
     private var position : Int? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
     private var sharedPreferences: SharedPreferences? = null
+    private lateinit var locationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         cities = sharedPreferences?.getStringSet("cities", null)
         dotsItemDecoration = DotsItemDecoration(
             resources.getDimension(R.dimen.dp_4).toInt(),
@@ -84,7 +88,7 @@ class NationalFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (cities != null)
+        if (cities != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
             concerti_checkbox_layout.visibility = View.VISIBLE
         else
             concerti_checkbox_layout.visibility = View.GONE

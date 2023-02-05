@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
@@ -49,7 +50,7 @@ class FilterCityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getNationalCities().observe(viewLifecycleOwner, cityObserver)
-        viewModel.getInternationalCities().observe(viewLifecycleOwner, cityObserver)
+        //viewModel.getInternationalCities().observe(viewLifecycleOwner, cityObserver)
 
         hideConcerti()
 
@@ -82,7 +83,7 @@ class FilterCityFragment : Fragment() {
                     filter_header_city.text = getString(R.string.filter_city_selected, it)
 
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
-                    viewModel.getInternationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
+                    //viewModel.getInternationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
 
                 }
                 val layoutManager = LinearLayoutManager(
