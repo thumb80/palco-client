@@ -61,38 +61,7 @@ class MainActivity: AppCompatActivity() {
                 ActivityCompat.requestPermissions( this, arrayOf(ACCESS_COARSE_LOCATION), 1000)
             }
             else
-                try {
-                    fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location : Location? ->
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                val geocoder = Geocoder(this, Locale.getDefault())
-                                val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
-                                val upperAddresses = geocoder.getFromLocation(location.latitude + 0.05, location.longitude + 0.05, 10)
-                                val lowerAddresses = geocoder.getFromLocation(location.latitude - 0.05, location.longitude - 0.05, 10)
-                                val addresses = mutableListOf<Address>()
-                                centerAdresses?.forEach {
-                                    addresses.add(it)
-                                }
-                                upperAddresses?.forEach {
-                                    addresses.add(it)
-                                }
-                                lowerAddresses?.forEach {
-                                    addresses.add(it)
-                                }
-                                val localities = collectLocations(addresses)
-                                sharedPreferences?.edit()?.putStringSet("cities", localities.toMutableSet())?.apply()
-                            }
-                            else
-                                Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
-                            supportFragmentManager.beginTransaction()
-                                .replace(R.id.container, ConcertiFragment.newInstance())
-                                .commitNow()
-                        }
-                } catch (e: SecurityException) {
-                    Log.w(TAG, "Cannot get last location")
-                    Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
-                }
+                handleLocation()
         else {
             Toast.makeText(this, getString(R.string.gps_disabled), Toast.LENGTH_LONG).show()
             supportFragmentManager.beginTransaction()
@@ -100,25 +69,8 @@ class MainActivity: AppCompatActivity() {
                 .commitNow()
         }
 
-
-        if (sharedPreferences?.getBoolean("firebaseTokenUploaded", false) == false) {
-
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
-                val token = task.result
-                Log.d(TAG, token ?: "")
-                user = User(
-                    username = sharedPreferences?.getString("username", "") ?: "",
-                    password = sharedPreferences?.getString("password","") ?: "",
-                    firebase_token = token ?: "",
-                    huawei_token = null
-                )
-                viewModel.uploadFirebaseToken(user!!).observe(this, uploadObserver)
-            })
-        }
+        if (sharedPreferences?.getBoolean("firebaseTokenUploaded", false) == false)
+            handleFirebaseToken()
 
         val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
         val layoutColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
@@ -201,17 +153,56 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    private val uploadObserver = Observer<String?> {
-        when (it?.contains("Token uploaded successfully !!")) {
-            true -> {
-                sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", true)?.apply()
-            }
-            else -> {
-                sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", false)?.apply()
-                Toast.makeText(this, "Ops.. c'è stato un problema con il token", Toast.LENGTH_LONG)
-                    .show()
-            }
+    private fun handleLocation() {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    if (location != null) {
+                        val geocoder = Geocoder(this, Locale.getDefault())
+                        val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
+                        val upperAddresses = geocoder.getFromLocation(location.latitude + 0.05, location.longitude + 0.05, 10)
+                        val lowerAddresses = geocoder.getFromLocation(location.latitude - 0.05, location.longitude - 0.05, 10)
+                        val addresses = mutableListOf<Address>()
+                        centerAdresses?.forEach {
+                            addresses.add(it)
+                        }
+                        upperAddresses?.forEach {
+                            addresses.add(it)
+                        }
+                        lowerAddresses?.forEach {
+                            addresses.add(it)
+                        }
+                        val localities = collectLocations(addresses)
+                        sharedPreferences?.edit()?.putStringSet("cities", localities.toMutableSet())?.apply()
+                    }
+                    else
+                        Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, ConcertiFragment.newInstance())
+                        .commitNow()
+                }
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Cannot get last location")
+            Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun handleFirebaseToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+            val token = task.result
+            Log.d(TAG, token ?: "")
+            user = User(
+                username = sharedPreferences?.getString("username", "") ?: "",
+                password = sharedPreferences?.getString("password","") ?: "",
+                firebase_token = token ?: "",
+                huawei_token = null
+            )
+            viewModel.uploadFirebaseToken(user!!).observe(this, uploadObserver)
+        })
     }
 
     private fun collectLocations(addresses: MutableList<Address>?): ArrayList<String> {
@@ -237,6 +228,19 @@ class MainActivity: AppCompatActivity() {
                         EventBus.getDefault().post(CheckBoxHolder(false))
                     }
                 }
+            }
+        }
+    }
+
+    private val uploadObserver = Observer<String?> {
+        when (it?.contains("Token uploaded successfully !!")) {
+            true -> {
+                sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", true)?.apply()
+            }
+            else -> {
+                sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", false)?.apply()
+                Toast.makeText(this, "Ops.. c'è stato un problema con il token", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
