@@ -12,11 +12,15 @@ import kotlinx.android.synthetic.main.city_list.view.city
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ArtistListAdapter(val artists: ArrayList<Artist>?, val  listener: (String) -> Unit)
+class ArtistListAdapter(val artists: ArrayList<Artist?>, val  listener: (String) -> Unit)
     : RecyclerView.Adapter<ArtistViewHolder>(), Filterable {
 
     val initialCityDataList = ArrayList<Artist>().apply {
-        artists?.let { addAll(it) }
+        artists.let {
+            it.forEach {
+                add(it!!)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
@@ -24,10 +28,10 @@ class ArtistListAdapter(val artists: ArrayList<Artist>?, val  listener: (String)
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
-        holder.bind(artists?.get(position)?.getArtist()!!, listener)
+        holder.bind(artists.get(position)?.getArtist()!!, listener)
     }
 
-    override fun getItemCount(): Int = artists?.size ?: 0
+    override fun getItemCount(): Int = artists.size
 
     override fun getFilter(): Filter {
         return artistFilter
@@ -53,8 +57,8 @@ class ArtistListAdapter(val artists: ArrayList<Artist>?, val  listener: (String)
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             if (results?.values is ArrayList<*>) {
-                artists?.clear()
-                artists?.addAll(results.values as ArrayList<Artist>)
+                artists.clear()
+                artists.addAll(results.values as Collection<Artist?>)
                 notifyDataSetChanged()
             }
         }

@@ -26,7 +26,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FilterArtistFragment : Fragment() {
 
     private val viewModel: SharedViewModel by viewModel()
-    private var artistList = ArrayList<Artist>()
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterArtistAdapter? = null
     var artisti = ArrayList<String>()
@@ -69,19 +68,10 @@ class FilterArtistFragment : Fragment() {
 
         when (!it.isNullOrEmpty()) {
             true -> {
-                for (artist in it) {
-                    if (checkArtistList(artist = Artist(artist = artist!!.getArtist()), artistList = artistList))
-                        if (artist.getArtist().contains("+"))
-                            artist.getArtist().split("+").get(0).let { it ->
-                                artistList.add(Artist(it.strip()))
-                            }
-                        else
-                            artist.getArtist().let { it ->
-                                artistList.add(Artist(it))
-                            }
-                }
-                artistList.sortBy { item -> item.getArtist() }
-                artistAdapter = ArtistListAdapter(artistList) {
+
+                it.sortBy { element-> element?.getArtist()?.strip() }
+
+                artistAdapter = ArtistListAdapter(it) {
 
                     filter_header_artist.text = getString(R.string.filter_artist_selected, it)
 
@@ -156,14 +146,6 @@ class FilterArtistFragment : Fragment() {
             }
         }
 
-    }
-
-    private fun checkArtistList(artist: Artist, artistList: ArrayList<Artist>): Boolean {
-        artistList.forEach {
-            if (it.getArtist().equals(artist.getArtist(), ignoreCase = true))
-                return false
-        }
-        return true
     }
 
     private fun showConcerti() {

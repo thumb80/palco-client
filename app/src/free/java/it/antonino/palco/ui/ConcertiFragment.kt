@@ -34,7 +34,7 @@ class ConcertiFragment: Fragment()  {
         viewPager.setPagingEnabled(false)
         viewPager.adapter = concertiViewPagerAdapter
         viewPager.setCurrentItem(0,true)
-        viewPager.offscreenPageLimit = 4
+        viewPager.offscreenPageLimit = 3
         tabLayout.setupWithViewPager(viewPager, true)
 
     }

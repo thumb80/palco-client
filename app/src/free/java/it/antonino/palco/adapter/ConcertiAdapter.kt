@@ -16,20 +16,20 @@ class ConcertiAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdap
         when (position) {
             0 -> return NationalFragment()
             1 -> return LocalFragment()
-            2 -> return EuropeFragment()
-            3 -> return FilterFragment()
+            //2 -> return EuropeFragment()
+            2 -> return FilterFragment()
         }
         return Fragment()
     }
 
-    override fun getCount(): Int = 4
+    override fun getCount(): Int = 3
 
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> return PalcoApplication.instance.resources.getString(R.string.concerti_nazionali)
             1 -> return PalcoApplication.instance.resources.getString(R.string.concerti_locali)
-            2 -> return PalcoApplication.instance.resources.getString(R.string.concerti_internazionali)
-            3 -> return PalcoApplication.instance.getString(R.string.concerti_filter)
+            //2 -> return PalcoApplication.instance.resources.getString(R.string.concerti_internazionali)
+            2 -> return PalcoApplication.instance.getString(R.string.concerti_filter)
         }
         return ""
     }
