@@ -28,10 +28,6 @@ class FilterArtistFragment : Fragment() {
     private val viewModel: SharedViewModel by viewModel()
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterArtistAdapter? = null
-    var artisti = ArrayList<String>()
-    var places = ArrayList<String>()
-    var times = ArrayList<String>()
-    val cities = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,11 +67,11 @@ class FilterArtistFragment : Fragment() {
 
                 it.sortBy { element-> element?.getArtist()?.strip() }
 
-                artistAdapter = ArtistListAdapter(it) {
+                artistAdapter = ArtistListAdapter(it) { artist ->
 
-                    filter_header_artist.text = getString(R.string.filter_artist_selected, it)
+                    filter_header_artist.text = getString(R.string.filter_artist_selected, artist)
 
-                    viewModel.getNationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
+                    viewModel.getNationalConcertsByArtist(artist).observe(viewLifecycleOwner, concertsObserver)
                     //viewModel.getInternationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
 
                 }
@@ -99,6 +95,11 @@ class FilterArtistFragment : Fragment() {
             true -> {
                 (activity as MainActivity).hideProgress()
                 showConcerti()
+
+                val artisti = ArrayList<String>()
+                val places = ArrayList<String>()
+                val times = ArrayList<String>()
+                val cities = ArrayList<String>()
 
                 for (concerto in it) {
                     if (!PalcoUtils.checkObject(concerto)) {
