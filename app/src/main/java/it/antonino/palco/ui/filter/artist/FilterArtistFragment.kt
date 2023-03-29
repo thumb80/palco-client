@@ -10,13 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.ext.CustomDialog
-import it.antonino.palco.model.Artist
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
@@ -60,12 +58,12 @@ class FilterArtistFragment : Fragment() {
 
     }
 
-    private val artistObserver = Observer<ArrayList<Artist?>?> {
+    private val artistObserver = Observer<ArrayList<String?>?> {
 
         when (!it.isNullOrEmpty()) {
             true -> {
 
-                it.sortBy { element-> element?.getArtist()?.strip() }
+                it.sortBy { element-> element?.strip() }
 
                 artistAdapter = ArtistListAdapter(it) { artist ->
 
@@ -116,13 +114,8 @@ class FilterArtistFragment : Fragment() {
                     cities,
                     times
                 ) {
-                    if (!BuildConfig.BUY_TICKET) {
-                        val dialog = CustomDialog(it)
-                        dialog.show(childFragmentManager,null)
-                    }
-                    else {
-                        Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
-                    }
+                    val dialog = CustomDialog(it)
+                    dialog.show(childFragmentManager,null)
                 }
 
                 val dividerItemDecoration = DividerItemDecoration(

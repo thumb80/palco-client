@@ -8,11 +8,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -24,7 +22,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
-import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
@@ -254,13 +251,8 @@ class NationalFragment: Fragment() {
 
         adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
 
-            if (!BuildConfig.BUY_TICKET) {
-                val dialog = CustomDialog(concertRow)
-                dialog.show(childFragmentManager,null)
-            }
-            else {
-                Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
-            }
+            val dialog = CustomDialog(concertRow)
+            dialog.show(childFragmentManager,null)
 
         }
 

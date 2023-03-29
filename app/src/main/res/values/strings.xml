@@ -41,4 +41,11 @@
     <string name="share_url">https://palco.mywire.org</string>
     <string name="locali">locali</string>
     <string name="nazionali">nazionali</string>
+    <string name="google_signin">Accedi con Google</string>
+    <string name="default_notification_channel_id">1001</string>
+    <string name="notification_id">1010101</string>
+    <string name="channel_name">Palco Channel</string>
+    <string name="channel_description">Notification Palco</string>
+    <string name="no_location">Non è stato possibile localizzzare i concerti a te vicini</string>
+    <string name="gps_disabled">Attiva il GPS per localizzare i concerti a te vicini</string>
 </resources>

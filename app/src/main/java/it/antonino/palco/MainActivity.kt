@@ -16,21 +16,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.ProgressBarHolder
-import it.antonino.palco.model.User
 import it.antonino.palco.ui.ConcertiFragment
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.runInterruptible
 import org.greenrobot.eventbus.EventBus
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import java.util.concurrent.ExecutorService
 
 class MainActivity: AppCompatActivity() {
 
@@ -38,11 +30,8 @@ class MainActivity: AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationManager: LocationManager
     private var progressBarHolder: ProgressBarHolder? = null
-    private var user: User? = null
     private var sharedPreferences: SharedPreferences? = null
     private var timeStamp: Long = 0
-
-    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,9 +57,6 @@ class MainActivity: AppCompatActivity() {
                 .replace(R.id.container, ConcertiFragment.newInstance())
                 .commitNow()
         }
-
-        if (sharedPreferences?.getBoolean("firebaseTokenUploaded", false) == false)
-            handleFirebaseToken()
 
         val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
         val layoutColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
@@ -187,24 +173,6 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
-    private fun handleFirebaseToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-            val token = task.result
-            Log.d(TAG, token ?: "")
-            user = User(
-                username = sharedPreferences?.getString("username", "") ?: "",
-                password = sharedPreferences?.getString("password","") ?: "",
-                firebase_token = token ?: "",
-                huawei_token = null
-            )
-            viewModel.uploadFirebaseToken(user!!).observe(this, uploadObserver)
-        })
-    }
-
     private fun collectLocations(addresses: MutableList<Address>?): ArrayList<String> {
         val ret = arrayListOf<String>()
         addresses?.forEach {
@@ -228,19 +196,6 @@ class MainActivity: AppCompatActivity() {
                         EventBus.getDefault().post(CheckBoxHolder(false))
                     }
                 }
-            }
-        }
-    }
-
-    private val uploadObserver = Observer<String?> {
-        when (it?.contains("Token uploaded successfully !!")) {
-            true -> {
-                sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", true)?.apply()
-            }
-            else -> {
-                sharedPreferences?.edit()?.putBoolean("firebaseTokenUploaded", false)?.apply()
-                Toast.makeText(this, "Ops.. c'è stato un problema con il token", Toast.LENGTH_LONG)
-                    .show()
             }
         }
     }

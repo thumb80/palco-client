@@ -10,14 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
-import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.ui.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
@@ -30,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class FilterCityFragment : Fragment() {
 
     private val viewModel: SharedViewModel by viewModel()
-    private var cityList = ArrayList<City>()
+    private var cityList = ArrayList<String>()
     private var cityAdapter: CityListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
@@ -69,7 +66,7 @@ class FilterCityFragment : Fragment() {
 
     }
 
-    private val cityObserver = Observer<ArrayList<City?>?> {
+    private val cityObserver = Observer<ArrayList<String?>?> {
 
         when (!it.isNullOrEmpty()) {
             true -> {
@@ -77,7 +74,7 @@ class FilterCityFragment : Fragment() {
                     if (!cityList.contains(city))
                         city?.let { it_city -> cityList.add(it_city) }
                 }
-                cityList.sortBy { it.getCity() }
+                cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
 
                     filter_header_city.text = getString(R.string.filter_city_selected, it)
@@ -122,13 +119,8 @@ class FilterCityFragment : Fragment() {
                     cities,
                     times
                 ) {
-                    if (!BuildConfig.BUY_TICKET) {
-                        val dialog = CustomDialog(it)
-                        dialog.show(childFragmentManager,null)
-                    }
-                    else {
-                        Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
-                    }
+                    val dialog = CustomDialog(it)
+                    dialog.show(childFragmentManager,null)
                 }
 
                 val dividerItemDecoration = DividerItemDecoration(

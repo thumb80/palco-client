@@ -10,23 +10,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import it.antonino.palco.BuildConfig
 import it.antonino.palco.MainActivity
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.model.Months
 import it.antonino.palco.ui.viewmodel.SharedViewModel
-import it.antonino.palco.util.Constant.maxMonthValue
 import it.antonino.palco.util.Constant.layoutWeight
+import it.antonino.palco.util.Constant.maxMonthValue
 import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_month_fragment.filter_header_month
-import kotlinx.android.synthetic.main.filter_month_fragment.filter_month_list
-import kotlinx.android.synthetic.main.filter_month_fragment.filter_concert_list
+import kotlinx.android.synthetic.main.filter_month_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.Instant
+import java.util.Calendar
+import java.util.Date
 
 class FilterMonthFragment : Fragment() {
 
@@ -65,19 +65,18 @@ class FilterMonthFragment : Fragment() {
             filter_header_month.layoutParams = layoutParams
             filter_header_month.text = getString(R.string.filter_month_selected, it)
 
-            viewModel.getNationalConcertsByMonth(
-                if (Months.valueOf(it).ordinal + 1 < maxMonthValue)
-                    "0"+(Months.valueOf(it).ordinal + 1).toString()
-                else
-                    (Months.valueOf(it).ordinal + 1).toString()
-            ).observe(viewLifecycleOwner, concertsObserver)
-            /*viewModel.getInternationalConcertsByMonth(
-                if (Months.valueOf(it).ordinal + 1 < maxMonthValue)
-                    "0"+(Months.valueOf(it).ordinal + 1).toString()
-                else
-                    (Months.valueOf(it).ordinal + 1).toString()
-            ).observe(viewLifecycleOwner, concertsObserver)*/
+            val calendar = Calendar.getInstance();
 
+            viewModel.getNationalConcertsByMonth(
+                if (Months.valueOf(it).ordinal + 1 < maxMonthValue) {
+                    val month = "0"+(Months.valueOf(it).ordinal + 1).toString()
+                    DateSearchDTO("${calendar.get(Calendar.YEAR)}-${month}-01}", "${calendar.get(Calendar.YEAR)}-${month}-${calendar.getActualMaximum(Calendar.DAY_OF_MONTH)}")
+                }
+                else {
+                    val month = (Months.valueOf(it).ordinal + 1).toString()
+                    DateSearchDTO("${calendar.get(Calendar.YEAR)}-${month}-01", "${calendar.get(Calendar.YEAR)}-${month}-${calendar.getActualMaximum(Calendar.DAY_OF_MONTH)}")
+                }
+            ).observe(viewLifecycleOwner, concertsObserver)
             (activity as MainActivity).showProgress()
         }
 
@@ -112,13 +111,8 @@ class FilterMonthFragment : Fragment() {
                     cities,
                     times
                 ) {
-                    if (!BuildConfig.BUY_TICKET) {
-                        val dialog = CustomDialog(it)
-                        dialog.show(childFragmentManager,null)
-                    }
-                    else {
-                        Toast.makeText(context, "Ops c'è stato un problema", Toast.LENGTH_LONG).show()
-                    }
+                    val dialog = CustomDialog(it)
+                    dialog.show(childFragmentManager,null)
                 }
 
                 val dividerItemDecoration = DividerItemDecoration(

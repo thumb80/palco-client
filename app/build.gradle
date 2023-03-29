@@ -2,9 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
-    id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
-    id 'com.huawei.agconnect'
     id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 
@@ -33,62 +31,6 @@ android {
             keyAlias "palco"
             keyPassword "antonino"
         }
-    }
-
-    flavorDimensions "config", "version"
-
-    productFlavors {
-
-        huawei {
-            dimension "config"
-        }
-
-        google {
-            dimension "config"
-        }
-
-        free {
-            versionCode 1
-            dimension "version"
-            versionNameSuffix "-free"
-            buildConfigField "boolean", "BUY_TICKET", "false"
-        }
-
-        paid {
-            versionCode 1
-            dimension "version"
-            versionNameSuffix "-paid"
-            buildConfigField "boolean", "BUY_TICKET", "false"
-        }
-
-    }
-
-    sourceSets {
-
-        googleFree {
-            java.srcDirs = ['src/google/java','src/free/java']
-            res.srcDirs = ['src/main/res','src/free/res']
-            manifest.srcFile 'src/google/AndroidManifest.xml'
-        }
-
-        googlePaid {
-            java.srcDirs = ['src/google/java','src/paid/java']
-            res.srcDirs = ['src/main/res','src/paid/res']
-            manifest.srcFile 'src/google/AndroidManifest.xml'
-        }
-
-        huaweiFree {
-            java.srcDirs = ['src/huawei/java','src/free/java']
-            res.srcDirs = ['src/main/res','src/free/res']
-            manifest.srcFile 'src/huawei/AndroidManifest.xml'
-        }
-
-        huaweiPaid {
-            java.srcDirs = ['src/huawei/java','src/paid/java']
-            res.srcDirs = ['src/main/res','src/paid/res']
-            manifest.srcFile 'src/huawei/AndroidManifest.xml'
-        }
-
     }
 
     buildTypes.each {
@@ -170,19 +112,14 @@ dependencies {
     implementation 'com.github.unsplash:unsplash-photopicker-android:1.0.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    googleImplementation 'com.google.android.gms:play-services-maps:17.0.1'
-    googleImplementation platform('com.google.firebase:firebase-bom:26.8.0')
-    googleImplementation 'com.google.firebase:firebase-analytics'
-    googleImplementation 'com.google.firebase:firebase-crashlytics-ktx'
-    googleImplementation 'com.google.firebase:firebase-messaging-ktx'
-    googleImplementation 'com.google.firebase:firebase-messaging-directboot:23.0.2'
-    googleImplementation 'com.google.android.gms:play-services-auth:19.0.0'
-    googleImplementation 'com.google.android.gms:play-services-location:21.0.1'
-    huaweiImplementation 'com.facebook.android:facebook-android-sdk:4.42.0'
-    huaweiImplementation 'com.huawei.agconnect:agconnect-core:1.5.2.300'
-    huaweiImplementation 'com.huawei.hms:push:5.0.2.301'
-    huaweiImplementation 'com.huawei.hms:location:3.0.3.300'
-    huaweiImplementation 'com.huawei.hms:maps:4.0.0.302'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    //implementation 'com.google.firebase:firebase-messaging-ktx'
+    //implementation 'com.google.firebase:firebase-messaging-directboot:23.0.2'
+    //implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -192,9 +129,5 @@ dependencies {
 check.dependsOn detektTask
 
 secrets {
-    // To add your Maps API key to this project:
-    // 1. Open the root project's local.properties file
-    // 2. Add this line, where YOUR_API_KEY is your API key:
-    //        MAPS_API_KEY=YOUR_API_KEY
     defaultPropertiesFileName 'local.properties'
 }

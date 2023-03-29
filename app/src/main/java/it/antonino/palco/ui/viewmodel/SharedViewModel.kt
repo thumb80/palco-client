@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
-import it.antonino.palco.model.Artist
-import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.network.NetworkRepository
 import kotlinx.coroutines.launch
 
@@ -19,14 +18,6 @@ class SharedViewModel(
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
             responseObject = networkRepository.getConcertiNazionali()
-        }
-        return responseObject
-    }
-
-    fun getConcertiInternazionali(): LiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getConcertiStranieri()
         }
         return responseObject
     }
@@ -47,8 +38,8 @@ class SharedViewModel(
         return responseObject
     }
 
-    fun getCities(): LiveData<ArrayList<City?>?> {
-        var responseObject = MutableLiveData<ArrayList<City?>?>()
+    fun getCities(): LiveData<ArrayList<String?>?> {
+        var responseObject = MutableLiveData<ArrayList<String?>?>()
         viewModelScope.launch {
             responseObject = networkRepository.getCities()
         }
@@ -63,50 +54,26 @@ class SharedViewModel(
         return responseObject
     }
 
-    fun getNationalCities(): LiveData<ArrayList<City?>?> {
-        var responseObject = MutableLiveData<ArrayList<City?>?>()
+    fun getNationalCities(): LiveData<ArrayList<String?>?> {
+        var responseObject = MutableLiveData<ArrayList<String?>?>()
         viewModelScope.launch {
             responseObject = networkRepository.getCities()
         }
         return responseObject
     }
 
-    fun getInternationalCities(): LiveData<ArrayList<City?>?> {
-        var responseObject = MutableLiveData<ArrayList<City?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getStranieriCities()
-        }
-        return responseObject
-    }
-
-    fun getNationalArtists(): LiveData<ArrayList<Artist?>?> {
-        var responseObject = MutableLiveData<ArrayList<Artist?>?>()
+    fun getNationalArtists(): LiveData<ArrayList<String?>?> {
+        var responseObject = MutableLiveData<ArrayList<String?>?>()
         viewModelScope.launch {
             responseObject = networkRepository.getNationalArtists()
         }
         return responseObject
     }
 
-    fun getInternationalArtists(): LiveData<ArrayList<Artist?>?> {
-        var responseObject = MutableLiveData<ArrayList<Artist?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getStranierilArtists()
-        }
-        return responseObject
-    }
-
-    fun getNationalConcertsByMonth(month: String): LiveData<ArrayList<Concerto?>?> {
+    fun getNationalConcertsByMonth(dateSearchDTO: DateSearchDTO): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
-            responseObject = networkRepository.getConcertiNazionaliByMonth(month)
-        }
-        return responseObject
-    }
-
-    fun getInternationalConcertsByMonth(month: String): LiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getConcertiStranieriByMonth(month)
+            responseObject = networkRepository.getConcertiNazionaliByMonth(dateSearchDTO)
         }
         return responseObject
     }
@@ -119,14 +86,6 @@ class SharedViewModel(
         return responseObject
     }
 
-    fun getInternationalConcertsByCity(city: String): LiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getConcertiStranieriByCity(city)
-        }
-        return responseObject
-    }
-
     fun getNationalConcertsByArtist(artist: String): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
@@ -134,14 +93,5 @@ class SharedViewModel(
         }
         return responseObject
     }
-
-    fun getInternationalConcertsByArtist(artist: String): LiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getConcertiStranieriByArtist(artist)
-        }
-        return responseObject
-    }
-
 
 }

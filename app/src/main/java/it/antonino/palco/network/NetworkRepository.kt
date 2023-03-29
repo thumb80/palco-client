@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.common.SingletonHolderThreeInput
-import it.antonino.palco.model.Artist
-import it.antonino.palco.model.City
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.model.DateSearchDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,59 +51,9 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getConcertiStranieri() : MutableLiveData<ArrayList<Concerto?>?> {
+    fun getConcertiNazionaliByMonth(dateSearchDTO: DateSearchDTO) : MutableLiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieri().enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiNazionaliByMonth(mese: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByMonth(mese).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiNazionaliByMonthAndCity(mese: String, city: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByMonthAndCity(mese,city).enqueue(
+        val response = networkAPI.getConcertiNazionaliByMonth(dateSearchDTO).enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
@@ -177,69 +126,19 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getConcertiNazionaliByTime(time: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByTime(time).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiNazionaliByTimeAndCity(time: String, city: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByTimeAndCity(time,city).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getCities() : MutableLiveData<ArrayList<City?>?> {
-        var responseObject = MutableLiveData<ArrayList<City?>?>()
+    fun getCities() : MutableLiveData<ArrayList<String?>?> {
+        var responseObject = MutableLiveData<ArrayList<String?>?>()
         val response = networkAPI.getCities().enqueue(
-            object : Callback<ArrayList<City?>?> {
-                override fun onFailure(call: Call<ArrayList<City?>?>, t: Throwable) {
+            object : Callback<ArrayList<String?>?> {
+                override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
                     Log.d(TAG, "${t.toString()}")
                     responseObject.postValue(arrayListOf())
                 }
 
                 override fun onResponse(
-                    call: Call<ArrayList<City?>?>,
-                    response: Response<ArrayList<City?>?>
+                    call: Call<ArrayList<String?>?>,
+                    response: Response<ArrayList<String?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
                     Log.d(TAG, "${response}")
@@ -252,219 +151,19 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getNationalArtists() : MutableLiveData<ArrayList<Artist?>?> {
-        var responseObject = MutableLiveData<ArrayList<Artist?>?>()
+    fun getNationalArtists() : MutableLiveData<ArrayList<String?>?> {
+        var responseObject = MutableLiveData<ArrayList<String?>?>()
         val response = networkAPI.getNationalArtists().enqueue(
-            object : Callback<ArrayList<Artist?>?> {
-                override fun onFailure(call: Call<ArrayList<Artist?>?>, t: Throwable) {
+            object : Callback<ArrayList<String?>?> {
+                override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
                     Log.d(TAG, "${t.toString()}")
                     responseObject.postValue(arrayListOf())
                 }
 
                 override fun onResponse(
-                    call: Call<ArrayList<Artist?>?>,
-                    response: Response<ArrayList<Artist?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiStranieriByMonth(mese: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieriByMonth(mese).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiStranieriByMonthAndCity(mese: String, city: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieriByMonthAndCity(mese,city).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiStranieriByCity(city: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieriByCity(city).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiStranieriByArtist(artist: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieriByArtist(artist).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiStranieriByTime(time: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieriByTime(time).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiStranieriByTimeAndCity(time: String, city: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiStranieriByTimeAndCity(time,city).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getStranieriCities() : MutableLiveData<ArrayList<City?>?> {
-        var responseObject = MutableLiveData<ArrayList<City?>?>()
-        val response = networkAPI.getStranieriCities().enqueue(
-            object : Callback<ArrayList<City?>?> {
-                override fun onFailure(call: Call<ArrayList<City?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<City?>?>,
-                    response: Response<ArrayList<City?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getStranierilArtists() : MutableLiveData<ArrayList<Artist?>?> {
-        var responseObject = MutableLiveData<ArrayList<Artist?>?>()
-        val response = networkAPI.getStranierilArtists().enqueue(
-            object : Callback<ArrayList<Artist?>?> {
-                override fun onFailure(call: Call<ArrayList<Artist?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Artist?>?>,
-                    response: Response<ArrayList<Artist?>?>
+                    call: Call<ArrayList<String?>?>,
+                    response: Response<ArrayList<String?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
                     Log.d(TAG, "${response}")

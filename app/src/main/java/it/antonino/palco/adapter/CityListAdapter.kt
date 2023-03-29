@@ -7,15 +7,14 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
-import it.antonino.palco.model.City
 import kotlinx.android.synthetic.main.city_list.view.city
 import java.util.*
 
 
-class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Unit)
+class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> Unit)
     : RecyclerView.Adapter<CityViewHolder>(), Filterable{
 
-    val initialCityDataList = ArrayList<City>().apply {
+    val initialCityDataList = ArrayList<String>().apply {
         city?.let { addAll(it) }
     }
 
@@ -24,7 +23,7 @@ class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Uni
     }
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
-        holder.bind(city?.get(position)?.getCity()!!,listener)
+        holder.bind(city?.get(position)!!,listener)
     }
 
     override fun getItemCount(): Int = city?.size ?: 0
@@ -35,13 +34,13 @@ class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Uni
 
     private val cityFilter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val filteredList: ArrayList<City?> = ArrayList()
+            val filteredList: ArrayList<String?> = ArrayList()
             if (constraint == null || constraint.isEmpty()) {
                 initialCityDataList.let { filteredList.addAll(it) }
             } else {
                 val query = constraint.toString().trim().toLowerCase()
                 initialCityDataList.forEach {
-                    if (it.getCity().toLowerCase(Locale.ROOT).contains(query)) {
+                    if (it.toLowerCase(Locale.ROOT).contains(query)) {
                         filteredList.add(it)
                     }
                 }
@@ -54,7 +53,7 @@ class CityListAdapter(val city: ArrayList<City>?, val  listener: (String) -> Uni
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             if (results?.values is ArrayList<*>) {
                 city?.clear()
-                city?.addAll(results.values as ArrayList<City>)
+                city?.addAll(results.values as ArrayList<String>)
                 notifyDataSetChanged()
             }
         }
