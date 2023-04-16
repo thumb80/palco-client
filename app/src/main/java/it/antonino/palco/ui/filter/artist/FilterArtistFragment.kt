@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,16 +17,22 @@ import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_artist_fragment.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterArtistFragment : Fragment() {
 
-    private val viewModel: SharedViewModel by viewModel()
+    private val viewModel: SharedViewModel by activityViewModels()
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterArtistAdapter? = null
+
+    var artisti = ArrayList<String>()
+    var places = ArrayList<String>()
+    var times = ArrayList<String>()
+    var cities = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +46,6 @@ class FilterArtistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getNationalArtists().observe(viewLifecycleOwner, artistObserver)
-        //viewModel.getInternationalArtists().observe(viewLifecycleOwner, artistObserver)
 
         hideConcerti()
 
@@ -67,11 +73,13 @@ class FilterArtistFragment : Fragment() {
 
                 artistAdapter = ArtistListAdapter(it) { artist ->
 
+                    artisti = arrayListOf()
+                    places = arrayListOf()
+                    cities = arrayListOf()
+                    times = arrayListOf()
+
                     filter_header_artist.text = getString(R.string.filter_artist_selected, artist)
-
                     viewModel.getNationalConcertsByArtist(artist).observe(viewLifecycleOwner, concertsObserver)
-                    //viewModel.getInternationalConcertsByArtist(it).observe(viewLifecycleOwner, concertsObserver)
-
                 }
                 val layoutManager = LinearLayoutManager(
                     context,
@@ -94,17 +102,16 @@ class FilterArtistFragment : Fragment() {
                 (activity as MainActivity).hideProgress()
                 showConcerti()
 
-                val artisti = ArrayList<String>()
-                val places = ArrayList<String>()
-                val times = ArrayList<String>()
-                val cities = ArrayList<String>()
-
                 for (concerto in it) {
                     if (!PalcoUtils.checkObject(concerto)) {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(concerto.getTime())
+                        times.add(
+                            PalcoUtils.getDateTimeString(
+                                concerto.getTime().substringBefore(" ")
+                            )
+                        )
                     }
                 }
 
@@ -131,7 +138,7 @@ class FilterArtistFragment : Fragment() {
                 filter_concert_artist_list.addItemDecoration(dividerItemDecoration)
 
                 filter_header_artist.setOnClickListener {
-                     hideConcerti()
+                    hideConcerti()
                 }
 
             }

@@ -9,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import it.antonino.palco.R
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
-import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.roundRadius
 import kotlinx.android.synthetic.main.concerto_filter_view.view.artist
 import kotlinx.android.synthetic.main.concerto_filter_view.view.artist_image

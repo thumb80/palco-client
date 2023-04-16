@@ -6,7 +6,7 @@ import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.network.UnsplashAPI
-import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

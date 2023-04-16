@@ -20,7 +20,7 @@ object PalcoUtils {
         return calendar.time
     }
 
-    fun getDateTimeString(time: String): String? {
+    fun getDateTimeString(time: String): String {
         val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
         val outsdf = SimpleDateFormat("EEEE dd MMMM y", Locale.ITALY)
         val calendar = Calendar.getInstance()

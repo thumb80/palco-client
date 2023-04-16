@@ -20,13 +20,18 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.ProgressBarHolder
+import it.antonino.palco.ext.populateMonths
 import it.antonino.palco.ui.ConcertiFragment
+import it.antonino.palco.viewmodel.SharedViewModel
+import kotlinx.android.synthetic.main.fragment_national.*
 import org.greenrobot.eventbus.EventBus
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MainActivity: AppCompatActivity() {
 
     private val TAG = MainActivity::class.simpleName
+    private val viewModel: SharedViewModel by viewModel()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationManager: LocationManager
     private var progressBarHolder: ProgressBarHolder? = null
@@ -46,16 +51,23 @@ class MainActivity: AppCompatActivity() {
                     this,
                     ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
-            ) {
+            )
                 ActivityCompat.requestPermissions( this, arrayOf(ACCESS_COARSE_LOCATION), 1000)
-            }
             else
                 handleLocation()
         else {
             Toast.makeText(this, getString(R.string.gps_disabled), Toast.LENGTH_LONG).show()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ConcertiFragment.newInstance())
-                .commitNow()
+            goNext()
+        }
+
+        showProgress()
+        viewModel.getConcertiNazionali().observe(this) {
+            if (it == null)
+                Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show()
+            else {
+                viewModel.setConcerti(it)
+                viewModel.setMonths(it.populateMonths())
+            }
         }
 
         val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
@@ -79,7 +91,6 @@ class MainActivity: AppCompatActivity() {
                     try {
                         fusedLocationClient.lastLocation
                             .addOnSuccessListener { location : Location? ->
-                                // Got last known location. In some rare situations this can be null.
                                 if (location != null) {
                                     val geocoder = Geocoder(this, Locale.getDefault())
                                     val centerAdresses = geocoder.getFromLocation(location.latitude, location.longitude, 10)
@@ -100,16 +111,16 @@ class MainActivity: AppCompatActivity() {
                                 }
                                 else
                                     Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
-                                supportFragmentManager.beginTransaction()
-                                    .replace(R.id.container, ConcertiFragment.newInstance())
-                                    .commitNow()
+                                goNext()
                             }
                     } catch (e: SecurityException) {
                         Log.w(TAG, "Cannot get last location")
                         Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
                     }
-                else
+                else {
                     Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
+                    goNext()
+                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -128,15 +139,11 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun showProgress() {
-        PalcoApplication.instance.executorService.execute {
-            progressBarHolder?.show(this)
-        }
+        progressBarHolder?.show(this)
     }
 
     fun hideProgress() {
-        PalcoApplication.instance.executorService.execute {
-            progressBarHolder?.hide(this)
-        }
+        progressBarHolder?.hide(this)
     }
 
     private fun handleLocation() {
@@ -163,9 +170,7 @@ class MainActivity: AppCompatActivity() {
                     }
                     else
                         Toast.makeText(this, getString(R.string.no_location), Toast.LENGTH_LONG).show()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, ConcertiFragment.newInstance())
-                        .commitNow()
+                    goNext()
                 }
         } catch (e: SecurityException) {
             Log.w(TAG, "Cannot get last location")
@@ -182,6 +187,12 @@ class MainActivity: AppCompatActivity() {
         return ret
     }
 
+    private fun goNext() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, ConcertiFragment.newInstance())
+            .commitNow()
+    }
+
     fun onCheckboxClicked(view: View) {
         if (view is CheckBox) {
             val checked: Boolean = view.isChecked
@@ -189,11 +200,19 @@ class MainActivity: AppCompatActivity() {
                 R.id.concerti_locali -> {
                     if (checked) {
                         EventBus.getDefault().post(CheckBoxHolder(true))
+                        concerti_locali.isChecked = true
+                        concerti_nazionali.isChecked = false
+                        concerti_locali.isClickable = false
+                        concerti_nazionali.isClickable = true
                     }
                 }
                 R.id.concerti_nazionali -> {
                     if (checked) {
                         EventBus.getDefault().post(CheckBoxHolder(false))
+                        concerti_locali.isChecked = false
+                        concerti_nazionali.isChecked = true
+                        concerti_locali.isClickable = true
+                        concerti_nazionali.isClickable = false
                     }
                 }
             }

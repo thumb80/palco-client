@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
@@ -18,11 +20,14 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.model.Months
-import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.layoutWeight
 import it.antonino.palco.util.Constant.maxMonthValue
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_month_fragment.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.Instant
 import java.util.Calendar
@@ -30,14 +35,13 @@ import java.util.Date
 
 class FilterMonthFragment : Fragment() {
 
-    private val viewModel: SharedViewModel by viewModel()
-    private var monthList = ArrayList<String>()
+    private val viewModel: SharedViewModel by activityViewModels()
     private var monthAdapter : MonthListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
     var times = ArrayList<String>()
-    val cities = ArrayList<String>()
+    var cities = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,42 +54,47 @@ class FilterMonthFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Months.values().forEach {
-            monthList.add(it.name)
-        }
+        viewModel.months.observe(viewLifecycleOwner, object : Observer<ArrayList<String>> {
+            override fun onChanged(t: ArrayList<String>?) {
+                monthAdapter = MonthListAdapter(t) {
 
+                    val layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    layoutParams.weight = layoutWeight
+                    filter_header_month.layoutParams = layoutParams
+                    filter_header_month.text = getString(R.string.filter_month_selected, it)
 
-        monthAdapter = MonthListAdapter(monthList) {
+                    val calendar = Calendar.getInstance()
+                    val year = it.substringAfter(" ")
+                    var month = ""
+                    val tempMonth = Months.valueOf(it.substringBefore( " ")).ordinal + 1
+                    month = if (tempMonth < 10)
+                        "0".plus(tempMonth)
+                    else
+                        tempMonth.toString()
+                    val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+                    val minDay = "01"
+                    val dateSearchDTO = DateSearchDTO(
+                        startDate = "$year-$month-$minDay",
+                        endDate = "$year-$month-$maxDay"
+                    )
 
-            val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            layoutParams.weight = layoutWeight
-            filter_header_month.layoutParams = layoutParams
-            filter_header_month.text = getString(R.string.filter_month_selected, it)
+                    artisti = arrayListOf()
+                    places = arrayListOf()
+                    cities = arrayListOf()
+                    times = arrayListOf()
 
-            val calendar = Calendar.getInstance();
-
-            viewModel.getNationalConcertsByMonth(
-                if (Months.valueOf(it).ordinal + 1 < maxMonthValue) {
-                    val month = "0"+(Months.valueOf(it).ordinal + 1).toString()
-                    DateSearchDTO("${calendar.get(Calendar.YEAR)}-${month}-01}", "${calendar.get(Calendar.YEAR)}-${month}-${calendar.getActualMaximum(Calendar.DAY_OF_MONTH)}")
+                    viewModel.getNationalConcertsByMonth(dateSearchDTO).observe(viewLifecycleOwner, concertsObserver)
                 }
-                else {
-                    val month = (Months.valueOf(it).ordinal + 1).toString()
-                    DateSearchDTO("${calendar.get(Calendar.YEAR)}-${month}-01", "${calendar.get(Calendar.YEAR)}-${month}-${calendar.getActualMaximum(Calendar.DAY_OF_MONTH)}")
-                }
-            ).observe(viewLifecycleOwner, concertsObserver)
-            (activity as MainActivity).showProgress()
-        }
 
-        val layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL,
-            false)
-        filter_month_list.layoutManager = layoutManager
-        filter_month_list.adapter = monthAdapter
+                displayMonths()
+            }
+
+        })
+
+
 
     }
 
@@ -101,7 +110,11 @@ class FilterMonthFragment : Fragment() {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(concerto.getTime())
+                        times.add(
+                            PalcoUtils.getDateTimeString(
+                                concerto.getTime().substringBefore(" ")
+                            )
+                        )
                     }
                 }
 
@@ -138,6 +151,15 @@ class FilterMonthFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun displayMonths() {
+        val layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false)
+        filter_month_list.layoutManager = layoutManager
+        filter_month_list.adapter = monthAdapter
     }
 
     private fun showConcerti() {

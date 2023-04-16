@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CheckBoxHolder
@@ -30,8 +32,9 @@ import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.getDate
+import it.antonino.palco.ext.populateMonths
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
@@ -41,16 +44,18 @@ import kotlinx.android.synthetic.main.fragment_national.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NationalFragment: Fragment() {
 
-    private val viewModel: SharedViewModel by viewModel()
+    private val viewModel: SharedViewModel by activityViewModels()
     private var adapter: CustomAdapter? = null
     private var cities: Set<String>? = null
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
@@ -63,9 +68,11 @@ class NationalFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         cities = sharedPreferences?.getStringSet("cities", null)
+
         dotsItemDecoration = DotsItemDecoration(
             resources.getDimension(R.dimen.dp_4).toInt(),
             resources.getDimension(R.dimen.dp_6).toInt(),
@@ -79,6 +86,7 @@ class NationalFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         return inflater.inflate(R.layout.fragment_national, container, false)
     }
 
@@ -155,66 +163,22 @@ class NationalFragment: Fragment() {
             calendar_view.scrollLeft()
         }
 
-        (activity as MainActivity).showProgress()
-
-        if (sharedPreferences?.getBoolean("isLocal", false) == true) {
-            concerti_locali.isChecked = true
-            concerti_nazionali.isChecked = false
-            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiLocaliObserver)
-        }
-        else {
-            concerti_locali.isChecked = false
-            concerti_nazionali.isChecked = true
-            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
-        }
-
-    }
-
-    private val concertiObserver = Observer<ArrayList<Concerto?>?> {
-        when (!it.isNullOrEmpty()) {
-            true -> {
-                (activity as MainActivity).hideProgress()
-                calendar_view.removeAllEvents()
-                for (concerto in it) {
-                    if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
-                        val event = Event(
-                            Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
-                            concerto.getTime().getDate() + concertoTimeOffset,
-                            concerto
-                        )
-                        calendar_view.addEvent(event)
-                    }
+        viewModel.concerti.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                if (sharedPreferences?.getBoolean("isLocal", false) == true) {
+                    concerti_locali.isChecked = true
+                    concerti_nazionali.isChecked = false
+                    concerti_locali.isClickable = false
+                    concerti_nazionali.isClickable = true
+                    displayLocalEvents(it)
                 }
-                displayCurrentEvents(currentDayInstance.time)
-            }
-            else -> {
-                (activity as MainActivity).hideProgress()
-                Toast.makeText(context, R.string.server_error, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    private val concertiLocaliObserver = Observer<ArrayList<Concerto?>?> {
-        when (!it.isNullOrEmpty()) {
-            true -> {
-                (activity as MainActivity).hideProgress()
-                calendar_view.removeAllEvents()
-                for (concerto in it) {
-                    if ((concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) &&
-                        (cities?.contains(concerto.getCity()) == true)) {
-                        val event = Event(
-                            Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
-                            concerto.getTime().getDate() + concertoTimeOffset,
-                            concerto
-                        )
-                        calendar_view.addEvent(event)
-                    }
+                else {
+                    concerti_locali.isChecked = false
+                    concerti_nazionali.isChecked = true
+                    concerti_locali.isClickable = true
+                    concerti_nazionali.isClickable = false
+                    displayNationalEvents(it)
                 }
-                displayCurrentEvents(currentDayInstance.time)
-            }
-            else -> {
-                (activity as MainActivity).hideProgress()
-                Toast.makeText(context, R.string.server_error, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -232,7 +196,6 @@ class NationalFragment: Fragment() {
         val artisti: ArrayList<String> = ArrayList(events.size)
         val places: ArrayList<String> = ArrayList(events.size)
         val cities: ArrayList<String> = ArrayList(events.size)
-        //val bills: ArrayList<String?> = ArrayList(events.size)
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
@@ -256,7 +219,6 @@ class NationalFragment: Fragment() {
 
         }
 
-
         if (events.isNotEmpty()) {
             concerti_recycler?.adapter = adapter
             hideEmpty()
@@ -267,6 +229,47 @@ class NationalFragment: Fragment() {
         }
 
         (activity as MainActivity).hideProgress()
+    }
+
+    private fun displayNationalEvents(concerti: ArrayList<Concerto?>?) {
+        if (concerti != null) {
+            calendar_view.removeAllEvents()
+            for (concerto in concerti) {
+                if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
+                    val event = Event(
+                        Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
+                        concerto.getTime().getDate() + concertoTimeOffset,
+                        concerto
+                    )
+                    calendar_view.addEvent(event)
+                }
+            }
+            displayCurrentEvents(currentDayInstance.time)
+        }
+        else {
+            showEmpty()
+        }
+    }
+
+    private fun displayLocalEvents(concerti: ArrayList<Concerto?>?) {
+        if (concerti != null) {
+            calendar_view.removeAllEvents()
+            for (concerto in concerti) {
+                if ((concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) &&
+                    (cities?.contains(concerto.getCity()) == true)) {
+                    val event = Event(
+                        Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
+                        concerto.getTime().getDate() + concertoTimeOffset,
+                        concerto
+                    )
+                    calendar_view.addEvent(event)
+                }
+            }
+            displayCurrentEvents(currentDayInstance.time)
+        }
+        else {
+            showEmpty()
+        }
     }
 
     private fun showEmpty() {
@@ -285,16 +288,14 @@ class NationalFragment: Fragment() {
     fun onCheckedListener(checkBoxHolder: CheckBoxHolder) {
         (activity as MainActivity).showProgress()
         if (checkBoxHolder.isChecked) {
-            concerti_locali.isChecked = true
-            concerti_nazionali.isChecked = false
+
             sharedPreferences?.edit()?.putBoolean("isLocal", true)?.apply()
-            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiLocaliObserver)
+            displayLocalEvents(viewModel.concerti.value)
         }
         else {
-            concerti_locali.isChecked = false
-            concerti_nazionali.isChecked = true
+
             sharedPreferences?.edit()?.putBoolean("isLocal", false)?.apply()
-            viewModel.getConcertiNazionali().observe(viewLifecycleOwner, concertiObserver)
+            displayNationalEvents(viewModel.concerti.value)
         }
     }
 
@@ -307,5 +308,4 @@ class NationalFragment: Fragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
-
 }

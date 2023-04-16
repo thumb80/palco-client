@@ -16,24 +16,25 @@ import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.ui.viewmodel.SharedViewModel
+import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_header_city
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_city_list
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_concert_city_list
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
 
-    private val viewModel: SharedViewModel by viewModel()
+    private val viewModel: SharedViewModel by sharedViewModel()
     private var cityList = ArrayList<String>()
     private var cityAdapter: CityListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
     var times = ArrayList<String>()
-    val cities = ArrayList<String>()
+    var cities = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +48,6 @@ class FilterCityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getNationalCities().observe(viewLifecycleOwner, cityObserver)
-        //viewModel.getInternationalCities().observe(viewLifecycleOwner, cityObserver)
 
         hideConcerti()
 
@@ -77,11 +77,13 @@ class FilterCityFragment : Fragment() {
                 cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
 
+                    artisti = arrayListOf()
+                    places = arrayListOf()
+                    cities = arrayListOf()
+                    times = arrayListOf()
+
                     filter_header_city.text = getString(R.string.filter_city_selected, it)
-
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
-                    //viewModel.getInternationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
-
                 }
                 val layoutManager = LinearLayoutManager(
                     context,
@@ -109,7 +111,11 @@ class FilterCityFragment : Fragment() {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(concerto.getTime())
+                        times.add(
+                            PalcoUtils.getDateTimeString(
+                                concerto.getTime().substringBefore(" ")
+                            )
+                        )
                     }
                 }
 
