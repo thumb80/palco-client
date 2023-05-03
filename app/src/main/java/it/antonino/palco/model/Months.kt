@@ -2,17 +2,17 @@ package it.antonino.palco.model
 
 enum class Months(value: Int) {
 
-    gennaio(1),
-    febbraio(2),
-    marzo(3),
-    aprile(4),
-    maggio(5),
-    giugno(6),
-    luglio(7),
-    agosto(8),
-    settembre(9),
-    ottobre(10),
-    novembre(11),
-    dicembre(12)
+    Gennaio(1),
+    Febbraio(2),
+    Marzo(3),
+    Aprile(4),
+    Maggio(5),
+    Giugno(6),
+    Luglio(7),
+    Agosto(8),
+    Settembre(9),
+    Ottobre(10),
+    Novembre(11),
+    Dicembre(12)
 
 }

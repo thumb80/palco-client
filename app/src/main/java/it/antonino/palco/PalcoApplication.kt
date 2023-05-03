@@ -13,7 +13,6 @@ import java.util.concurrent.Executors
 class PalcoApplication: Application() {
 
     val executorService: ExecutorService = Executors.newFixedThreadPool(4)
-    var months: ArrayList<String> = arrayListOf()
 
     companion object {
         lateinit var instance: PalcoApplication

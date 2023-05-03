@@ -73,6 +73,8 @@ class FilterArtistFragment : Fragment() {
 
                 artistAdapter = ArtistListAdapter(it) { artist ->
 
+                    (activity as MainActivity).showProgress()
+
                     artisti = arrayListOf()
                     places = arrayListOf()
                     cities = arrayListOf()

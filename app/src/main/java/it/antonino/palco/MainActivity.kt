@@ -60,7 +60,6 @@ class MainActivity: AppCompatActivity() {
             goNext()
         }
 
-        showProgress()
         viewModel.getConcertiNazionali().observe(this) {
             if (it == null)
                 Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show()
@@ -139,11 +138,15 @@ class MainActivity: AppCompatActivity() {
     }
 
     fun showProgress() {
-        progressBarHolder?.show(this)
+        PalcoApplication.instance.executorService.execute {
+            progressBarHolder?.show(this)
+        }
     }
 
     fun hideProgress() {
-        progressBarHolder?.hide(this)
+        PalcoApplication.instance.executorService.execute {
+            progressBarHolder?.hide(this)
+        }
     }
 
     private fun handleLocation() {

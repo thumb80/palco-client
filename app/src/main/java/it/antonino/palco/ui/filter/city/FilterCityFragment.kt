@@ -77,6 +77,8 @@ class FilterCityFragment : Fragment() {
                 cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
 
+                    (activity as MainActivity).showProgress()
+
                     artisti = arrayListOf()
                     places = arrayListOf()
                     cities = arrayListOf()

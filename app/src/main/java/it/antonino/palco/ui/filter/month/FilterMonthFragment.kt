@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.MainActivity
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
@@ -20,18 +19,11 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.model.Months
-import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.layoutWeight
-import it.antonino.palco.util.Constant.maxMonthValue
 import it.antonino.palco.util.PalcoUtils
+import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_month_fragment.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.time.Instant
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 class FilterMonthFragment : Fragment() {
 
@@ -58,6 +50,8 @@ class FilterMonthFragment : Fragment() {
             override fun onChanged(t: ArrayList<String>?) {
                 monthAdapter = MonthListAdapter(t) {
 
+                    (activity as MainActivity).showProgress()
+
                     val layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
@@ -69,7 +63,9 @@ class FilterMonthFragment : Fragment() {
                     val calendar = Calendar.getInstance()
                     val year = it.substringAfter(" ")
                     var month = ""
-                    val tempMonth = Months.valueOf(it.substringBefore( " ")).ordinal + 1
+                    val tempMonth = Months.values().filter { month ->
+                        month.name == it.substringBefore(" ")
+                    }[0].ordinal + 1
                     month = if (tempMonth < 10)
                         "0".plus(tempMonth)
                     else
@@ -93,8 +89,6 @@ class FilterMonthFragment : Fragment() {
             }
 
         })
-
-
 
     }
 

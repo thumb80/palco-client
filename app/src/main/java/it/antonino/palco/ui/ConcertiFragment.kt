@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
+import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ConcertiAdapter
 import it.antonino.palco.ext.CustomViewPager
@@ -25,6 +26,8 @@ class ConcertiFragment: Fragment()  {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        (context as MainActivity).showProgress()
 
         val viewPager = view.findViewById<CustomViewPager>(R.id.pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)

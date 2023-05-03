@@ -286,7 +286,6 @@ class NationalFragment: Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCheckedListener(checkBoxHolder: CheckBoxHolder) {
-        (activity as MainActivity).showProgress()
         if (checkBoxHolder.isChecked) {
 
             sharedPreferences?.edit()?.putBoolean("isLocal", true)?.apply()

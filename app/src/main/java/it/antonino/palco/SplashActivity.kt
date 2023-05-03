@@ -10,8 +10,6 @@ import it.antonino.palco.util.Constant.delayMillis
 
 class SplashActivity: AppCompatActivity() {
 
-    var sharedPreferences: SharedPreferences? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
