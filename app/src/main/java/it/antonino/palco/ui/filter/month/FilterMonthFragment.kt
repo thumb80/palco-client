@@ -16,11 +16,12 @@ import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
 import it.antonino.palco.ext.CustomDialog
+import it.antonino.palco.ext.checkObject
+import it.antonino.palco.ext.getDateString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.model.Months
 import it.antonino.palco.util.Constant.layoutWeight
-import it.antonino.palco.util.PalcoUtils
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_month_fragment.*
 import java.util.*
@@ -100,15 +101,11 @@ class FilterMonthFragment : Fragment() {
                 showConcerti()
 
                 for (concerto in it) {
-                    if (!PalcoUtils.checkObject(concerto)) {
+                    if (concerto?.checkObject() == false) {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(
-                            PalcoUtils.getDateTimeString(
-                                concerto.getTime().substringBefore(" ")
-                            )
-                        )
+                        times.add(concerto.getTime().substringBefore(" ").getDateString())
                     }
                 }
 

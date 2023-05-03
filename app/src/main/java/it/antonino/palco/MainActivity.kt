@@ -60,6 +60,15 @@ class MainActivity: AppCompatActivity() {
             goNext()
         }
 
+        val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
+        val layoutColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
+        progressBarHolder = ProgressBarHolder.Builder()
+            .setIndeterminateColor(layoutColor)
+            .setLayoutBackColor(backColor)
+            .build(this)
+
+        showProgress()
+
         viewModel.getConcertiNazionali().observe(this) {
             if (it == null)
                 Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show()
@@ -68,14 +77,6 @@ class MainActivity: AppCompatActivity() {
                 viewModel.setMonths(it.populateMonths())
             }
         }
-
-        val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
-        val layoutColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
-        progressBarHolder = ProgressBarHolder.Builder()
-            .setIndeterminateColor(layoutColor)
-            .setLayoutBackColor(backColor)
-            .build(this)
-
 
     }
 

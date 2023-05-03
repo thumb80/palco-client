@@ -9,12 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,28 +22,22 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import it.antonino.palco.MainActivity
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
-import it.antonino.palco.ext.CustomDialog
-import it.antonino.palco.ext.getDate
-import it.antonino.palco.ext.populateMonths
+import it.antonino.palco.ext.*
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.redColorRGB
-import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.fragment_national.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
@@ -199,7 +191,7 @@ class NationalFragment: Fragment() {
         val times: ArrayList<String> = ArrayList(events.size)
         for (concerto in concerti)
         {
-            if (!PalcoUtils.checkObject(concerto)) {
+            if (!concerto.checkObject()) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)
@@ -235,7 +227,7 @@ class NationalFragment: Fragment() {
         if (concerti != null) {
             calendar_view.removeAllEvents()
             for (concerto in concerti) {
-                if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
+                if (concerto?.getTime()?.compareDate() == false) {
                     val event = Event(
                         Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
                         concerto.getTime().getDate() + concertoTimeOffset,
@@ -255,7 +247,7 @@ class NationalFragment: Fragment() {
         if (concerti != null) {
             calendar_view.removeAllEvents()
             for (concerto in concerti) {
-                if ((concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) &&
+                if ((concerto?.getTime()?.compareDate() == false) &&
                     (cities?.contains(concerto.getCity()) == true)) {
                     val event = Event(
                         Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),

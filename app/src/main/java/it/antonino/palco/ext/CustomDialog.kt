@@ -21,7 +21,6 @@ import it.antonino.palco.R
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.maps.MapsActivity
 import it.antonino.palco.util.Constant.bitMapQuality
-import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.custom_dialog.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -72,11 +71,10 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                 .into(object: CustomTarget<Bitmap>() {
 
                     override fun onLoadCleared(placeholder: Drawable?) {
-                        // do your stuff, you can load placeholder image here
+
                     }
 
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-
 
                         val cachePath = File(requireContext().cacheDir, "images")
                         cachePath.mkdirs()
@@ -97,7 +95,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                             R.string.share_concert_string,
                             concertRow.artist,
                             concertRow.place,
-                            PalcoUtils.getDateTimeString(concertRow.time!!),
+                            concertRow.time?.getDateFromString(),
                             getString(R.string.share_url))
                         )
                         intent.putExtra(Intent.EXTRA_STREAM, contentUri)
@@ -127,7 +125,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                 R.string.share_concert_string,
                 concertRow.artist,
                 concertRow.place,
-                PalcoUtils.getDateTimeString(concertRow.time!!),
+                concertRow.time?.getDateFromString(),
                 getString(R.string.share_url))
             )
             intent.putExtra(Intent.EXTRA_STREAM, contentUri)

@@ -15,15 +15,15 @@ import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
+import it.antonino.palco.ext.checkObject
+import it.antonino.palco.ext.getDateString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_header_city
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_city_list
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_concert_city_list
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
 
@@ -109,15 +109,11 @@ class FilterCityFragment : Fragment() {
                 showConcerti()
 
                 for (concerto in it) {
-                    if (!PalcoUtils.checkObject(concerto)) {
-                        artisti.add(concerto?.getArtist()!!)
+                    if (concerto?.checkObject() == false) {
+                        artisti.add(concerto.getArtist())
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(
-                            PalcoUtils.getDateTimeString(
-                                concerto.getTime().substringBefore(" ")
-                            )
-                        )
+                        times.add(concerto.getTime().substringBefore(" ").getDateString())
                     }
                 }
 
