@@ -50,18 +50,25 @@ class AdviseFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        advise_text.text = builder.toString()
-
-        no_consent.setOnClickListener {
-            System.exit(0)
-        }
-
-        ok_consent.setOnClickListener {
-            sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
+        if (sharedPreferences?.getBoolean("ok_consent", false) == true) {
             advise_container.visibility = View.INVISIBLE
             childFragmentManager.beginTransaction()
                 .replace(R.id.second_container, ConcertiFragment.newInstance())
                 .commit()
+        } else {
+            advise_text.text = builder.toString()
+
+            no_consent.setOnClickListener {
+                System.exit(0)
+            }
+
+            ok_consent.setOnClickListener {
+                advise_container.visibility = View.INVISIBLE
+                sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
+                childFragmentManager.beginTransaction()
+                    .replace(R.id.second_container, ConcertiFragment.newInstance())
+                    .commit()
+            }
         }
     }
 }

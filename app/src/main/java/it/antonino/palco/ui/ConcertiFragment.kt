@@ -27,8 +27,6 @@ class ConcertiFragment: Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        (context as MainActivity).showProgress()
-
         val viewPager = view.findViewById<CustomViewPager>(R.id.pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val concertiViewPagerAdapter = ConcertiAdapter(childFragmentManager)

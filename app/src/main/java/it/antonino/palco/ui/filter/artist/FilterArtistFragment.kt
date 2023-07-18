@@ -17,13 +17,10 @@ import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.checkObject
-import it.antonino.palco.ext.getDateString
+import it.antonino.palco.ext.getDateFromString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_artist_fragment.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterArtistFragment : Fragment() {
 
@@ -81,6 +78,7 @@ class FilterArtistFragment : Fragment() {
                     times = arrayListOf()
 
                     filter_header_artist.text = getString(R.string.filter_artist_selected, artist)
+                    (activity as MainActivity).showProgress()
                     viewModel.getNationalConcertsByArtist(artist).observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
@@ -101,6 +99,8 @@ class FilterArtistFragment : Fragment() {
 
         when(!it.isNullOrEmpty()) {
             true -> {
+                (activity as MainActivity).hideProgress()
+
                 showConcerti()
 
                 for (concerto in it) {
@@ -109,9 +109,7 @@ class FilterArtistFragment : Fragment() {
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
                         times.add(
-                            PalcoUtils.getDateTimeString(
-                                concerto.getTime().substringBefore(" ")
-                            )
+                            concerto.getTime().substringBefore(" ").getDateFromString()
                         )
                     }
                 }
@@ -144,6 +142,8 @@ class FilterArtistFragment : Fragment() {
 
             }
             else -> {
+                (activity as MainActivity).hideProgress()
+
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
         }

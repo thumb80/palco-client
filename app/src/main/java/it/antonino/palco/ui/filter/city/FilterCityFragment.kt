@@ -16,16 +16,11 @@ import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.checkObject
-import it.antonino.palco.ext.getDateString
+import it.antonino.palco.ext.getDateFromString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.util.PalcoUtils
-import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
-import kotlinx.android.synthetic.main.filter_city_fragment.filter_header_city
-import kotlinx.android.synthetic.main.filter_city_fragment.filter_city_list
-import kotlinx.android.synthetic.main.filter_city_fragment.filter_concert_city_list
+import kotlinx.android.synthetic.main.filter_city_fragment.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
 
@@ -85,6 +80,7 @@ class FilterCityFragment : Fragment() {
                     times = arrayListOf()
 
                     filter_header_city.text = getString(R.string.filter_city_selected, it)
+                    (activity as MainActivity).showProgress()
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
@@ -114,9 +110,7 @@ class FilterCityFragment : Fragment() {
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
                         times.add(
-                            PalcoUtils.getDateTimeString(
-                                concerto.getTime().substringBefore(" ")
-                            )
+                            concerto.getTime().substringBefore(" ").getDateFromString()
                         )
                     }
                 }
@@ -149,6 +143,8 @@ class FilterCityFragment : Fragment() {
 
             }
             else -> {
+                (activity as MainActivity).hideProgress()
+
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
         }

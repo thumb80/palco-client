@@ -18,15 +18,13 @@ import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.checkObject
-import it.antonino.palco.ext.getDateString
+import it.antonino.palco.ext.getDateFromString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.model.Months
 import it.antonino.palco.util.Constant.layoutWeight
-import it.antonino.palco.util.PalcoUtils
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_month_fragment.*
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 
 class FilterMonthFragment : Fragment() {
@@ -80,6 +78,7 @@ class FilterMonthFragment : Fragment() {
             cities = arrayListOf()
             times = arrayListOf()
 
+            (activity as MainActivity).showProgress()
             viewModel.getNationalConcertsByMonth(dateSearchDTO).observe(viewLifecycleOwner, concertsObserver)
         }
 
@@ -96,6 +95,8 @@ class FilterMonthFragment : Fragment() {
 
         when(!it.isNullOrEmpty()) {
             true -> {
+                (activity as MainActivity).hideProgress()
+
                 showConcerti()
 
                 for (concerto in it) {
@@ -104,9 +105,7 @@ class FilterMonthFragment : Fragment() {
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
                         times.add(
-                            PalcoUtils.getDateTimeString(
-                                concerto.getTime().substringBefore(" ")
-                            )
+                            concerto.getTime().substringBefore(" ").getDateFromString()
                         )
                     }
                 }
@@ -140,6 +139,8 @@ class FilterMonthFragment : Fragment() {
 
             }
             else -> {
+                (activity as MainActivity).hideProgress()
+
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
         }

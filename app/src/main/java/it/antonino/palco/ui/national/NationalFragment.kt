@@ -31,7 +31,6 @@ import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.redColorRGB
-import it.antonino.palco.util.PalcoUtils
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_national.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -56,6 +55,8 @@ class NationalFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        (activity as MainActivity).showProgress()
 
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -145,8 +146,6 @@ class NationalFragment: Fragment() {
             calendar_view.scrollLeft()
         }
 
-        (activity as MainActivity).showProgress()
-
         viewModel.concerti.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 displayNationalEvents(it)
@@ -205,7 +204,7 @@ class NationalFragment: Fragment() {
     private fun displayNationalEvents(concerti: ArrayList<Concerto?>?) {
         if (concerti != null) {
             for (concerto in concerti) {
-                if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
+                if (concerto?.getTime()?.let { time -> time.compareDate() } == false) {
                     val event = Event(
                         Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
                         concerto.getTime().getDate() + concertoTimeOffset,
@@ -222,7 +221,6 @@ class NationalFragment: Fragment() {
     }
 
     private fun showEmpty() {
-        (activity as MainActivity).hideProgress()
         no_data.visibility = View.VISIBLE
         no_data.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
         concerti_recycler?.visibility = View.INVISIBLE

@@ -95,8 +95,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                             R.string.share_concert_string,
                             concertRow.artist,
                             concertRow.place,
-                            concertRow.time?.getDateFromString(),
-                            getString(R.string.share_url))
+                            concertRow.time?.getDateFromString())
                         )
                         intent.putExtra(Intent.EXTRA_STREAM, contentUri)
                         context?.startActivity(
@@ -125,8 +124,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
                 R.string.share_concert_string,
                 concertRow.artist,
                 concertRow.place,
-                concertRow.time?.getDateFromString(),
-                getString(R.string.share_url))
+                concertRow.time?.getDateFromString())
             )
             intent.putExtra(Intent.EXTRA_STREAM, contentUri)
             context?.startActivity(

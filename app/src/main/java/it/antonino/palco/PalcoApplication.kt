@@ -13,11 +13,7 @@ import java.util.concurrent.Executors
 class PalcoApplication: Application() {
 
     val executorService: ExecutorService = Executors.newFixedThreadPool(4)
-    var concerti: ArrayList<Concerto?> = arrayListOf()
     var months: ArrayList<String> = arrayListOf()
-    var selectedMonth: String = ""
-    var selectedCity: String = ""
-    var selectedArtist: String = ""
 
     companion object {
         lateinit var instance: PalcoApplication

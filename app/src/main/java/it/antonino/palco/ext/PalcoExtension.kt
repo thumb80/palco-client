@@ -27,6 +27,13 @@ fun String.getDate(): Long {
     return sdf.parse(this).time
 }
 
+fun String.getDateFromString(): String {
+    val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+    val outsdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
+    val date = insdf.parse(this).time
+    return outsdf.format(Date(date))
+}
+
 fun String.compareDate(): Boolean {
     val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
     val calendar = Calendar.getInstance()

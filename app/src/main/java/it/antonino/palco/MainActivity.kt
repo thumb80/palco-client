@@ -38,17 +38,10 @@ class MainActivity: AppCompatActivity() {
                 viewModel.setConcerti(it)
                 PalcoApplication.instance.months = it.populateMonths()
             }
-            if (sharedPreferences?.getBoolean("ok_consent", false) == true) {
-                advise_container.visibility = View.INVISIBLE
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, ConcertiFragment.newInstance())
-            }
-            else {
-                advise_container.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, AdviseFragment())
-                    .commit()
-            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, AdviseFragment())
+                .commit()
         }
 
         val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
@@ -59,13 +52,6 @@ class MainActivity: AppCompatActivity() {
             .build(this)
 
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, AdviseFragment())
-            .commit()
     }
 
     @Deprecated("Deprecated in Java")
