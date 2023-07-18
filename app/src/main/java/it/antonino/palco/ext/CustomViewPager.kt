@@ -26,9 +26,4 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
     fun setPagingEnabled(enabled: Boolean) {
         this.myEnabled = enabled
     }
-
-    override fun getCurrentItem(): Int {
-        return super.getCurrentItem()
-    }
-
 }

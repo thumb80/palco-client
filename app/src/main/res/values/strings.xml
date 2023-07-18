@@ -39,13 +39,7 @@
     <string name="filter_artist_select">Elenco artisti. Seleziona un artista dall\'elenco</string>
     <string name="share_concert_string">C\'è un concerto \n %1$s a %2$s \n %3$s \n clicca sul link per maggiori dettagli %4$s</string>
     <string name="share_url">https://palco.mywire.org</string>
-    <string name="locali">locali</string>
-    <string name="nazionali">nazionali</string>
-    <string name="google_signin">Accedi con Google</string>
-    <string name="default_notification_channel_id">1001</string>
-    <string name="notification_id">1010101</string>
-    <string name="channel_name">Palco Channel</string>
-    <string name="channel_description">Notification Palco</string>
-    <string name="no_location">Non è stato possibile localizzzare i concerti a te vicini</string>
-    <string name="gps_disabled">Attiva il GPS per localizzare i concerti a te vicini</string>
+    <string name="title_activity_filter">FilterActivity</string>
+    <string name="no_consent">Rifiuta</string>
+    <string name="ok_consent">Accetta</string>
 </resources>

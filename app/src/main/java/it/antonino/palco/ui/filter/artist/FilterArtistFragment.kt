@@ -20,7 +20,10 @@ import it.antonino.palco.ext.checkObject
 import it.antonino.palco.ext.getDateString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
+import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_artist_fragment.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterArtistFragment : Fragment() {
 
@@ -72,8 +75,6 @@ class FilterArtistFragment : Fragment() {
 
                 artistAdapter = ArtistListAdapter(it) { artist ->
 
-                    (activity as MainActivity).showProgress()
-
                     artisti = arrayListOf()
                     places = arrayListOf()
                     cities = arrayListOf()
@@ -100,7 +101,6 @@ class FilterArtistFragment : Fragment() {
 
         when(!it.isNullOrEmpty()) {
             true -> {
-                (activity as MainActivity).hideProgress()
                 showConcerti()
 
                 for (concerto in it) {
@@ -108,7 +108,11 @@ class FilterArtistFragment : Fragment() {
                         artisti.add(concerto.getArtist())
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(concerto.getTime().substringBefore(" ").getDateString())
+                        times.add(
+                            PalcoUtils.getDateTimeString(
+                                concerto.getTime().substringBefore(" ")
+                            )
+                        )
                     }
                 }
 

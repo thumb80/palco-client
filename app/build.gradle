@@ -39,6 +39,7 @@ android {
         it.buildConfigField('String', 'DISCOGS_SECRET', properties.get("discogsSecret"))
         it.buildConfigField('String', 'UNSPLASH_ACCESS_KEY', properties.get("unsplashAccessKey"))
         it.buildConfigField('String', 'UNSPLASH_SECRET_KEY', properties.get("unsplashSecretKey"))
+        it.buildConfigField('String', 'AUTH_TOKEN', properties.get("authToken"))
     }
 
     buildTypes {
@@ -92,7 +93,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.22.0-RC1'
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation 'androidx.fragment:fragment-ktx:1.5.6'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
@@ -111,7 +112,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.github.unsplash:unsplash-photopicker-android:1.0.1'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-analytics'

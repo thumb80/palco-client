@@ -19,11 +19,13 @@ import it.antonino.palco.ext.checkObject
 import it.antonino.palco.ext.getDateString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
+import it.antonino.palco.util.PalcoUtils
 import kotlinx.android.synthetic.main.filter_city_fragment.search_bar
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_header_city
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_city_list
 import kotlinx.android.synthetic.main.filter_city_fragment.filter_concert_city_list
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FilterCityFragment : Fragment() {
 
@@ -77,8 +79,6 @@ class FilterCityFragment : Fragment() {
                 cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
 
-                    (activity as MainActivity).showProgress()
-
                     artisti = arrayListOf()
                     places = arrayListOf()
                     cities = arrayListOf()
@@ -113,7 +113,11 @@ class FilterCityFragment : Fragment() {
                         artisti.add(concerto.getArtist())
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(concerto.getTime().substringBefore(" ").getDateString())
+                        times.add(
+                            PalcoUtils.getDateTimeString(
+                                concerto.getTime().substringBefore(" ")
+                            )
+                        )
                     }
                 }
 

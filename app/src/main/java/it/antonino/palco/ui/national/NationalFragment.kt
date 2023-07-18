@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,20 +23,18 @@ import com.google.gson.JsonParser
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
-import it.antonino.palco.common.CheckBoxHolder
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.ext.*
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.redColorRGB
+import it.antonino.palco.util.PalcoUtils
+import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_national.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
@@ -47,9 +44,8 @@ import kotlin.collections.ArrayList
 
 class NationalFragment: Fragment() {
 
-    private val viewModel: SharedViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by sharedViewModel()
     private var adapter: CustomAdapter? = null
-    private var cities: Set<String>? = null
     private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     private val currentDayInstance: Calendar = Calendar.getInstance(Locale.ITALY)
     private var layoutManager: LinearLayoutManager? = null
@@ -63,7 +59,6 @@ class NationalFragment: Fragment() {
 
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        cities = sharedPreferences?.getStringSet("cities", null)
 
         dotsItemDecoration = DotsItemDecoration(
             resources.getDimension(R.dimen.dp_4).toInt(),
@@ -84,11 +79,6 @@ class NationalFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (cities != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            concerti_checkbox_layout.visibility = View.VISIBLE
-        else
-            concerti_checkbox_layout.visibility = View.GONE
 
         monthView?.text = simpleDateFormat.format(
             DateTimeUtils.toDate(
@@ -155,22 +145,11 @@ class NationalFragment: Fragment() {
             calendar_view.scrollLeft()
         }
 
+        (activity as MainActivity).showProgress()
+
         viewModel.concerti.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
-                if (sharedPreferences?.getBoolean("isLocal", false) == true) {
-                    concerti_locali.isChecked = true
-                    concerti_nazionali.isChecked = false
-                    concerti_locali.isClickable = false
-                    concerti_nazionali.isClickable = true
-                    displayLocalEvents(it)
-                }
-                else {
-                    concerti_locali.isChecked = false
-                    concerti_nazionali.isChecked = true
-                    concerti_locali.isClickable = true
-                    concerti_nazionali.isClickable = false
-                    displayNationalEvents(it)
-                }
+                displayNationalEvents(it)
             }
         }
     }
@@ -225,30 +204,8 @@ class NationalFragment: Fragment() {
 
     private fun displayNationalEvents(concerti: ArrayList<Concerto?>?) {
         if (concerti != null) {
-            calendar_view.removeAllEvents()
             for (concerto in concerti) {
-                if (concerto?.getTime()?.compareDate() == false) {
-                    val event = Event(
-                        Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
-                        concerto.getTime().getDate() + concertoTimeOffset,
-                        concerto
-                    )
-                    calendar_view.addEvent(event)
-                }
-            }
-            displayCurrentEvents(currentDayInstance.time)
-        }
-        else {
-            showEmpty()
-        }
-    }
-
-    private fun displayLocalEvents(concerti: ArrayList<Concerto?>?) {
-        if (concerti != null) {
-            calendar_view.removeAllEvents()
-            for (concerto in concerti) {
-                if ((concerto?.getTime()?.compareDate() == false) &&
-                    (cities?.contains(concerto.getCity()) == true)) {
+                if (concerto?.getTime()?.let { time -> PalcoUtils.compareDate(time) } == false) {
                     val event = Event(
                         Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
                         concerto.getTime().getDate() + concertoTimeOffset,
@@ -274,29 +231,5 @@ class NationalFragment: Fragment() {
     private fun hideEmpty() {
         no_data.visibility = View.INVISIBLE
         concerti_recycler?.visibility = View.VISIBLE
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onCheckedListener(checkBoxHolder: CheckBoxHolder) {
-        if (checkBoxHolder.isChecked) {
-
-            sharedPreferences?.edit()?.putBoolean("isLocal", true)?.apply()
-            displayLocalEvents(viewModel.concerti.value)
-        }
-        else {
-
-            sharedPreferences?.edit()?.putBoolean("isLocal", false)?.apply()
-            displayNationalEvents(viewModel.concerti.value)
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
     }
 }

@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.7.20-RC'
     repositories {
         google()
         mavenCentral()
@@ -25,4 +25,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    compose_version = '1.2.0-dev-k1.7.0-RC2-6ab9bf980ae'
 }

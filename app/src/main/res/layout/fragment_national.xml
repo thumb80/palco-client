@@ -53,48 +53,6 @@
 
     </RelativeLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/concerti_checkbox_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_8"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/monthLayout"
-        app:layout_constraintBottom_toTopOf="@+id/calendar_view">
-
-        <CheckBox
-            android:id="@+id/concerti_locali"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/locali"
-            android:textColor="@color/colorWhite"
-            android:buttonTint="@color/colorWhite"
-            android:padding="@dimen/dp_6"
-            android:onClick="onCheckboxClicked"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/concerti_nazionali"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <CheckBox
-            android:id="@+id/concerti_nazionali"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nazionali"
-            android:textColor="@color/colorWhite"
-            android:buttonTint="@color/colorWhite"
-            android:padding="@dimen/dp_6"
-            android:onClick="onCheckboxClicked"
-            app:layout_constraintStart_toEndOf="@+id/concerti_locali"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"

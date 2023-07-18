@@ -18,9 +18,6 @@ class SharedViewModel(
     private var _concerti: MutableLiveData<ArrayList<Concerto?>?> = MutableLiveData()
     val concerti: LiveData<ArrayList<Concerto?>?> get() = _concerti
 
-    private var _months: MutableLiveData<ArrayList<String>> = MutableLiveData()
-    val months: LiveData<ArrayList<String>> get() = _months
-
     fun getConcertiNazionali(): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
@@ -87,9 +84,5 @@ class SharedViewModel(
 
     fun setConcerti(concerti: ArrayList<Concerto?>?) {
         _concerti.postValue(concerti)
-    }
-
-    fun setMonths(months: ArrayList<String>) {
-        _months.postValue(months)
     }
 }

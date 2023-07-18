@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.adapter.MonthListAdapter
@@ -22,8 +23,10 @@ import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.DateSearchDTO
 import it.antonino.palco.model.Months
 import it.antonino.palco.util.Constant.layoutWeight
+import it.antonino.palco.util.PalcoUtils
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_month_fragment.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 
 class FilterMonthFragment : Fragment() {
@@ -47,49 +50,45 @@ class FilterMonthFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.months.observe(viewLifecycleOwner, object : Observer<ArrayList<String>> {
-            override fun onChanged(t: ArrayList<String>?) {
-                monthAdapter = MonthListAdapter(t) {
+        monthAdapter = MonthListAdapter(PalcoApplication.instance.months) {
 
-                    (activity as MainActivity).showProgress()
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.weight = layoutWeight
+            filter_header_month.layoutParams = layoutParams
+            filter_header_month.text = getString(R.string.filter_month_selected, it)
 
-                    val layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    layoutParams.weight = layoutWeight
-                    filter_header_month.layoutParams = layoutParams
-                    filter_header_month.text = getString(R.string.filter_month_selected, it)
+            val calendar = Calendar.getInstance()
+            val year = it.substringAfter(" ")
+            var month = ""
+            val tempMonth = Months.valueOf(it.substringBefore( " ")).ordinal + 1
+            month = if (tempMonth < 10)
+                "0".plus(tempMonth)
+            else
+                tempMonth.toString()
+            val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            val minDay = "01"
+            val dateSearchDTO = DateSearchDTO(
+                startDate = "$year-$month-$minDay",
+                endDate = "$year-$month-$maxDay"
+            )
 
-                    val calendar = Calendar.getInstance()
-                    val year = it.substringAfter(" ")
-                    var month = ""
-                    val tempMonth = Months.values().filter { month ->
-                        month.name == it.substringBefore(" ")
-                    }[0].ordinal + 1
-                    month = if (tempMonth < 10)
-                        "0".plus(tempMonth)
-                    else
-                        tempMonth.toString()
-                    val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-                    val minDay = "01"
-                    val dateSearchDTO = DateSearchDTO(
-                        startDate = "$year-$month-$minDay",
-                        endDate = "$year-$month-$maxDay"
-                    )
+            artisti = arrayListOf()
+            places = arrayListOf()
+            cities = arrayListOf()
+            times = arrayListOf()
 
-                    artisti = arrayListOf()
-                    places = arrayListOf()
-                    cities = arrayListOf()
-                    times = arrayListOf()
+            viewModel.getNationalConcertsByMonth(dateSearchDTO).observe(viewLifecycleOwner, concertsObserver)
+        }
 
-                    viewModel.getNationalConcertsByMonth(dateSearchDTO).observe(viewLifecycleOwner, concertsObserver)
-                }
-
-                displayMonths()
-            }
-
-        })
+        val layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false)
+        filter_month_list.layoutManager = layoutManager
+        filter_month_list.adapter = monthAdapter
 
     }
 
@@ -97,7 +96,6 @@ class FilterMonthFragment : Fragment() {
 
         when(!it.isNullOrEmpty()) {
             true -> {
-                (activity as MainActivity).hideProgress()
                 showConcerti()
 
                 for (concerto in it) {
@@ -105,7 +103,11 @@ class FilterMonthFragment : Fragment() {
                         artisti.add(concerto?.getArtist()!!)
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(concerto.getTime().substringBefore(" ").getDateString())
+                        times.add(
+                            PalcoUtils.getDateTimeString(
+                                concerto.getTime().substringBefore(" ")
+                            )
+                        )
                     }
                 }
 

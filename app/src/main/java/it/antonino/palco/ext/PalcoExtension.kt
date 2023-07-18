@@ -12,6 +12,7 @@ import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
@@ -24,24 +25,6 @@ fun Int.dpToPixels(): Int {
 fun String.getDate(): Long {
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
     return sdf.parse(this).time
-}
-
-fun String.getDateString(): String {
-    val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-    val outsdf = SimpleDateFormat("EEEE dd MMMM y", Locale.ITALY)
-    val calendar = Calendar.getInstance()
-    calendar.time = insdf.parse(this) as Date
-    calendar.add(Calendar.DAY_OF_MONTH, 1)
-    return outsdf.format(calendar.time)
-}
-
-fun String.getDateFromString(): String {
-    val insdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-    val outsdf = SimpleDateFormat("EEEE dd MMMM y", Locale.ITALY)
-    val calendar = Calendar.getInstance()
-    calendar.time = insdf.parse(this) as Date
-    calendar.add(Calendar.DAY_OF_MONTH, 1)
-    return outsdf.format(calendar.time)
 }
 
 fun String.compareDate(): Boolean {
@@ -70,7 +53,8 @@ fun Concerto?.checkObject(): Boolean {
             || this?.getTime()?.compareDate() == true
 }
 
-fun ArrayList<Concerto?>?.populateMonths(): ArrayList<String> {
+
+fun ArrayList<Concerto?>?.populateMonths() : ArrayList<String> {
     val months: ArrayList<String> = arrayListOf()
     val sdf = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
