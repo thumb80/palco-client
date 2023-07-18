@@ -10,7 +10,7 @@ object Constant {
     const val roundRadius = 6
     const val densityPixelOffset = 0.5f
     const val offsetDayMillis = 86400000L
-    const val offscreenPageLimit = 3
+    const val offscreenPageLimit = 2
     const val currentItem = 0
     const val layoutWeight = 0.1F
     const val redColorRGB = 241
