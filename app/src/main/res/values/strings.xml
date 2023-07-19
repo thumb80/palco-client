@@ -37,7 +37,7 @@
     <string name="filter_artist_selected">Artista selezionato : %1$s. Fai tap quì per cambiare artista</string>
     <string name="filter_city_select">Elenco città. Seleziona una città dall\'elenco</string>
     <string name="filter_artist_select">Elenco artisti. Seleziona un artista dall\'elenco</string>
-    <string name="share_concert_string">C\'è un concerto \n %1$s a %2$s \n %3$s</string>
+    <string name="share_concert_string">C\'è un concerto \n%1$s a %2$s\n%3$s - %4$s</string>
     <string name="share_url">https://palco.mywire.org</string>
     <string name="title_activity_filter">FilterActivity</string>
     <string name="no_consent">Rifiuta</string>
