@@ -4,15 +4,11 @@ import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
 import it.antonino.palco.di.appModule
-import it.antonino.palco.model.Concerto
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class PalcoApplication: Application() {
 
-    val executorService: ExecutorService = Executors.newFixedThreadPool(4)
     var months: ArrayList<String> = arrayListOf()
 
     companion object {

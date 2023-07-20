@@ -18,7 +18,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 33
         versionCode 1
-        versionName "2.1"
+        versionName "1.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -39,6 +39,7 @@ android {
         it.buildConfigField('String', 'DISCOGS_SECRET', properties.get("discogsSecret"))
         it.buildConfigField('String', 'UNSPLASH_ACCESS_KEY', properties.get("unsplashAccessKey"))
         it.buildConfigField('String', 'UNSPLASH_SECRET_KEY', properties.get("unsplashSecretKey"))
+        it.buildConfigField('Double', 'VERSION_NAME', defaultConfig.versionName)
         it.buildConfigField('String', 'AUTH_TOKEN', properties.get("authToken"))
     }
 
@@ -107,7 +108,6 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
-    implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'com.github.tarek360.RichPath:animator:0.1.1'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.github.unsplash:unsplash-photopicker-android:1.0.1'
@@ -116,9 +116,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    //implementation 'com.google.firebase:firebase-messaging-ktx'
-    //implementation 'com.google.firebase:firebase-messaging-directboot:23.0.2'
-    //implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

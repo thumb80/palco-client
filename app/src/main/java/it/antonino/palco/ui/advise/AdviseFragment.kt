@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.ui.ConcertiFragment
 import kotlinx.android.synthetic.main.fragment_advise.*
@@ -22,7 +24,7 @@ class AdviseFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val `in`: InputStream = resources.openRawResource(R.raw.advise)
 

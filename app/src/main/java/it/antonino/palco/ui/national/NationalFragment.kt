@@ -56,8 +56,6 @@ class NationalFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (activity as MainActivity).showProgress()
-
         sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -198,7 +196,6 @@ class NationalFragment: Fragment() {
             showEmpty()
         }
 
-        (activity as MainActivity).hideProgress()
     }
 
     private fun displayNationalEvents(concerti: ArrayList<Concerto?>?) {

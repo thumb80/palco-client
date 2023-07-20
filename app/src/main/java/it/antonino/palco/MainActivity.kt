@@ -5,23 +5,20 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import it.antonino.palco.common.ProgressBarHolder
 import it.antonino.palco.ext.populateMonths
-import it.antonino.palco.ui.ConcertiFragment
 import it.antonino.palco.ui.advise.AdviseFragment
 import it.antonino.palco.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.fragment_advise.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity: AppCompatActivity() {
 
     private val viewModel: SharedViewModel by viewModel()
-    private var progressBarHolder: ProgressBarHolder? = null
     private var sharedPreferences: SharedPreferences? = null
     private var timeStamp: Long = 0
+    var progressBar: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -30,7 +27,8 @@ class MainActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-
+        progressBar = findViewById(R.id.progress_bar) as ProgressBar
+        progressBar?.visibility = View.VISIBLE
         viewModel.getConcertiNazionali().observe(this) {
             if (it == null)
                 Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show()
@@ -43,15 +41,6 @@ class MainActivity: AppCompatActivity() {
                 .replace(R.id.container, AdviseFragment())
                 .commit()
         }
-
-        val backColor = ContextCompat.getColor(applicationContext, R.color.white_alpha)
-        val layoutColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
-        progressBarHolder = ProgressBarHolder.Builder()
-            .setIndeterminateColor(layoutColor)
-            .setLayoutBackColor(backColor)
-            .build(this)
-
-
     }
 
     @Deprecated("Deprecated in Java")
@@ -63,18 +52,6 @@ class MainActivity: AppCompatActivity() {
                 timeStamp = System.currentTimeMillis()
                 Toast.makeText(this, "Premere due volte per uscire dall'app", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    fun showProgress() {
-        PalcoApplication.instance.executorService.execute {
-            progressBarHolder?.show(this)
-        }
-    }
-
-    fun hideProgress() {
-        PalcoApplication.instance.executorService.execute {
-            progressBarHolder?.hide(this)
         }
     }
 }

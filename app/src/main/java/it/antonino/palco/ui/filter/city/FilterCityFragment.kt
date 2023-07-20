@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.MainActivity
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
@@ -80,7 +81,7 @@ class FilterCityFragment : Fragment() {
                     times = arrayListOf()
 
                     filter_header_city.text = getString(R.string.filter_city_selected, it)
-                    (activity as MainActivity).showProgress()
+                    (activity as MainActivity).progressBar?.visibility = View.VISIBLE
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
@@ -101,7 +102,7 @@ class FilterCityFragment : Fragment() {
 
         when(!it.isNullOrEmpty()) {
             true -> {
-                (activity as MainActivity).hideProgress()
+                (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 showConcerti()
 
                 for (concerto in it) {
@@ -143,8 +144,7 @@ class FilterCityFragment : Fragment() {
 
             }
             else -> {
-                (activity as MainActivity).hideProgress()
-
+                (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
         }
