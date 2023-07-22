@@ -58,14 +58,6 @@ class SharedViewModel(
         return responseObject
     }
 
-    fun getNationalConcertsByMonth(dateSearchDTO: DateSearchDTO): LiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        viewModelScope.launch {
-            responseObject = networkRepository.getConcertiNazionaliByMonth(dateSearchDTO)
-        }
-        return responseObject
-    }
-
     fun getNationalConcertsByCity(city: String): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {

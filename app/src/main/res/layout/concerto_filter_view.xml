@@ -32,7 +32,7 @@
             app:layout_constraintGuide_percent="0.45"/>
 
         <TextView
-            tools:text="Artista col nome lunghissimo che va su due righe fhgffhfgh"
+            tools:text="Artista"
             android:id="@+id/artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            tools:text="Circolo Magnolia ingresso riservato ai soci ACI bla bla bla bla bla bla bla bla bla bla bla bla"
+            tools:text="Locale"
             android:id="@+id/place"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            tools:text="Milano bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla"
+            tools:text="Città"
             android:id="@+id/city"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            tools:text="Milano bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla"
+            tools:text="Sabato 22 Luglio 2023"
             android:id="@+id/time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

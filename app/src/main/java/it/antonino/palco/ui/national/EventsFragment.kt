@@ -1,14 +1,12 @@
 package it.antonino.palco.ui.national
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -20,7 +18,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
-import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
@@ -32,7 +29,7 @@ import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.fragment_national.*
+import kotlinx.android.synthetic.main.fragment_events.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.Instant
@@ -41,7 +38,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class NationalFragment: Fragment() {
+class EventsFragment: Fragment() {
 
     private val viewModel: SharedViewModel by sharedViewModel()
     private var adapter: CustomAdapter? = null
@@ -50,13 +47,11 @@ class NationalFragment: Fragment() {
     private var layoutManager: LinearLayoutManager? = null
     private var position : Int? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
-    private var sharedPreferences: SharedPreferences? = null
     private lateinit var locationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        sharedPreferences = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         dotsItemDecoration = DotsItemDecoration(
@@ -73,7 +68,7 @@ class NationalFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        return inflater.inflate(R.layout.fragment_national, container, false)
+        return inflater.inflate(R.layout.fragment_events, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -127,7 +122,6 @@ class NationalFragment: Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val view = snapHelper.findSnapView(recyclerView.layoutManager)
-                val cardContainer = view?.findViewById<LinearLayout>(R.id.cardContainer)
                 position = view?.let { recyclerView.getChildAdapterPosition(it) }
                 position?.let {
                     adapter?.setSelectedItem(it)

@@ -6,13 +6,13 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.ui.filter.FilterFragment
-import it.antonino.palco.ui.national.NationalFragment
+import it.antonino.palco.ui.national.EventsFragment
 
 class ConcertiAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return NationalFragment()
+            0 -> return EventsFragment()
             1 -> return FilterFragment()
         }
         return Fragment()

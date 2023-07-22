@@ -18,7 +18,8 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +30,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.maps.MapsActivity"

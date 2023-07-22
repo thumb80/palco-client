@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import it.antonino.palco.util.Constant.delayMillis
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity: AppCompatActivity() {
@@ -17,7 +18,7 @@ class SplashActivity: AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
-        }, 3000)
+        }, delayMillis)
     }
 
 }

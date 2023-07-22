@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import it.antonino.palco.BuildConfig
-import it.antonino.palco.common.SingletonHolderThreeInput
+import it.antonino.palco.common.SingletonHolder
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.DateSearchDTO
 import retrofit2.Call
@@ -17,7 +17,7 @@ class NetworkRepository(
     private val unsplashAPI: UnsplashAPI
 ) {
 
-    companion object : SingletonHolderThreeInput<
+    companion object : SingletonHolder<
             NetworkRepository,
             NetworkAPI,
             DiscogsAPI,
