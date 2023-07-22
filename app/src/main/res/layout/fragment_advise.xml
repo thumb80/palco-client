@@ -30,6 +30,8 @@
             android:id="@+id/advise_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/dp_24"
+            android:layout_marginRight="@dimen/dp_24"
             app:layout_constraintTop_toBottomOf="@+id/main_guideline"
             app:layout_constraintBottom_toTopOf="@+id/advise_guideline"/>
 

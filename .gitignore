@@ -9,7 +9,7 @@
 
 # Files for the ART/Dalvik VM
 *.dex
-
+*.txt
 # Java class files
 *.class
 
@@ -97,3 +97,6 @@ main/google-services.json
 
 gradle/wrapper/gradle-wrapper.jar
 gradle/wrapper/gradle-wrapper.properties
+
+gradlew
+gradlew.bat

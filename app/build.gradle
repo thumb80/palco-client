@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'com.google.firebase.crashlytics'
-    id 'com.google.secrets_gradle_plugin' version '0.5'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '1.3.0'
 }
 
 Properties properties = new Properties()
@@ -20,7 +20,16 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-        setProperty("archivesBaseName", "palco-$versionName")
+
+        buildConfigField "String", "BASE_URL", properties.get("baseUrl")
+        buildConfigField "String", "DISCOGS_API_KEY", properties.get("dicogsApiKey")
+        buildConfigField "String", "DISCOGS_SECRET", properties.get("discogsSecret")
+        buildConfigField "String", "UNSPLASH_ACCESS_KEY", properties.get("unsplashAccessKey")
+        buildConfigField "String", "UNSPLASH_SECRET_KEY", properties.get("unsplashSecretKey")
+        buildConfigField "Double", "VERSION_NAME", defaultConfig.versionName
+        buildConfigField "String", "AUTH_TOKEN", properties.get("authToken")
+
+        setProperty("archivesBaseName", "palco")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -32,16 +41,6 @@ android {
             keyAlias "palco"
             keyPassword "antonino"
         }
-    }
-
-    buildTypes.each {
-        it.buildConfigField('String', 'BASE_URL', properties.get("baseUrl"))
-        it.buildConfigField('String', 'DISCOGS_API_KEY', properties.get("dicogsApiKey"))
-        it.buildConfigField('String', 'DISCOGS_SECRET', properties.get("discogsSecret"))
-        it.buildConfigField('String', 'UNSPLASH_ACCESS_KEY', properties.get("unsplashAccessKey"))
-        it.buildConfigField('String', 'UNSPLASH_SECRET_KEY', properties.get("unsplashSecretKey"))
-        it.buildConfigField('Double', 'VERSION_NAME', defaultConfig.versionName)
-        it.buildConfigField('String', 'AUTH_TOKEN', properties.get("authToken"))
     }
 
     buildTypes {
@@ -126,6 +125,10 @@ dependencies {
 
 check.dependsOn detektTask
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '8.2.1' //version required
+}
+
 secrets {
-    defaultPropertiesFileName 'local.properties'
+    defaultPropertiesFileName = 'local.properties'
 }
