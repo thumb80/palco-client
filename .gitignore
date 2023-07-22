@@ -98,4 +98,5 @@ main/google-services.json
 gradle/wrapper/gradle-wrapper.jar
 gradle/wrapper/gradle-wrapper.properties
 
-app/src/main/res/raw/*..txt
+app/src/main/res/raw/advise.txt
+app/src/main/res/raw/style_map.json
