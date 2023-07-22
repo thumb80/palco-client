@@ -29,6 +29,7 @@ class MainActivity: AppCompatActivity() {
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         progressBar = findViewById(R.id.progress_bar) as ProgressBar
         progressBar?.visibility = View.VISIBLE
+
         viewModel.getConcertiNazionali().observe(this) {
             if (it == null)
                 Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show()

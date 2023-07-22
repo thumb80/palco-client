@@ -18,5 +18,5 @@ object Constant {
     const val concertoTimeOffset = 86400000
     const val delayMillis = 1500L
     const val bitMapQuality = 100
-
+    const val cacheSize = (5 * 1024 * 1024).toLong()
 }
