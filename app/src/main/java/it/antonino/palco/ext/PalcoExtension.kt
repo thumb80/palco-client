@@ -34,6 +34,25 @@ fun String.getDateFromString(): String {
     return outsdf.format(Date(date))
 }
 
+fun String.getStringFromDate(): String {
+    val insdf1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALY)
+    val insdf2 = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
+    val insdf3 = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
+
+    val outsdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
+    var date: Long = 0L
+    try {
+        date = insdf1.parse(this).time
+    } catch (e: Exception) {
+        try {
+            date = insdf2.parse(this).time
+        } catch (e: Exception) {
+            date = insdf3.parse(this).time
+        }
+    }
+    return outsdf.format(Date(date))
+}
+
 fun String.compareDate(): Boolean {
     val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
     val calendar = Calendar.getInstance()
