@@ -68,7 +68,7 @@
         app:compactCalendarBackgroundColor="@color/colorPrimary"
         app:compactCalendarTextColor="@color/colorWhite"
         app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorAccent"
-        app:compactCalendarCurrentDayBackgroundColor="@color/colorAccent"
+        app:compactCalendarCurrentDayBackgroundColor="@color/colorPrimary"
         app:compactCalendarMultiEventIndicatorColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/monthLayout"
