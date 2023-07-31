@@ -8,7 +8,6 @@ import android.view.Window
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import it.antonino.palco.ext.populateMonths
 import it.antonino.palco.ui.advise.AdviseFragment
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,7 +34,6 @@ class MainActivity: AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show()
             else {
                 viewModel.setConcerti(it)
-                PalcoApplication.instance.months = it.populateMonths()
             }
 
             supportFragmentManager.beginTransaction()

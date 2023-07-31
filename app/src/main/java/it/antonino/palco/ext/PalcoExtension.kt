@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import com.google.gson.JsonElement
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.util.Constant
+import it.antonino.palco.util.Constant.actualDateFormat
+import it.antonino.palco.util.Constant.dateDateFormat
+import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.densityPixelOffset
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.Instant
-import java.text.SimpleDateFormat
+import it.antonino.palco.util.Constant.offsetDayMillis
+import it.antonino.palco.util.Constant.shareDateFormat
+import java.time.Instant
 import java.util.*
-import kotlin.collections.ArrayList
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
@@ -23,44 +24,32 @@ fun Int.dpToPixels(): Int {
 }
 
 fun String.getDate(): Long {
-    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-    return sdf.parse(this).time
+    return dateDateFormat.parse(this)?.time ?: 0L
 }
 
-fun String.getDateFromString(): String {
-    val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-    val outsdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-    val date = insdf.parse(this).time
-    return outsdf.format(Date(date))
+fun String.getDateFromString(): String? {
+    val date = dateDateFormat.parse(this)?.time
+    return date?.let { Date(it) }?.let { shareDateFormat.format(it) }
 }
 
 fun String.getStringFromDate(): String {
-    val insdf1 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALY)
-    val insdf2 = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-    val insdf3 = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-
-    val outsdf = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
     var date: Long = 0L
     try {
-        date = insdf1.parse(this).time
+        date = dateTimeDateFormat.parse(this)?.time ?: 0L
     } catch (e: Exception) {
         try {
-            date = insdf2.parse(this).time
+            date = dateDateFormat.parse(this)?.time ?: 0L
         } catch (e: Exception) {
-            date = insdf3.parse(this).time
+            date = shareDateFormat.parse(this)?.time ?: 0L
         }
     }
-    return outsdf.format(Date(date))
+    return shareDateFormat.format(Date(date))
 }
 
 fun String.compareDate(): Boolean {
-    val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
     val calendar = Calendar.getInstance()
-    calendar.time = insdf.parse(this) as Date
-    return calendar.time.before(
-        DateTimeUtils.toDate(
-            Instant.now()
-        .minusMillis(Constant.offsetDayMillis)))
+    calendar.time = dateDateFormat.parse(this) as Date
+    return calendar.time.before(Date(System.currentTimeMillis().minus(offsetDayMillis)))
 }
 
 fun JsonElement.checkObject(): Boolean {
@@ -79,14 +68,7 @@ fun Concerto?.checkObject(): Boolean {
             || this?.getTime()?.compareDate() == true
 }
 
-
-fun ArrayList<Concerto?>?.populateMonths() : ArrayList<String> {
-    val months: ArrayList<String> = arrayListOf()
-    val sdf = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
-    val insdf = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
-    this?.forEach {
-        if (!months.contains(sdf.format(insdf.parse(it?.getTime()))))
-            months.add(sdf.format(insdf.parse(it?.getTime())))
-    }
-    return months
+fun Date?.isActualMonth(): Boolean? {
+    val currentDate = actualDateFormat.format(Date(System.currentTimeMillis()))
+    return this?.let { actualDateFormat.format(it).equals(currentDate, true) }
 }

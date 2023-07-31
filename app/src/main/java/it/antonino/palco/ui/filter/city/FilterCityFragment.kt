@@ -110,9 +110,11 @@ class FilterCityFragment : Fragment() {
                         artisti.add(concerto.getArtist())
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        times.add(
-                            concerto.getTime().substringBefore(" ").getDateFromString()
-                        )
+                        concerto.getTime().substringBefore(" ").getDateFromString()?.let { dateFromString ->
+                            times.add(
+                                dateFromString
+                            )
+                        }
                     }
                 }
 

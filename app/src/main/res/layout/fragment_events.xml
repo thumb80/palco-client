@@ -24,9 +24,10 @@
 
         <Button
             android:id="@+id/prevMonth"
-            android:layout_width="@dimen/dp_24"
+            android:layout_width="@dimen/dp_112"
             android:layout_height="@dimen/dp_24"
             android:layout_alignParentLeft="true"
+            android:visibility="gone"
             android:background="@drawable/ic_icon_left">
 
         </Button>
@@ -43,7 +44,7 @@
 
         <Button
             android:id="@+id/nextMonth"
-            android:layout_width="@dimen/dp_24"
+            android:layout_width="@dimen/dp_112"
             android:layout_height="@dimen/dp_24"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -62,7 +63,7 @@
         android:paddingRight="@dimen/dp_12"
         android:layout_marginTop="@dimen/dp_12"
         app:compactCalendarDisplayOtherMonthDays="true"
-        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="true"
+        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
         app:compactCalendarOtherMonthDaysTextColor="@color/colorGrey"
         app:compactCalendarTextSize="@dimen/sp_12"
         app:compactCalendarBackgroundColor="@color/colorPrimary"

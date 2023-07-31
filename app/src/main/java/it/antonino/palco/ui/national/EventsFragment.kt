@@ -27,13 +27,14 @@ import it.antonino.palco.model.Concerto
 import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
+import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_events.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.Instant
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -42,15 +43,20 @@ class EventsFragment: Fragment() {
 
     private val viewModel: SharedViewModel by sharedViewModel()
     private var adapter: CustomAdapter? = null
-    private val simpleDateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
-    private val currentDayInstance: Calendar = Calendar.getInstance(Locale.ITALY)
     private var layoutManager: LinearLayoutManager? = null
     private var position : Int? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
     private lateinit var locationManager: LocationManager
 
+    companion object {
+        private var currentDayInstance: Calendar? = null
+        private var lastMonthViewed: Date?  = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        currentDayInstance = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
 
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -74,26 +80,32 @@ class EventsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        monthView?.text = simpleDateFormat.format(
-            DateTimeUtils.toDate(
-                Instant.ofEpochMilli(
-                    Calendar.getInstance(Locale.ITALY).timeInMillis
-                )
-            )
-        )
+        monthView?.text = currentDayInstance?.time?.let {
+            monthDateFormat.format(it)
 
-        calendar_view.setLocale(TimeZone.getTimeZone("it"), Locale.ITALY)
+        }
+
+        val timeZone = LocalDateTime.now(ZoneId.systemDefault())
+        calendar_view.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
         calendar_view.setUseThreeLetterAbbreviation(true)
 
         calendar_view.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
-                displayCurrentEvents(dateClicked!!)
+                displayCurrentEvents(dateClicked)
             }
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
-                monthView?.text = simpleDateFormat.format(firstDayOfNewMonth?.time)
-                displayCurrentEvents(firstDayOfNewMonth!!)
+                lastMonthViewed = firstDayOfNewMonth
+                monthView?.text = monthDateFormat.format(firstDayOfNewMonth?.time)
+                if (firstDayOfNewMonth?.isActualMonth() == true) {
+                    prevMonth.visibility = View.GONE
+                    calendar_view.setCurrentDate(currentDayInstance?.time)
+                    displayCurrentEvents(currentDayInstance?.time)
+                } else {
+                    displayCurrentEvents(firstDayOfNewMonth)
+                }
+
             }
 
         })
@@ -131,6 +143,8 @@ class EventsFragment: Fragment() {
         })
 
         nextMonth.setOnClickListener {
+            prevMonth.visibility = View.VISIBLE
+            calendar_view.shouldSelectFirstDayOfMonthOnScroll(true)
             calendar_view.scrollRight()
         }
 
@@ -145,7 +159,7 @@ class EventsFragment: Fragment() {
         }
     }
 
-    private fun displayCurrentEvents(currentDate: Date) {
+    private fun displayCurrentEvents(currentDate: Date?) {
 
         no_data.visibility = View.INVISIBLE
 
@@ -204,7 +218,7 @@ class EventsFragment: Fragment() {
                     calendar_view.addEvent(event)
                 }
             }
-            displayCurrentEvents(currentDayInstance.time)
+            displayCurrentEvents(currentDayInstance?.time)
         }
         else {
             showEmpty()
