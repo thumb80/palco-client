@@ -172,21 +172,21 @@ class EventsFragment: Fragment() {
         val artisti: ArrayList<String> = ArrayList(events.size)
         val places: ArrayList<String> = ArrayList(events.size)
         val cities: ArrayList<String> = ArrayList(events.size)
-        val times: ArrayList<String> = ArrayList(events.size)
+        val times: ArrayList<Date?> = ArrayList(events.size)
         for (concerto in concerti)
         {
             if (!concerto.checkObject()) {
                 artisti.add(concerto.asJsonObject.get("artist").asString)
                 places.add(concerto.asJsonObject.get("place").asString)
                 cities.add(concerto.asJsonObject.get("city").asString)
-                times.add(concerto.asJsonObject.get("time").asString)
+                times.add(concerto.asJsonObject.get("time").asString?.getDate())
             }
         }
 
         artisti.add(0,"")
         places.add(0,"")
         cities.add(0,"")
-        times.add(0,"")
+        times.add(0,Date())
 
         adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
 
@@ -209,12 +209,14 @@ class EventsFragment: Fragment() {
     private fun displayNationalEvents(concerti: ArrayList<Concerto?>?) {
         if (concerti != null) {
             for (concerto in concerti) {
-                if (concerto?.getTime()?.let { time -> time.compareDate() } == false) {
-                    val event = Event(
-                        Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
-                        concerto.getTime().getDate() + concertoTimeOffset,
-                        concerto
-                    )
+                if (concerto?.getTime()?.compareDate() == false) {
+                    val event = concerto.getTime()?.time?.plus(concertoTimeOffset)?.let { time ->
+                        Event(
+                            Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
+                            time,
+                            concerto
+                        )
+                    }
                     calendar_view.addEvent(event)
                 }
             }

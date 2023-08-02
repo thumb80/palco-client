@@ -22,6 +22,8 @@ import kotlinx.android.synthetic.main.concerto_card_view.view.place
 import kotlinx.android.synthetic.main.concerto_card_view.view.city
 import kotlinx.android.synthetic.main.concerto_card_view.view.artist_image
 import org.koin.java.KoinJavaComponent.inject
+import java.util.*
+import kotlin.collections.ArrayList
 
 private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
@@ -34,7 +36,7 @@ class CustomAdapter(
     val artist: ArrayList<String>?,
     val place: ArrayList<String>?,
     val city: ArrayList<String>?,
-    val times: ArrayList<String>? ,
+    val times: ArrayList<Date?>?,
     val  listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     init {
@@ -60,7 +62,6 @@ class CustomAdapter(
                 place?.get(position),
                 city?.get(position),
                 times?.get(position),
-                //bill?.get(position),
                 artistThumb)
             ,listener)
 

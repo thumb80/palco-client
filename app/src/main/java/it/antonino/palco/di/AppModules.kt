@@ -1,5 +1,6 @@
 package it.antonino.palco.di
 
+import com.google.gson.Gson
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.common.CustomTrust
 import it.antonino.palco.network.DiscogsAPI
@@ -7,10 +8,11 @@ import it.antonino.palco.network.NetworkAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.network.UnsplashAPI
 import it.antonino.palco.util.Constant.cacheSize
+import it.antonino.palco.util.Constant.dateTimeFormat
+import it.antonino.palco.util.Constant.gson
 import it.antonino.palco.viewmodel.SharedViewModel
 import okhttp3.Cache
 import okhttp3.Interceptor
-import okhttp3.Request
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -27,7 +29,7 @@ val appModule = module {
     }
     single {
         Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(
                 CustomTrust(androidContext())
                     .client

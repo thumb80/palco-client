@@ -23,15 +23,6 @@ fun Int.dpToPixels(): Int {
     return (this * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
 }
 
-fun String.getDate(): Long {
-    return dateDateFormat.parse(this)?.time ?: 0L
-}
-
-fun String.getDateFromString(): String? {
-    val date = dateDateFormat.parse(this)?.time
-    return date?.let { Date(it) }?.let { shareDateFormat.format(it) }
-}
-
 fun String.getStringFromDate(): String {
     var date: Long = 0L
     try {
@@ -46,10 +37,8 @@ fun String.getStringFromDate(): String {
     return shareDateFormat.format(Date(date))
 }
 
-fun String.compareDate(): Boolean {
-    val calendar = Calendar.getInstance()
-    calendar.time = dateDateFormat.parse(this) as Date
-    return calendar.time.before(Date(System.currentTimeMillis().minus(offsetDayMillis)))
+fun Date.compareDate(): Boolean {
+    return this.before(Date(System.currentTimeMillis().minus(offsetDayMillis)))
 }
 
 fun JsonElement.checkObject(): Boolean {
@@ -57,18 +46,38 @@ fun JsonElement.checkObject(): Boolean {
             || this.asJsonObject?.get("place")?.asString?.isEmpty() == true
             || this.asJsonObject?.get("city")?.asString?.isEmpty() == true
             || this.asJsonObject?.get("time")?.asString?.isEmpty() == true)
-            || this.asJsonObject?.get("time")?.asString?.compareDate() == true
 }
 
 fun Concerto?.checkObject(): Boolean {
     return this?.getArtist().isNullOrEmpty()
             || this?.getCity().isNullOrEmpty()
             || this?.getPlace().isNullOrEmpty()
-            || this?.getTime().isNullOrEmpty()
-            || this?.getTime()?.compareDate() == true
+            || this?.getTime() == null
 }
 
 fun Date?.isActualMonth(): Boolean? {
     val currentDate = actualDateFormat.format(Date(System.currentTimeMillis()))
-    return this?.let { actualDateFormat.format(it).equals(currentDate, true) }
+    return try {
+        this?.let { actualDateFormat.format(it).equals(currentDate, true) }
+    } catch (e: Exception) {
+        return null
+    }
+}
+
+fun Date?.getString(): String? {
+    return try {
+        this?.let { dateDateFormat.format(it) }
+    } catch (e: Exception) {
+        return null
+    }
+}
+
+fun String?.getDate(): Date? {
+    return try {
+        this?.let {
+            dateDateFormat.parse(it)
+        }
+    } catch (e: Exception) {
+        return null
+    }
 }

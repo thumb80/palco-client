@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,16 +13,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.MainActivity
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.checkObject
-import it.antonino.palco.ext.getDateFromString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_artist_fragment.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FilterArtistFragment : Fragment() {
 
@@ -31,7 +32,7 @@ class FilterArtistFragment : Fragment() {
 
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
-    var times = ArrayList<String>()
+    var times = ArrayList<Date?>()
     var cities = ArrayList<String>()
 
     override fun onCreateView(
@@ -108,11 +109,7 @@ class FilterArtistFragment : Fragment() {
                         artisti.add(concerto.getArtist())
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        concerto.getTime().substringBefore(" ").getDateFromString()?.let { dateFromString ->
-                            times.add(
-                                dateFromString
-                            )
-                        }
+                        times.add(concerto.getTime())
                     }
                 }
 
@@ -155,6 +152,7 @@ class FilterArtistFragment : Fragment() {
         filter_artist_list.visibility = View.GONE
         search_bar.visibility = View.GONE
         filter_header_artist.visibility = View.VISIBLE
+        filter_header_artist.background = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_background_grey)
         filter_concert_artist_list.visibility = View.VISIBLE
     }
 

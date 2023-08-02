@@ -5,23 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import it.antonino.palco.MainActivity
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.checkObject
-import it.antonino.palco.ext.getDateFromString
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_city_fragment.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FilterCityFragment : Fragment() {
 
@@ -31,7 +32,7 @@ class FilterCityFragment : Fragment() {
     private var adapter: CustomFilterAdapter? = null
     var artisti = ArrayList<String>()
     var places = ArrayList<String>()
-    var times = ArrayList<String>()
+    var times = ArrayList<Date?>()
     var cities = ArrayList<String>()
 
     override fun onCreateView(
@@ -110,11 +111,7 @@ class FilterCityFragment : Fragment() {
                         artisti.add(concerto.getArtist())
                         places.add(concerto.getPlace())
                         cities.add(concerto.getCity())
-                        concerto.getTime().substringBefore(" ").getDateFromString()?.let { dateFromString ->
-                            times.add(
-                                dateFromString
-                            )
-                        }
+                        times.add(concerto.getTime())
                     }
                 }
 
@@ -157,6 +154,7 @@ class FilterCityFragment : Fragment() {
         filter_city_list.visibility = View.GONE
         search_bar.visibility = View.GONE
         filter_header_city.visibility = View.VISIBLE
+        filter_header_city.background = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_background_grey)
         filter_concert_city_list.visibility = View.VISIBLE
     }
 

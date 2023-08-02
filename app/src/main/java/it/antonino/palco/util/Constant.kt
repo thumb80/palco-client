@@ -1,5 +1,6 @@
 package it.antonino.palco.util
 
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,4 +28,9 @@ object Constant {
     val shareDateFormat = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
     val dateTimeDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALY)
     val actualDateFormat = SimpleDateFormat("yyyy-MM", Locale.ITALY)
+    val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+    val gson = Gson()
+        .newBuilder()
+        .setDateFormat(dateTimeFormat)
+        .create()
 }

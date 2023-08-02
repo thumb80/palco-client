@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import it.antonino.palco.R
+import it.antonino.palco.ext.getString
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.viewmodel.SharedViewModel
@@ -17,6 +18,8 @@ import kotlinx.android.synthetic.main.concerto_filter_view.view.place
 import kotlinx.android.synthetic.main.concerto_filter_view.view.time
 import kotlinx.android.synthetic.main.concerto_filter_view.view.city
 import org.koin.java.KoinJavaComponent
+import java.util.*
+import kotlin.collections.ArrayList
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
@@ -28,7 +31,7 @@ class CustomFilterAdapter(
     val artist: ArrayList<String>?,
     val place: ArrayList<String>?,
     val city: ArrayList<String>?,
-    val times: ArrayList<String>? ,
+    val times: ArrayList<Date?>?,
     val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<FilterViewHolder>() {
 
     init {
@@ -69,7 +72,7 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         artist.text = item.artist
         place.text = item.place
         city.text = item.city
-        time.text = item.time
+        time.text = item.time?.getString()
 
         viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
