@@ -10,7 +10,6 @@ import org.koin.core.context.startKoin
 
 class PalcoApplication: Application() {
 
-    var months: ArrayList<String> = arrayListOf()
     var sharedPreferences: SharedPreferences? = null
 
     companion object {

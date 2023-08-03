@@ -1,4 +1,4 @@
-package it.antonino.palco.ui.national
+package it.antonino.palco.ui.events
 
 import android.content.Context
 import android.graphics.Color
@@ -18,6 +18,7 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
@@ -25,15 +26,12 @@ import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.ext.*
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.util.Constant.blueColorRGB
-import it.antonino.palco.util.Constant.concertoTimeOffset
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_events.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
@@ -41,6 +39,8 @@ import kotlin.collections.ArrayList
 
 class EventsFragment: Fragment() {
 
+    //TODO : data evento in formato testuale
+    //TODO : condivisione evento data testuale sia da event fragment che da filtri
     private val viewModel: SharedViewModel by sharedViewModel()
     private var adapter: CustomAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
@@ -85,9 +85,15 @@ class EventsFragment: Fragment() {
 
         }
 
-        val timeZone = LocalDateTime.now(ZoneId.systemDefault())
         calendar_view.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
         calendar_view.setUseThreeLetterAbbreviation(true)
+
+        viewModel.concerti.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                collectConcerti(it)
+                displayCurrentEvents(currentDayInstance?.time)
+            }
+        }
 
         calendar_view.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
@@ -133,8 +139,8 @@ class EventsFragment: Fragment() {
         concerti_recycler?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val view = snapHelper.findSnapView(recyclerView.layoutManager)
-                position = view?.let { recyclerView.getChildAdapterPosition(it) }
+                val concertiListView = snapHelper.findSnapView(recyclerView.layoutManager)
+                position = concertiListView?.let { recyclerView.getChildAdapterPosition(it) }
                 position?.let {
                     adapter?.setSelectedItem(it)
                 }
@@ -150,12 +156,6 @@ class EventsFragment: Fragment() {
 
         prevMonth.setOnClickListener {
             calendar_view.scrollLeft()
-        }
-
-        viewModel.concerti.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                displayNationalEvents(it)
-            }
         }
     }
 
@@ -186,7 +186,7 @@ class EventsFragment: Fragment() {
         artisti.add(0,"")
         places.add(0,"")
         cities.add(0,"")
-        times.add(0,Date())
+        times.add(0, Date())
 
         adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
 
@@ -206,21 +206,20 @@ class EventsFragment: Fragment() {
 
     }
 
-    private fun displayNationalEvents(concerti: ArrayList<Concerto?>?) {
+    private fun collectConcerti(concerti: ArrayList<Concerto?>?) {
         if (concerti != null) {
             for (concerto in concerti) {
                 if (concerto?.getTime()?.compareDate() == false) {
-                    val event = concerto.getTime()?.time?.plus(concertoTimeOffset)?.let { time ->
+                    val event = concerto.getTime().let { time ->
                         Event(
                             Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
-                            time,
+                            time.time,
                             concerto
                         )
                     }
                     calendar_view.addEvent(event)
                 }
             }
-            displayCurrentEvents(currentDayInstance?.time)
         }
         else {
             showEmpty()

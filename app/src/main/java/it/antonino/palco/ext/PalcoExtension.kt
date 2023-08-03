@@ -12,7 +12,6 @@ import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.densityPixelOffset
 import it.antonino.palco.util.Constant.offsetDayMillis
 import it.antonino.palco.util.Constant.shareDateFormat
-import java.time.Instant
 import java.util.*
 
 fun ViewGroup.inflate(layoutRes: Int): View {

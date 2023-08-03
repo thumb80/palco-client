@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/dp_8"
-    tools:context=".ui.national.EventsFragment">
+    tools:context=".ui.events.EventsFragment">
 
     <RelativeLayout
         android:id="@+id/monthLayout"
@@ -69,8 +69,9 @@
         app:compactCalendarBackgroundColor="@color/colorPrimary"
         app:compactCalendarTextColor="@color/colorWhite"
         app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorAccent"
-        app:compactCalendarCurrentDayBackgroundColor="@color/colorPrimary"
         app:compactCalendarMultiEventIndicatorColor="@color/colorAccent"
+        app:compactCalendarCurrentDayIndicatorStyle="fill_large_indicator"
+        app:compactCalendarEventIndicatorStyle="small_indicator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/monthLayout"
         app:layout_constraintBottom_toTopOf="@+id/guideline"/>

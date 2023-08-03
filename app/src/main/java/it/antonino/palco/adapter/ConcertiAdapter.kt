@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.ui.filter.FilterFragment
-import it.antonino.palco.ui.national.EventsFragment
+import it.antonino.palco.ui.events.EventsFragment
 
 class ConcertiAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
