@@ -12,28 +12,34 @@
         android:orientation="vertical"
         android:background="@color/colorWhite">
 
-        <TextView
-            android:id="@+id/filter_header_city"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:textAlignment="center"
-            android:fontFamily="@font/gotham_bold"
-            android:textSize="@dimen/sp_12"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/dp_24"
-            android:paddingBottom="@dimen/dp_8"/>
+            android:layout_weight="2">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_header_artist"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_container"/>
+            <TextView
+                android:id="@+id/filter_header_city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:fontFamily="@font/gotham_bold"
+                android:textSize="@dimen/sp_12"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingBottom="@dimen/dp_8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
