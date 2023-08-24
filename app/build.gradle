@@ -32,6 +32,7 @@ android {
         buildConfigField "String", "UNSPLASH_SECRET_KEY", properties.get("unsplashSecretKey")
         buildConfigField "Double", "VERSION_NAME", defaultConfig.versionName
         buildConfigField "String", "AUTH_TOKEN", properties.get("authToken")
+        buildConfigField "String", "UNSPLASH_SEARCH_URL", properties.get("unsplashSearchURL")
 
         setProperty("archivesBaseName", "palco")
 

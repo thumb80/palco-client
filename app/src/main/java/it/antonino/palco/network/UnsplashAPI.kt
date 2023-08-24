@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface UnsplashAPI {
 
-    @GET("https://api.unsplash.com/search/photos")
+    @GET(BuildConfig.UNSPLASH_SEARCH_URL)
     fun getPhoto(
         @Header("Authorization") accessKey: String,
         @Query("query") query: String

@@ -27,12 +27,12 @@ class NetworkRepository(
     val TAG = NetworkRepository::class.java.simpleName
 
     fun getConcertiNazionali() : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
+        val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         val response = networkAPI.getConcertiNazionali().enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(arrayListOf())
                 }
 
@@ -41,32 +41,7 @@ class NetworkRepository(
                     response: Response<ArrayList<Concerto?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        Log.d(TAG, "$response")
-        return responseObject
-    }
-
-    fun getConcertiNazionaliByMonth(dateSearchDTO: DateSearchDTO) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByMonth(dateSearchDTO).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
@@ -77,12 +52,12 @@ class NetworkRepository(
     }
 
     fun getConcertiNazionaliByCity(city: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
+        val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         val response = networkAPI.getConcertiNazionaliByCity(city).enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(arrayListOf())
                 }
 
@@ -91,7 +66,7 @@ class NetworkRepository(
                     response: Response<ArrayList<Concerto?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
@@ -102,12 +77,12 @@ class NetworkRepository(
     }
 
     fun getConcertiNazionaliByArtist(artist: String) : MutableLiveData<ArrayList<Concerto?>?> {
-        var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
+        val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         val response = networkAPI.getConcertiNazionaliByArtist(artist).enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(arrayListOf())
                 }
 
@@ -116,7 +91,7 @@ class NetworkRepository(
                     response: Response<ArrayList<Concerto?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
@@ -127,12 +102,12 @@ class NetworkRepository(
     }
 
     fun getCities() : MutableLiveData<ArrayList<String?>?> {
-        var responseObject = MutableLiveData<ArrayList<String?>?>()
+        val responseObject = MutableLiveData<ArrayList<String?>?>()
         val response = networkAPI.getCities().enqueue(
             object : Callback<ArrayList<String?>?> {
                 override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(arrayListOf())
                 }
 
@@ -141,7 +116,7 @@ class NetworkRepository(
                     response: Response<ArrayList<String?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
@@ -152,12 +127,12 @@ class NetworkRepository(
     }
 
     fun getNationalArtists() : MutableLiveData<ArrayList<String?>?> {
-        var responseObject = MutableLiveData<ArrayList<String?>?>()
+        val responseObject = MutableLiveData<ArrayList<String?>?>()
         val response = networkAPI.getNationalArtists().enqueue(
             object : Callback<ArrayList<String?>?> {
                 override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(arrayListOf())
                 }
 
@@ -166,7 +141,7 @@ class NetworkRepository(
                     response: Response<ArrayList<String?>?>
                 ) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
@@ -177,12 +152,12 @@ class NetworkRepository(
     }
 
     fun getArtistThumb(artist: String?) : MutableLiveData<JsonObject?> {
-        var responseObject = MutableLiveData<JsonObject?>()
+        val responseObject = MutableLiveData<JsonObject?>()
         val response = discogsAPI.getArtistThumb(artist).enqueue(
             object : Callback<JsonObject?> {
                 override fun onFailure(call: Call<JsonObject?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(null)
                 }
 
@@ -191,7 +166,7 @@ class NetworkRepository(
                     response: Response<JsonObject?>
                 ) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
@@ -202,7 +177,7 @@ class NetworkRepository(
     }
 
     fun getPlacePhoto(place: String) : MutableLiveData<JsonObject?> {
-        var responseObject = MutableLiveData<JsonObject?>()
+        val responseObject = MutableLiveData<JsonObject?>()
         val response = unsplashAPI.getPhoto(
             "Client-ID ${BuildConfig.UNSPLASH_ACCESS_KEY}",
             place
@@ -210,13 +185,13 @@ class NetworkRepository(
             object : Callback<JsonObject?> {
                 override fun onResponse(call: Call<JsonObject?>, response: Response<JsonObject?>) {
                     Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "${response}")
+                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
                 override fun onFailure(call: Call<JsonObject?>, t: Throwable) {
                     Log.d(TAG, "FAILURE")
-                    Log.d(TAG, "${t.toString()}")
+                    Log.d(TAG, t.toString())
                     responseObject.postValue(null)
                 }
 
@@ -225,5 +200,4 @@ class NetworkRepository(
         Log.d(TAG, "$response")
         return responseObject
     }
-
 }

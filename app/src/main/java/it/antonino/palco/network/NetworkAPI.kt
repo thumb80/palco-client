@@ -17,12 +17,6 @@ interface NetworkAPI {
     fun getConcertiNazionali(): Call<ArrayList<Concerto?>?>
 
     @Headers("x-api-key:${BuildConfig.AUTH_TOKEN}")
-    @POST("getconcertimese")
-    fun getConcertiNazionaliByMonth(
-        @Body dateSearchDTO: DateSearchDTO
-    ): Call<ArrayList<Concerto?>?>
-
-    @Headers("x-api-key:${BuildConfig.AUTH_TOKEN}")
     @GET("getconcerticity/{city}")
     fun getConcertiNazionaliByCity(@Path("city") city: String): Call<ArrayList<Concerto?>?>
 
