@@ -33,7 +33,7 @@ class PalcoApplication: Application() {
             modules(appModule)
         }
 
-        sharedPreferences = instance.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        sharedPreferences = instance.getSharedPreferences("palco_prefs", Context.MODE_PRIVATE)
 
     }
 }

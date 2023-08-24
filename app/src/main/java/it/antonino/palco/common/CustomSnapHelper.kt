@@ -5,9 +5,6 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 
-/**
- * A LinearSnapHelper that ignores item decorations to determine a view's center
- */
 class CustomSnapHelper : LinearSnapHelper() {
 
     private var verticalHelper: OrientationHelper? = null
@@ -30,26 +27,6 @@ class CustomSnapHelper : LinearSnapHelper() {
                 scrolled = false
             } else {
                 scrolled = true
-            }
-        }
-    }
-
-    fun scrollTo(position: Int, smooth: Boolean) {
-        if (recyclerView?.layoutManager != null) {
-            val viewHolder = recyclerView!!.findViewHolderForAdapterPosition(position)
-            if (viewHolder != null) {
-                val distances = calculateDistanceToFinalSnap(recyclerView!!.layoutManager!!, viewHolder.itemView)
-                if (smooth) {
-                    recyclerView!!.smoothScrollBy(distances!![0], distances[1])
-                } else {
-                    recyclerView!!.scrollBy(distances!![0], distances[1])
-                }
-            } else {
-                if (smooth) {
-                    recyclerView!!.smoothScrollToPosition(position)
-                } else {
-                    recyclerView!!.scrollToPosition(position)
-                }
             }
         }
     }

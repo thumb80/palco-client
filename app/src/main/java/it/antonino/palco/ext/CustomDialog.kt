@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.maps.MapsActivity
@@ -130,7 +131,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
             )
             intent.putExtra(Intent.EXTRA_STREAM, contentUri)
             context?.startActivity(
-                Intent.createChooser(intent, "Scegli con quale app vuoi condividere il concerto")
+                Intent.createChooser(intent, PalcoApplication.instance.getString(R.string.share_text))
             )
             dismiss()
         }

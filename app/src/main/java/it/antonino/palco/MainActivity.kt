@@ -49,7 +49,7 @@ class MainActivity: AppCompatActivity() {
                 this.finishAffinity()
             else {
                 timeStamp = System.currentTimeMillis()
-                Toast.makeText(this, "Premere due volte per uscire dall'app", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, PalcoApplication.instance.getString(R.string.back_exit), Toast.LENGTH_SHORT).show()
             }
         }
     }
