@@ -23,12 +23,11 @@ object Constant {
     const val bitMapQuality = 100
     const val cacheSize = (5 * 1024 * 1024).toLong()
     val monthDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
-    val dateDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
     val shareDateFormat = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-    val dateTimeDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALY)
+    val dateTimeDateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ITALY)
     val actualDateFormat = SimpleDateFormat("yyyy-MM", Locale.ITALY)
-    val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
-    val gson = Gson()
+    const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+    val gson: Gson = Gson()
         .newBuilder()
         .setDateFormat(dateTimeFormat)
         .create()

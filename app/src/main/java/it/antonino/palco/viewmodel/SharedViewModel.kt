@@ -16,12 +16,6 @@ class SharedViewModel(
     private var _concerti: MutableLiveData<ArrayList<Concerto?>?> = MutableLiveData()
     val concerti: LiveData<ArrayList<Concerto?>?> get() = _concerti
 
-    private var _shouldSelectFirstDayOfMonthOnScroll: MutableLiveData<Boolean> = MutableLiveData()
-    val shouldSelectFirstDayOfMonthOnScroll: LiveData<Boolean> get() = _shouldSelectFirstDayOfMonthOnScroll
-
-    private var _scrollIndicator: MutableLiveData<Boolean> = MutableLiveData()
-    val scrollIndicator: LiveData<Boolean> get() = _scrollIndicator
-
     fun getConcertiNazionali(): LiveData<ArrayList<Concerto?>?> {
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
@@ -80,13 +74,5 @@ class SharedViewModel(
 
     fun setConcerti(concerti: ArrayList<Concerto?>?) {
         _concerti.postValue(concerti)
-    }
-
-    fun setShouldSelectFirstDayOfMonthOnScroll(value: Boolean) {
-        _shouldSelectFirstDayOfMonthOnScroll.postValue(value)
-    }
-
-    fun setScrollIndicator(value: Boolean) {
-        _scrollIndicator.postValue(value)
     }
 }

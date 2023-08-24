@@ -37,11 +37,11 @@ class CustomAdapter(
     val place: ArrayList<String>?,
     val city: ArrayList<String>?,
     val times: ArrayList<Date?>?,
-    val  listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+    val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     init {
         artistArray = artist!!
-        selectedItems = arrayOfNulls<Int>(artist.size + 1)
+        selectedItems = arrayOfNulls(artist.size + 1)
         for (i in selectedItems.indices) {
             if (i == 1)
                 selectedItems[i] = 1

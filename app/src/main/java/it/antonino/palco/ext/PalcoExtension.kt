@@ -7,7 +7,6 @@ import com.google.gson.JsonElement
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.util.Constant.actualDateFormat
-import it.antonino.palco.util.Constant.dateDateFormat
 import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.densityPixelOffset
 import it.antonino.palco.util.Constant.offsetDayMillis
@@ -20,20 +19,6 @@ fun ViewGroup.inflate(layoutRes: Int): View {
 
 fun Int.dpToPixels(): Int {
     return (this * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
-}
-
-fun String.getStringFromDate(): String {
-    var date: Long = 0L
-    try {
-        date = dateTimeDateFormat.parse(this)?.time ?: 0L
-    } catch (e: Exception) {
-        try {
-            date = dateDateFormat.parse(this)?.time ?: 0L
-        } catch (e: Exception) {
-            date = shareDateFormat.parse(this)?.time ?: 0L
-        }
-    }
-    return shareDateFormat.format(Date(date))
 }
 
 fun Date.compareDate(): Boolean {
@@ -65,7 +50,7 @@ fun Date?.isActualMonth(): Boolean? {
 
 fun Date?.getString(): String? {
     return try {
-        this?.let { dateDateFormat.format(it) }
+        this?.let { shareDateFormat.format(it) }
     } catch (e: Exception) {
         return null
     }
@@ -74,7 +59,7 @@ fun Date?.getString(): String? {
 fun String?.getDate(): Date? {
     return try {
         this?.let {
-            dateDateFormat.parse(it)
+            dateTimeDateFormat.parse(it)
         }
     } catch (e: Exception) {
         return null

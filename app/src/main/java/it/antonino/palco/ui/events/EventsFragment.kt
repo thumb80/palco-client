@@ -39,8 +39,6 @@ import kotlin.collections.ArrayList
 
 class EventsFragment: Fragment() {
 
-    //TODO : data evento in formato testuale
-    //TODO : condivisione evento data testuale sia da event fragment che da filtri
     private val viewModel: SharedViewModel by sharedViewModel()
     private var adapter: CustomAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
