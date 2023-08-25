@@ -25,19 +25,20 @@ private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewMod
 
 private var placeThumb: String? = null
 private var selectedItems = emptyArray<Int?>()
-private var artistArray = arrayListOf<String>()
+private var artistArray: ArrayList<String?>? = null
 
 class CustomFilterArtistAdapter(
-    val artist: ArrayList<String>?,
-    val place: ArrayList<String>?,
-    val city: ArrayList<String>?,
+    val artist: ArrayList<String?>?,
+    val place: ArrayList<String?>?,
+    val city: ArrayList<String?>?,
     val times: ArrayList<Date?>?,
     val listener: (ConcertRow) -> Unit
 ) : RecyclerView.Adapter<FilterArtistViewHolder>() {
 
     init {
-        artistArray = artist!!
-        selectedItems = arrayOfNulls<Int>(artist.size + 1)
+        val selectedItemSize : Int = artist?.size?.plus(1) ?: 0
+        artistArray = artist
+        selectedItems = arrayOfNulls(selectedItemSize)
         for (i in selectedItems.indices) {
             if (i == 1)
                 selectedItems[i] = 1
@@ -95,7 +96,6 @@ class FilterArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                         ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null)
                     )
         }
-
 
         setOnClickListener {
             listener(item)

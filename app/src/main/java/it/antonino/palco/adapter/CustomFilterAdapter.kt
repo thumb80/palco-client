@@ -25,18 +25,19 @@ private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewMod
 
 private var artistThumb: String? = null
 private var selectedItems = emptyArray<Int?>()
-private var artistArray = arrayListOf<String>()
+private var artistArray: ArrayList<String?>? = null
 
 class CustomFilterAdapter(
-    val artist: ArrayList<String>?,
-    val place: ArrayList<String>?,
-    val city: ArrayList<String>?,
+    val artist: ArrayList<String?>?,
+    val place: ArrayList<String?>?,
+    val city: ArrayList<String?>?,
     val times: ArrayList<Date?>?,
     val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<FilterViewHolder>() {
 
     init {
-        artistArray = artist!!
-        selectedItems = arrayOfNulls<Int>(artist.size + 1)
+        val selectedItemSize = artist?.size?.plus(1) ?: 0
+        artistArray = artist
+        selectedItems = arrayOfNulls<Int>(selectedItemSize)
         for (i in selectedItems.indices) {
             if (i == 1)
                 selectedItems[i] = 1

@@ -11,36 +11,19 @@ import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.densityPixelOffset
 import it.antonino.palco.util.Constant.offsetDayMillis
 import it.antonino.palco.util.Constant.shareDateFormat
+import java.time.Instant
 import java.util.*
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
 
-fun Int.dpToPixels(): Int {
-    return (this * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
-}
-
 fun Date.compareDate(): Boolean {
     return this.before(Date(System.currentTimeMillis().minus(offsetDayMillis)))
 }
 
-fun JsonElement.checkObject(): Boolean {
-    return (this.asJsonObject?.get("artist")?.asString?.isEmpty() == true
-            || this.asJsonObject?.get("place")?.asString?.isEmpty() == true
-            || this.asJsonObject?.get("city")?.asString?.isEmpty() == true
-            || this.asJsonObject?.get("time")?.asString?.isEmpty() == true)
-}
-
-fun Concerto?.checkObject(): Boolean {
-    return this?.getArtist().isNullOrEmpty()
-            || this?.getCity().isNullOrEmpty()
-            || this?.getPlace().isNullOrEmpty()
-            || this?.getTime() == null
-}
-
 fun Date?.isActualMonth(): Boolean? {
-    val currentDate = actualDateFormat.format(Date(System.currentTimeMillis()))
+    val currentDate = actualDateFormat.format(Date.from(Instant.now()))
     return try {
         this?.let { actualDateFormat.format(it).equals(currentDate, true) }
     } catch (e: Exception) {

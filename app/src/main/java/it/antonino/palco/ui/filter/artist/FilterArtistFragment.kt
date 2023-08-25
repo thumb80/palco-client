@@ -17,7 +17,6 @@ import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.ext.CustomDialog
-import it.antonino.palco.ext.checkObject
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import kotlinx.android.synthetic.main.filter_artist_fragment.*
@@ -30,10 +29,10 @@ class FilterArtistFragment : Fragment() {
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterArtistAdapter? = null
 
-    var artisti = ArrayList<String>()
-    var places = ArrayList<String>()
+    var artisti = ArrayList<String?>()
+    var places = ArrayList<String?>()
+    var cities = ArrayList<String?>()
     var times = ArrayList<Date?>()
-    var cities = ArrayList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,12 +104,10 @@ class FilterArtistFragment : Fragment() {
                 showConcerti()
 
                 for (concerto in it) {
-                    if (concerto?.checkObject() == false) {
-                        artisti.add(concerto.getArtist())
-                        places.add(concerto.getPlace())
-                        cities.add(concerto.getCity())
-                        times.add(concerto.getTime())
-                    }
+                    artisti.add(concerto?.getArtist())
+                    places.add(concerto?.getPlace())
+                    cities.add(concerto?.getCity())
+                    times.add(concerto?.getTime())
                 }
 
                 adapter = CustomFilterArtistAdapter(

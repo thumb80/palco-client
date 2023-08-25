@@ -18,7 +18,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
@@ -171,14 +170,12 @@ class EventsFragment: Fragment() {
         val places: ArrayList<String> = ArrayList(events.size)
         val cities: ArrayList<String> = ArrayList(events.size)
         val times: ArrayList<Date?> = ArrayList(events.size)
-        for (concerto in concerti)
-        {
-            if (!concerto.checkObject()) {
-                artisti.add(concerto.asJsonObject.get("artist").asString)
-                places.add(concerto.asJsonObject.get("place").asString)
-                cities.add(concerto.asJsonObject.get("city").asString)
-                times.add(concerto.asJsonObject.get("time").asString?.getDate())
-            }
+
+        concerti.forEach {
+            artisti.add(it.asJsonObject.get("artist").asString)
+            places.add(it.asJsonObject.get("place").asString)
+            cities.add(it.asJsonObject.get("city").asString)
+            times.add(it.asJsonObject.get("time").asString?.getDate())
         }
 
         artisti.add(0,"")

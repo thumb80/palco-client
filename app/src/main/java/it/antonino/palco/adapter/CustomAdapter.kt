@@ -9,12 +9,13 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
-import it.antonino.palco.ext.dpToPixels
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.defaultDisplayFactor
+import it.antonino.palco.util.Constant.densityPixelOffset
 import it.antonino.palco.util.Constant.roundRadius
 import kotlinx.android.synthetic.main.concerto_card_view.view.mainContainer
 import kotlinx.android.synthetic.main.concerto_card_view.view.artist
@@ -94,7 +95,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             ConstraintLayout.LayoutParams.WRAP_CONTENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
         )
-        layoutParams.width = 260.dpToPixels()
+        layoutParams.width = (260 * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
         mainContainer.layoutParams = layoutParams
         mainContainer.visibility = View.VISIBLE
 
