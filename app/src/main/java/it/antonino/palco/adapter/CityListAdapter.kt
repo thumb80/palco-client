@@ -1,15 +1,17 @@
 package it.antonino.palco.adapter
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.R
+import it.antonino.palco.databinding.CityListBinding
 import it.antonino.palco.ext.inflate
-import kotlinx.android.synthetic.main.city_list.view.city
 import java.util.*
 
+private lateinit var binding: CityListBinding
 
 class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> Unit)
     : RecyclerView.Adapter<CityViewHolder>(), Filterable{
@@ -19,7 +21,8 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
-        return CityViewHolder(parent.inflate(R.layout.city_list))
+        binding = CityListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CityViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
@@ -63,7 +66,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
 
 class CityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: String, listener: (String) -> Unit) = with(itemView) {
-        city.text = item
+        binding.city.text = item
         setOnClickListener { listener(item) }
     }
 }

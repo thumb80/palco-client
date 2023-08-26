@@ -1,5 +1,6 @@
 package it.antonino.palco.adapter
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
@@ -7,25 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import it.antonino.palco.R
+import it.antonino.palco.databinding.ConcertoFilterViewBinding
 import it.antonino.palco.ext.getString
 import it.antonino.palco.ext.inflate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.roundRadius
-import kotlinx.android.synthetic.main.concerto_filter_view.view.artist
-import kotlinx.android.synthetic.main.concerto_filter_view.view.artist_image
-import kotlinx.android.synthetic.main.concerto_filter_view.view.place
-import kotlinx.android.synthetic.main.concerto_filter_view.view.time
-import kotlinx.android.synthetic.main.concerto_filter_view.view.city
-import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import java.util.*
 import kotlin.collections.ArrayList
 
-private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
+private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
 private var artistThumb: String? = null
 private var selectedItems = emptyArray<Int?>()
 private var artistArray: ArrayList<String?>? = null
+
+private lateinit var binding: ConcertoFilterViewBinding
 
 class CustomFilterAdapter(
     val artist: ArrayList<String?>?,
@@ -47,7 +46,8 @@ class CustomFilterAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {
-        return FilterViewHolder(parent.inflate(R.layout.concerto_filter_view))
+        binding = ConcertoFilterViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FilterViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
@@ -70,17 +70,17 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: ConcertRow, listener: (ConcertRow) -> Unit) = with(itemView) {
 
-        artist.text = item.artist
-        place.text = item.place
-        city.text = item.city
-        time.text = item.time?.getString()
+        binding.artist.text = item.artist
+        binding.place.text = item.place
+        binding.city.text = item.city
+        binding.time.text = item.time?.getString()
 
         viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                 artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
-                    artist_image
+                    binding.artistImage
                         .setImageDrawable(
                             ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null)
                         )
@@ -90,13 +90,13 @@ class FilterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         .load(artistThumb)
                         .transform(RoundedCorners(roundRadius))
                         .error(ResourcesCompat.getDrawable(resources, R.drawable.placeholder_scheda, null))
-                        .into(artist_image)
+                        .into(binding.artistImage)
                 }
             }
             else {
                 artistThumb = null
                 item.addArtistThumb(artistThumb)
-                artist_image.setImageDrawable(
+                binding.artistImage.setImageDrawable(
                     ResourcesCompat.getDrawable(
                         resources,
                         R.drawable.placeholder_scheda,

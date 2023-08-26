@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ConcertiAdapter
+import it.antonino.palco.databinding.FragmentConcertiBinding
 import it.antonino.palco.ext.CustomViewPager
 import it.antonino.palco.util.Constant.offscreenPageLimit
 
 class ConcertiFragment: Fragment()  {
+
+    private lateinit var binding: FragmentConcertiBinding
 
     companion object {
         fun newInstance() = ConcertiFragment()
@@ -21,8 +24,9 @@ class ConcertiFragment: Fragment()  {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_concerti, container, false)
+    ): View {
+        binding = FragmentConcertiBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

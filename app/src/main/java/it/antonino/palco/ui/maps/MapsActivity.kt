@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import it.antonino.palco.R
+import it.antonino.palco.databinding.ActivityMapsBinding
 import java.io.IOException
 import java.util.*
 
@@ -23,17 +24,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var artist: String? = null
     private var city: String? = null
     private var addresses: List<Address> = listOf()
+    private lateinit var binding: ActivityMapsBinding
 
     val TAG = MapsActivity::class.java.canonicalName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+
         place = intent.extras?.getString("place")
         artist = intent.extras?.getString("artist")
         city = intent.extras?.getString("city")
 
-        setContentView(R.layout.activity_maps)
+        setContentView(binding.root)
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment

@@ -15,10 +15,10 @@ import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
+import it.antonino.palco.databinding.FilterCityFragmentBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.filter_city_fragment.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -33,13 +33,15 @@ class FilterCityFragment : Fragment() {
     var places = ArrayList<String?>()
     var times = ArrayList<Date?>()
     var cities = ArrayList<String?>()
+    private lateinit var binding: FilterCityFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.filter_city_fragment, container, false)
+    ): View {
+        binding = FilterCityFragmentBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +51,7 @@ class FilterCityFragment : Fragment() {
 
         hideConcerti()
 
-        search_bar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 cityAdapter?.filter?.filter(query)
                 return true
@@ -80,7 +82,7 @@ class FilterCityFragment : Fragment() {
                     cities = arrayListOf()
                     times = arrayListOf()
 
-                    filter_header_city.text = getString(R.string.filter_city_selected, it)
+                    binding.filterHeaderCity.text = getString(R.string.filter_city_selected, it)
                     (activity as MainActivity).progressBar?.visibility = View.VISIBLE
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
                 }
@@ -88,8 +90,8 @@ class FilterCityFragment : Fragment() {
                     context,
                     LinearLayoutManager.VERTICAL,
                     false)
-                filter_city_list.layoutManager = layoutManager
-                filter_city_list.adapter = cityAdapter
+                binding.filterCityList.layoutManager = layoutManager
+                binding.filterCityList.adapter = cityAdapter
             }
             else -> {
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
@@ -130,11 +132,11 @@ class FilterCityFragment : Fragment() {
                     context,
                     LinearLayoutManager.VERTICAL,
                     false)
-                filter_concert_city_list.layoutManager = layoutManager
-                filter_concert_city_list.adapter = adapter
-                filter_concert_city_list.addItemDecoration(dividerItemDecoration)
+                binding.filterConcertCityList.layoutManager = layoutManager
+                binding.filterConcertCityList.adapter = adapter
+                binding.filterConcertCityList.addItemDecoration(dividerItemDecoration)
 
-                filter_header_city.setOnClickListener {
+                binding.filterHeaderCity.setOnClickListener {
                     hideConcerti()
                 }
 
@@ -148,18 +150,18 @@ class FilterCityFragment : Fragment() {
     }
 
     private fun showConcerti() {
-        filter_city_list.visibility = View.GONE
-        search_bar.visibility = View.GONE
-        filter_header_city.visibility = View.VISIBLE
-        filter_header_city.background = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_background_grey)
-        filter_concert_city_list.visibility = View.VISIBLE
+        binding.filterCityList.visibility = View.GONE
+        binding.searchBar.visibility = View.GONE
+        binding.filterHeaderCity.visibility = View.VISIBLE
+        binding.filterHeaderCity.background = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_background_grey)
+        binding.filterConcertCityList.visibility = View.VISIBLE
     }
 
     private fun hideConcerti() {
-        filter_city_list.visibility = View.VISIBLE
-        search_bar.visibility = View.VISIBLE
-        filter_header_city.visibility = View.GONE
-        filter_concert_city_list.visibility = View.GONE
+        binding.filterCityList.visibility = View.VISIBLE
+        binding.searchBar.visibility = View.VISIBLE
+        binding.filterHeaderCity.visibility = View.GONE
+        binding.filterConcertCityList.visibility = View.GONE
     }
 
 }

@@ -8,6 +8,7 @@ import android.view.Window
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import it.antonino.palco.databinding.ActivityMainBinding
 import it.antonino.palco.ui.advise.AdviseFragment
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,16 +19,19 @@ class MainActivity: AppCompatActivity() {
     private var sharedPreferences: SharedPreferences? = null
     private var timeStamp: Long = 0
     var progressBar: ProgressBar? = null
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        progressBar = findViewById(R.id.progress_bar) as ProgressBar
-        progressBar?.visibility = View.VISIBLE
+
+        binding.progressBar.visibility = View.VISIBLE
 
         viewModel.getConcertiNazionali().observe(this) {
             if (it == null)

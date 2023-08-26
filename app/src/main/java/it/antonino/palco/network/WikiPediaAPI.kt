@@ -4,15 +4,12 @@ import com.google.gson.JsonObject
 import it.antonino.palco.BuildConfig
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
-interface UnsplashAPI {
+interface WikiPediaAPI {
 
-    @GET(BuildConfig.unsplashSearchURL)
-    fun getPhoto(
-        @Header("Authorization") accessKey: String,
-        @Query("query") query: String
+    @GET(BuildConfig.wikipediaSearchURL)
+    fun getArtistInfos(
+        @Query("titles") artist: String?
     ) : Call<JsonObject>
-
 }

@@ -1,10 +1,12 @@
 package it.antonino.palco.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
+import com.squareup.moshi.Json
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.network.NetworkRepository
 import kotlinx.coroutines.launch
@@ -68,6 +70,14 @@ class SharedViewModel(
         var responseObject = MutableLiveData<ArrayList<Concerto?>?>()
         viewModelScope.launch {
             responseObject = networkRepository.getConcertiNazionaliByArtist(artist)
+        }
+        return responseObject
+    }
+
+    fun getArtistInfos(artist: String?): LiveData<JsonObject?> {
+        var responseObject = MutableLiveData<JsonObject?>()
+        viewModelScope.launch {
+            responseObject = networkRepository.getArtistInfos(artist)
         }
         return responseObject
     }

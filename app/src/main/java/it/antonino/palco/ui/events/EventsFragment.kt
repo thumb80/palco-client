@@ -22,6 +22,7 @@ import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
+import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.*
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.util.Constant.blueColorRGB
@@ -29,7 +30,6 @@ import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
-import kotlinx.android.synthetic.main.fragment_events.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.time.ZoneId
 import java.util.*
@@ -44,6 +44,7 @@ class EventsFragment: Fragment() {
     private var position : Int? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
     private lateinit var locationManager: LocationManager
+    private lateinit var binding: FragmentEventsBinding
 
     companion object {
         private var currentDayInstance: Calendar? = null
@@ -52,6 +53,8 @@ class EventsFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = FragmentEventsBinding.inflate(layoutInflater)
 
         currentDayInstance = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
 
@@ -70,20 +73,20 @@ class EventsFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        return inflater.inflate(R.layout.fragment_events, container, false)
+        binding = FragmentEventsBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        monthView?.text = currentDayInstance?.time?.let {
+        binding.monthView.text = currentDayInstance?.time?.let {
             monthDateFormat.format(it)
 
         }
 
-        calendar_view.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
-        calendar_view.setUseThreeLetterAbbreviation(true)
+        binding.calendarView.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
+        binding.calendarView.setUseThreeLetterAbbreviation(true)
 
         viewModel.concerti.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
@@ -92,7 +95,7 @@ class EventsFragment: Fragment() {
             }
         }
 
-        calendar_view.setListener(object :
+        binding.calendarView.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
                 displayCurrentEvents(dateClicked)
@@ -100,10 +103,10 @@ class EventsFragment: Fragment() {
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
                 lastMonthViewed = firstDayOfNewMonth
-                monthView?.text = monthDateFormat.format(firstDayOfNewMonth?.time)
+                binding.monthView.text = monthDateFormat.format(firstDayOfNewMonth?.time)
                 if (firstDayOfNewMonth?.isActualMonth() == true) {
-                    prevMonth.visibility = View.GONE
-                    calendar_view.setCurrentDate(currentDayInstance?.time)
+                    binding.prevMonth.visibility = View.GONE
+                    binding.calendarView.setCurrentDate(currentDayInstance?.time)
                     displayCurrentEvents(currentDayInstance?.time)
                 } else {
                     displayCurrentEvents(firstDayOfNewMonth)
@@ -124,16 +127,16 @@ class EventsFragment: Fragment() {
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        concerti_recycler.layoutManager = layoutManager
+        binding.concertiRecycler.layoutManager = layoutManager
 
         val snapHelper = CustomSnapHelper()
-        snapHelper.attachToRecyclerView(concerti_recycler)
+        snapHelper.attachToRecyclerView(binding.concertiRecycler)
 
-        concerti_recycler?.setHasFixedSize(true)
-        concerti_recycler?.addItemDecoration(dividerItemDecoration)
-        dotsItemDecoration?.let { concerti_recycler?.addItemDecoration(it) }
+        binding.concertiRecycler.setHasFixedSize(true)
+        binding.concertiRecycler.addItemDecoration(dividerItemDecoration)
+        dotsItemDecoration?.let { binding.concertiRecycler.addItemDecoration(it) }
 
-        concerti_recycler?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.concertiRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val concertiListView = snapHelper.findSnapView(recyclerView.layoutManager)
@@ -145,22 +148,22 @@ class EventsFragment: Fragment() {
             }
         })
 
-        nextMonth.setOnClickListener {
-            prevMonth.visibility = View.VISIBLE
-            calendar_view.shouldSelectFirstDayOfMonthOnScroll(true)
-            calendar_view.scrollRight()
+        binding.nextMonth.setOnClickListener {
+            binding.prevMonth.visibility = View.VISIBLE
+            binding.calendarView.shouldSelectFirstDayOfMonthOnScroll(true)
+            binding.calendarView.scrollRight()
         }
 
-        prevMonth.setOnClickListener {
-            calendar_view.scrollLeft()
+        binding.prevMonth.setOnClickListener {
+            binding.calendarView.scrollLeft()
         }
     }
 
     private fun displayCurrentEvents(currentDate: Date?) {
 
-        no_data.visibility = View.INVISIBLE
+        binding.noData.visibility = View.INVISIBLE
 
-        val events: List<Event> = calendar_view.getEvents(currentDate).orEmpty()
+        val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
         val concerti = JsonArray(events.size)
         for (event in events)
         {
@@ -191,11 +194,11 @@ class EventsFragment: Fragment() {
         }
 
         if (events.isNotEmpty()) {
-            concerti_recycler?.adapter = adapter
+            binding.concertiRecycler.adapter = adapter
             hideEmpty()
         }
         else {
-            concerti_recycler?.adapter = null
+            binding.concertiRecycler.adapter = null
             showEmpty()
         }
 
@@ -212,7 +215,7 @@ class EventsFragment: Fragment() {
                             concerto
                         )
                     }
-                    calendar_view.addEvent(event)
+                    binding.calendarView.addEvent(event)
                 }
             }
         }
@@ -222,13 +225,13 @@ class EventsFragment: Fragment() {
     }
 
     private fun showEmpty() {
-        no_data.visibility = View.VISIBLE
-        no_data.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
-        concerti_recycler?.visibility = View.INVISIBLE
+        binding.noData.visibility = View.VISIBLE
+        binding.noData.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
+        binding.concertiRecycler.visibility = View.INVISIBLE
     }
 
     private fun hideEmpty() {
-        no_data.visibility = View.INVISIBLE
-        concerti_recycler?.visibility = View.VISIBLE
+        binding.noData.visibility = View.INVISIBLE
+        binding.calendarView.visibility = View.VISIBLE
     }
 }

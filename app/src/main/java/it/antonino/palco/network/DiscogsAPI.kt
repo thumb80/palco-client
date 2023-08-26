@@ -8,11 +8,11 @@ import retrofit2.http.Query
 
 interface DiscogsAPI {
 
-    @GET("https://api.discogs.com/database/search")
+    @GET(BuildConfig.discogsSearchURL)
     fun getArtistThumb(
         @Query("q") artist: String?,
-        @Query("key") discogsApiKey: String = BuildConfig.DISCOGS_API_KEY,
-        @Query("secret") discogsSecret: String = BuildConfig.DISCOGS_SECRET
+        @Query("key") discogsApiKey: String = BuildConfig.dicogsApiKey,
+        @Query("secret") discogsSecret: String = BuildConfig.discogsSecret
     ): Call<JsonObject>
 
 }

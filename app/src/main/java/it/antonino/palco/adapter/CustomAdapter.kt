@@ -1,6 +1,7 @@
 package it.antonino.palco.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -11,17 +12,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
-import it.antonino.palco.ext.inflate
+import it.antonino.palco.databinding.ConcertoCardViewBinding
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.viewmodel.SharedViewModel
 import it.antonino.palco.util.Constant.defaultDisplayFactor
 import it.antonino.palco.util.Constant.densityPixelOffset
 import it.antonino.palco.util.Constant.roundRadius
-import kotlinx.android.synthetic.main.concerto_card_view.view.mainContainer
-import kotlinx.android.synthetic.main.concerto_card_view.view.artist
-import kotlinx.android.synthetic.main.concerto_card_view.view.place
-import kotlinx.android.synthetic.main.concerto_card_view.view.city
-import kotlinx.android.synthetic.main.concerto_card_view.view.artist_image
 import org.koin.java.KoinJavaComponent.inject
 import java.util.*
 import kotlin.collections.ArrayList
@@ -32,6 +28,7 @@ private var artistThumb: String? = null
 private var selectedItems = emptyArray<Int?>()
 private var artistArray = arrayListOf<String>()
 
+private lateinit var binding: ConcertoCardViewBinding
 
 class CustomAdapter(
     val artist: ArrayList<String>?,
@@ -69,7 +66,8 @@ class CustomAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.concerto_card_view))
+        binding = ConcertoCardViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding.root)
 
     }
 
@@ -96,12 +94,12 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             ConstraintLayout.LayoutParams.MATCH_PARENT
         )
         layoutParams.width = (260 * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
-        mainContainer.layoutParams = layoutParams
-        mainContainer.visibility = View.VISIBLE
+        binding.mainContainer.layoutParams = layoutParams
+        binding.mainContainer.visibility = View.VISIBLE
 
-        artist.text = item.artist
-        place.text = item.place
-        city.text = item.city
+        binding.artist.text = item.artist
+        binding.place.text = item.place
+        binding.city.text = item.city
 
         viewModel.getArtistThumb(item.artist).observeForever {
             if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
@@ -112,7 +110,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     ?.get("cover_image")?.asString
                 item.addArtistThumb(artistThumb)
                 if (artistThumb?.contains(".gif") == true){
-                    artist_image.setImageDrawable(
+                    binding.artistImage.setImageDrawable(
                         ResourcesCompat.getDrawable(
                             resources,
                             R.drawable.placeholder_scheda, null)
@@ -126,13 +124,13 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                             resources,
                             R.drawable.placeholder_scheda, null)
                         )
-                        .into(artist_image)
+                        .into(binding.artistImage)
                 }
             }
             else {
                 artistThumb = null
                 item.addArtistThumb(artistThumb)
-                artist_image.setImageDrawable(
+                binding.artistImage.setImageDrawable(
                     ResourcesCompat.getDrawable(
                         resources,
                         R.drawable.placeholder_scheda,
@@ -156,7 +154,7 @@ class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         )
         layoutParams.width = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
                                                                             .defaultDisplay.width/defaultDisplayFactor
-        mainContainer.layoutParams = layoutParams
-        mainContainer.visibility = View.INVISIBLE
+        binding.mainContainer.layoutParams = layoutParams
+        binding.mainContainer.visibility = View.INVISIBLE
     }
 }

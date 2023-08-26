@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import it.antonino.palco.MainActivity
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
+import it.antonino.palco.databinding.FragmentAdviseBinding
 import it.antonino.palco.ui.ConcertiFragment
-import kotlinx.android.synthetic.main.fragment_advise.*
 import java.io.IOException
 import java.io.InputStream
 import kotlin.system.exitProcess
@@ -20,6 +20,7 @@ import kotlin.system.exitProcess
 class AdviseFragment: Fragment() {
 
     private lateinit var builder: StringBuilder
+    private lateinit var binding: FragmentAdviseBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,27 +45,28 @@ class AdviseFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_advise, container, false)
+    ): View {
+        binding = FragmentAdviseBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (PalcoApplication.instance.sharedPreferences?.getBoolean("ok_consent", false) == true) {
-            advise_container.visibility = View.INVISIBLE
+            binding.adviseContainer.visibility = View.INVISIBLE
             childFragmentManager.beginTransaction()
                 .replace(R.id.second_container, ConcertiFragment.newInstance())
                 .commit()
         } else {
-            advise_text.text = builder.toString()
+            binding.adviseText.text = builder.toString()
 
-            no_consent.setOnClickListener {
+            binding.noConsent.setOnClickListener {
                 exitProcess(0)
             }
 
-            ok_consent.setOnClickListener {
-                advise_container.visibility = View.INVISIBLE
+            binding.okConsent.setOnClickListener {
+                binding.adviseContainer.visibility = View.INVISIBLE
                 PalcoApplication.instance.sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
                 childFragmentManager.beginTransaction()
                     .replace(R.id.second_container, ConcertiFragment.newInstance())

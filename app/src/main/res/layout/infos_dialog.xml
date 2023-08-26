@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialog_background_grey"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_322"
+    android:paddingBottom="@dimen/dp_42">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/infos_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorWhite"
+            android:fontFamily="@font/gotham_book"
+            android:padding="@dimen/dp_24"/>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,10 +3,7 @@ package it.antonino.palco.di
 import com.google.gson.Gson
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.common.CustomTrust
-import it.antonino.palco.network.DiscogsAPI
-import it.antonino.palco.network.NetworkAPI
-import it.antonino.palco.network.NetworkRepository
-import it.antonino.palco.network.UnsplashAPI
+import it.antonino.palco.network.*
 import it.antonino.palco.util.Constant.cacheSize
 import it.antonino.palco.util.Constant.dateTimeFormat
 import it.antonino.palco.util.Constant.gson
@@ -25,7 +22,7 @@ val appModule = module {
 
     // Network Dependencies
     single {
-        NetworkRepository.getInstance(get(),get(),get())
+        NetworkRepository.getInstance(get(),get(),get(),get())
     }
     single {
         Retrofit.Builder()
@@ -50,7 +47,7 @@ val appModule = module {
                     ).cache(Cache(androidContext().cacheDir, cacheSize))
                     .retryOnConnectionFailure(true)
                     .build())
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(BuildConfig.baseUrl)
             .build()
     }
     // Interfaces
@@ -65,6 +62,10 @@ val appModule = module {
     single {
         get<Retrofit>()
             .create(UnsplashAPI::class.java)
+    }
+    single {
+        get<Retrofit>()
+            .create(WikiPediaAPI::class.java)
     }
 
     // ViewModel Dependencies

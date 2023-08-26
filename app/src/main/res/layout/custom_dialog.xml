@@ -51,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
-        android:id="@+id/back_button"
+        android:id="@+id/info_button"
         android:layout_width="@dimen/dp_240"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
@@ -60,7 +60,7 @@
         android:background="@drawable/button_background_white"
         android:drawableEnd="@drawable/ic_triangle"
         android:fontFamily="@font/gotham_bold"
-        android:text="@string/back_string"
+        android:text="@string/info_string"
         app:layout_constraintTop_toBottomOf="@+id/maps_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

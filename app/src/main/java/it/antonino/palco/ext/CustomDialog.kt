@@ -1,6 +1,6 @@
 package it.antonino.palco.ext
 
-import android.app.AlertDialog
+import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.app.SearchManager
 import android.content.Intent
@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
@@ -19,22 +20,28 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
+import it.antonino.palco.databinding.CustomDialogBinding
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.maps.MapsActivity
 import it.antonino.palco.util.Constant.bitMapQuality
-import kotlinx.android.synthetic.main.custom_dialog.view.*
+import it.antonino.palco.viewmodel.SharedViewModel
+import org.koin.java.KoinJavaComponent
 import java.io.File
 import java.io.FileOutputStream
 
 class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        //POSITIVE
-        val builder = AlertDialog.Builder(activity)
-        val inflater = requireActivity().layoutInflater
-        val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+    private lateinit var binding: CustomDialogBinding
+    private lateinit var builder: Builder
+    private val sharedViewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
-        dialogView.maps_button.setOnClickListener {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+        binding = CustomDialogBinding.inflate(layoutInflater)
+
+        builder = Builder(activity)
+
+        binding.mapsButton.setOnClickListener {
             val intent = Intent(context, MapsActivity::class.java)
             intent.putExtra("place", concertRow.place)
             intent.putExtra("artist", concertRow.artist)
@@ -42,7 +49,7 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
             startActivity(intent)
         }
 
-        dialogView.listen_button.setOnClickListener {
+        binding.listenButton.setOnClickListener {
             val intent = Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH).apply {
                 putExtra(MediaStore.EXTRA_MEDIA_FOCUS, MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE)
                 putExtra(MediaStore.EXTRA_MEDIA_ARTIST, concertRow.artist)
@@ -52,15 +59,27 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
             dismiss()
         }
 
-        dialogView.back_button.setOnClickListener {
-            dismiss()
+        binding.infoButton.setOnClickListener {
+            sharedViewModel.getArtistInfos(concertRow.artist).observe(this) {
+                if (it?.isJsonNull == false) {
+                    val artistInfo = it?.get("query")
+                        ?.asJsonObject?.entrySet()?.iterator()?.next()
+                        ?.value?.asJsonObject?.entrySet()?.first()?.value
+                        ?.asJsonObject?.get("extract")?.asString
+                    val dialog = CustomInfosDialog(artistInfo)
+                    activity?.supportFragmentManager?.let { frManager -> dialog.show(frManager, null) }
+                } else {
+                    Toast.makeText(activity, resources.getString(R.string.server_error), Toast.LENGTH_LONG).show()
+                }
+            }
+
         }
 
-        dialogView.share_button.setOnClickListener {
+        binding.shareButton.setOnClickListener {
             shareConcert()
         }
 
-        builder.setView(dialogView)
+        builder.setView(binding.root)
         val popupDialog = builder.create()
         popupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return popupDialog
