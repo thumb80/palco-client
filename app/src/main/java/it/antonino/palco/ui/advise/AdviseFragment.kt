@@ -25,7 +25,6 @@ class AdviseFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
         val `in`: InputStream = resources.openRawResource(R.raw.advise)
 
         try {

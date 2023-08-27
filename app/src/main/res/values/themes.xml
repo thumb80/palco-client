@@ -6,5 +6,6 @@
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:layout_width">@dimen/dp_260</item>
     </style>
 </resources>

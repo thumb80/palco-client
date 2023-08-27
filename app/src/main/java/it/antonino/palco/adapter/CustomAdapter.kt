@@ -1,160 +1,137 @@
 package it.antonino.palco.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoCardViewBinding
+import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.ConcertRow
-import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.util.Constant.defaultDisplayFactor
-import it.antonino.palco.util.Constant.densityPixelOffset
+import it.antonino.palco.util.Constant.itemDimension
+import it.antonino.palco.util.Constant.nullItemDimension
 import it.antonino.palco.util.Constant.roundRadius
+import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent.inject
-import java.util.*
-import kotlin.collections.ArrayList
 
 private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
-private var artistThumb: String? = null
-private var selectedItems = emptyArray<Int?>()
-private var artistArray = arrayListOf<String>()
-
-private lateinit var binding: ConcertoCardViewBinding
-
 class CustomAdapter(
-    val artist: ArrayList<String>?,
-    val place: ArrayList<String>?,
-    val city: ArrayList<String>?,
-    val times: ArrayList<Date?>?,
-    val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+    val concerti: JsonArray,
+    val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<CustomAdapter.ConcertiViewHolder>() {
 
-    init {
-        artistArray = artist!!
-        selectedItems = arrayOfNulls(artist.size + 1)
-        for (i in selectedItems.indices) {
-            if (i == 1)
-                selectedItems[i] = 1
-            else
-                selectedItems[i] = 0
+    private var artistThumb: String? = null
+    private lateinit var binding: ConcertoCardViewBinding
+
+    inner class ConcertiViewHolder(val binding: ConcertoCardViewBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(concerto: JsonObject) {
+
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            )
+            layoutParams.width = itemDimension
+
+            binding.mainContainer.layoutParams = layoutParams
+            binding.mainContainer.visibility = View.VISIBLE
+
+            val artist = concerto.get("artist")?.asString
+            val place = concerto.get("place")?.asString
+            val city = concerto.get("city")?.asString
+            val time = concerto.get("time")?.asString?.getDate()
+
+            binding.artist.text = artist
+            binding.place.text = place
+            binding.city.text = city
+
+            viewModel.getArtistThumb(artist).observeForever {
+                if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
+                    artistThumb = it.get("results")
+                        ?.asJsonArray
+                        ?.get(0)
+                        ?.asJsonObject
+                        ?.get("cover_image")?.asString
+                    if (artistThumb?.contains(".gif") == true) {
+                        binding.artistImage.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                PalcoApplication.instance.resources,
+                                R.drawable.placeholder_scheda, null)
+                        )
+                    } else {
+                        Glide
+                            .with(PalcoApplication.instance)
+                            .load(artistThumb)
+                            .transform(RoundedCorners(roundRadius))
+                            .error(ResourcesCompat.getDrawable(
+                                PalcoApplication.instance.resources,
+                                R.drawable.placeholder_scheda, null)
+                            )
+                            .into(binding.artistImage)
+                    }
+                }
+                else {
+                    artistThumb = null
+                    binding.artistImage.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            PalcoApplication.instance.resources,
+                            R.drawable.placeholder_scheda,
+                            null
+                        )
+                    )
+                }
+            }
+
+            binding.cardContainer.setOnClickListener {
+                listener.invoke(
+                    ConcertRow(
+                        artist = artist,
+                        place = place,
+                        city = city,
+                        time = time,
+                        artistThumb = artistThumb
+                    )
+                )
+
+            }
+        }
+
+        fun bindNullItem() {
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            )
+            layoutParams.width = nullItemDimension
+
+            binding.mainContainer.layoutParams = layoutParams
+            binding.mainContainer.visibility = View.INVISIBLE
         }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ConcertiViewHolder, position: Int) {
 
-        if (position == RecyclerView.NO_POSITION)
-            return
-        else if (position == 0)
+        if (position == 0) {
             holder.bindNullItem()
-        else
-            holder.bind(ConcertRow(
-                artist?.get(position),
-                place?.get(position),
-                city?.get(position),
-                times?.get(position),
-                artistThumb)
-            ,listener)
-
+        }
+        else {
+            holder.bind(concerti[position].asJsonObject)
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConcertiViewHolder {
         binding = ConcertoCardViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding.root)
+        return ConcertiViewHolder(binding)
 
     }
 
     override fun getItemCount(): Int {
-        return artist!!.size
-    }
-
-    fun setSelectedItem(position: Int) {
-        for (i in selectedItems.indices) {
-            if (i == position)
-                selectedItems[i] = 1
-            else
-                selectedItems[i] = 0
-        }
-    }
-
-}
-
-class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    fun bind(item: ConcertRow, listener: (ConcertRow) -> Unit) = with(itemView) {
-        val layoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.MATCH_PARENT
-        )
-        layoutParams.width = (260 * PalcoApplication.instance.resources.displayMetrics.density + densityPixelOffset).toInt()
-        binding.mainContainer.layoutParams = layoutParams
-        binding.mainContainer.visibility = View.VISIBLE
-
-        binding.artist.text = item.artist
-        binding.place.text = item.place
-        binding.city.text = item.city
-
-        viewModel.getArtistThumb(item.artist).observeForever {
-            if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
-                artistThumb = it.get("results")
-                    ?.asJsonArray
-                    ?.get(0)
-                    ?.asJsonObject
-                    ?.get("cover_image")?.asString
-                item.addArtistThumb(artistThumb)
-                if (artistThumb?.contains(".gif") == true){
-                    binding.artistImage.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.placeholder_scheda, null)
-                    )
-                }else{
-                    Glide
-                        .with(this)
-                        .load(artistThumb)
-                        .transform(RoundedCorners(roundRadius))
-                        .error(ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.placeholder_scheda, null)
-                        )
-                        .into(binding.artistImage)
-                }
-            }
-            else {
-                artistThumb = null
-                item.addArtistThumb(artistThumb)
-                binding.artistImage.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.placeholder_scheda,
-                        null
-                    )
-                )
-            }
-        }
-
-
-        setOnClickListener {
-            if (selectedItems[artistArray.indexOf(item.artist)] == 1)
-                listener(item)
-        }
-    }
-
-    fun bindNullItem() = with(itemView) {
-        val layoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.MATCH_PARENT
-        )
-        layoutParams.width = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-                                                                            .defaultDisplay.width/defaultDisplayFactor
-        binding.mainContainer.layoutParams = layoutParams
-        binding.mainContainer.visibility = View.INVISIBLE
+        return concerti.size()
     }
 }

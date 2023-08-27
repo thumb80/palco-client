@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="dp_0">0dp</dimen>
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_6">6dp</dimen>
@@ -37,6 +38,7 @@
     <dimen name="dp_236">236dp</dimen>
     <dimen name="dp_240">240dp</dimen>
     <dimen name="dp_242">242dp</dimen>
+    <dimen name="dp_260">260dp</dimen>
     <dimen name="dp_278">278dp</dimen>
     <dimen name="dp_300">300dp</dimen>
     <dimen name="dp_318">318dp</dimen>

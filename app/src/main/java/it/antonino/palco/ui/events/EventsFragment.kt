@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
@@ -25,6 +27,7 @@ import it.antonino.palco.common.DotsItemDecoration
 import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.*
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.monthDateFormat
@@ -48,7 +51,6 @@ class EventsFragment: Fragment() {
 
     companion object {
         private var currentDayInstance: Calendar? = null
-        private var lastMonthViewed: Date?  = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,19 +76,6 @@ class EventsFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentEventsBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.monthView.text = currentDayInstance?.time?.let {
-            monthDateFormat.format(it)
-
-        }
-
-        binding.calendarView.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
-        binding.calendarView.setUseThreeLetterAbbreviation(true)
 
         viewModel.concerti.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
@@ -95,6 +84,19 @@ class EventsFragment: Fragment() {
             }
         }
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.monthView.text = currentDayInstance?.time?.let {
+            monthDateFormat.format(it)
+        }
+
+        binding.calendarView.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
+        binding.calendarView.setUseThreeLetterAbbreviation(true)
+
         binding.calendarView.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
@@ -102,7 +104,6 @@ class EventsFragment: Fragment() {
             }
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
-                lastMonthViewed = firstDayOfNewMonth
                 binding.monthView.text = monthDateFormat.format(firstDayOfNewMonth?.time)
                 if (firstDayOfNewMonth?.isActualMonth() == true) {
                     binding.prevMonth.visibility = View.GONE
@@ -136,18 +137,6 @@ class EventsFragment: Fragment() {
         binding.concertiRecycler.addItemDecoration(dividerItemDecoration)
         dotsItemDecoration?.let { binding.concertiRecycler.addItemDecoration(it) }
 
-        binding.concertiRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val concertiListView = snapHelper.findSnapView(recyclerView.layoutManager)
-                position = concertiListView?.let { recyclerView.getChildAdapterPosition(it) }
-                position?.let {
-                    adapter?.setSelectedItem(it)
-                }
-
-            }
-        })
-
         binding.nextMonth.setOnClickListener {
             binding.prevMonth.visibility = View.VISIBLE
             binding.calendarView.shouldSelectFirstDayOfMonthOnScroll(true)
@@ -157,6 +146,7 @@ class EventsFragment: Fragment() {
         binding.prevMonth.setOnClickListener {
             binding.calendarView.scrollLeft()
         }
+
     }
 
     private fun displayCurrentEvents(currentDate: Date?) {
@@ -165,29 +155,19 @@ class EventsFragment: Fragment() {
 
         val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
         val concerti = JsonArray(events.size)
+
         for (event in events)
         {
             concerti.add(JsonParser().parse(GsonBuilder().setLenient().create().toJson(event.data)))
         }
-        val artisti: ArrayList<String> = ArrayList(events.size)
-        val places: ArrayList<String> = ArrayList(events.size)
-        val cities: ArrayList<String> = ArrayList(events.size)
-        val times: ArrayList<Date?> = ArrayList(events.size)
 
-        concerti.forEach {
-            artisti.add(it.asJsonObject.get("artist").asString)
-            places.add(it.asJsonObject.get("place").asString)
-            cities.add(it.asJsonObject.get("city").asString)
-            times.add(it.asJsonObject.get("time").asString?.getDate())
-        }
-
-        artisti.add(0,"")
-        places.add(0,"")
-        cities.add(0,"")
-        times.add(0, Date())
-
-        adapter = CustomAdapter(artisti, places, cities, times) { concertRow ->
-
+        concerti.set(0, GsonBuilder().create().toJsonTree(Concerto(
+            artist = "",
+            place = "",
+            city = "",
+            time = java.sql.Date(0L)
+        )))
+        adapter = CustomAdapter(concerti) { concertRow ->
             val dialog = CustomDialog(concertRow)
             dialog.show(childFragmentManager,null)
 

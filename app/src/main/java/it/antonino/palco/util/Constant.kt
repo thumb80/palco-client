@@ -1,6 +1,10 @@
 package it.antonino.palco.util
 
+import android.content.Context
+import android.view.WindowManager
 import com.google.gson.Gson
+import it.antonino.palco.PalcoApplication
+import it.antonino.palco.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,4 +35,8 @@ object Constant {
         .newBuilder()
         .setDateFormat(dateTimeFormat)
         .create()
+    val nullItemDimension = (PalcoApplication.instance.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+        .defaultDisplay.width/defaultDisplayFactor
+    val itemDimension = (260 * PalcoApplication.instance
+        .resources.displayMetrics.density + densityPixelOffset).toInt()
 }

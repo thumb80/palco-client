@@ -40,6 +40,8 @@ class MainActivity: AppCompatActivity() {
                 viewModel.setConcerti(it)
             }
 
+            binding.progressBar.visibility = View.INVISIBLE
+
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, AdviseFragment())
                 .commit()
