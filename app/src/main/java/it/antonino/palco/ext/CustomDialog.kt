@@ -62,10 +62,10 @@ class CustomDialog(private val concertRow: ConcertRow) : DialogFragment() {
         binding.infoButton.setOnClickListener {
             sharedViewModel.getArtistInfos(concertRow.artist).observe(this) {
                 if (it?.isJsonNull == false) {
-                    val artistInfo = it?.get("query")
+                    val artistInfo = it.get("query")
                         ?.asJsonObject?.entrySet()?.iterator()?.next()
                         ?.value?.asJsonObject?.entrySet()?.first()?.value
-                        ?.asJsonObject?.get("extract")?.asString
+                        ?.asJsonObject?.get("extract")?.asString ?: getString(R.string.unavailable_infos)
                     val dialog = CustomInfosDialog(artistInfo)
                     activity?.supportFragmentManager?.let { frManager -> dialog.show(frManager, null) }
                 } else {

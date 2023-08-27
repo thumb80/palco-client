@@ -8,6 +8,7 @@
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Condividi</string>
     <string name="info_string">Informazioni</string>
+    <string name="unavailable_infos">WikiPedia non può fornire informazioni sull\'artista selezionato</string>
     <string name="maps_string">Maps</string>
     <string name="close_button_string">Chiudi</string>
     <string name="filter_city_selected">Città selezionata : %1$s. Fai tap quì per cambiare città</string>
