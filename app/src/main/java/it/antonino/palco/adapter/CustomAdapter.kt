@@ -1,5 +1,6 @@
 package it.antonino.palco.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ class CustomAdapter(
     val concerti: JsonArray,
     val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<CustomAdapter.ConcertiViewHolder>() {
 
+    private var shareArtistThumb: ArrayList<String?>? = null
     private var artistThumb: String? = null
     private lateinit var binding: ConcertoCardViewBinding
 
@@ -42,6 +44,8 @@ class CustomAdapter(
 
             binding.mainContainer.layoutParams = layoutParams
             binding.mainContainer.visibility = View.VISIBLE
+
+            shareArtistThumb = arrayListOf()
 
             val artist = concerto.get("artist")?.asString
             val place = concerto.get("place")?.asString
@@ -87,6 +91,7 @@ class CustomAdapter(
                         )
                     )
                 }
+                shareArtistThumb?.add(artistThumb)
             }
 
             binding.cardContainer.setOnClickListener {
@@ -96,7 +101,7 @@ class CustomAdapter(
                         place = place,
                         city = city,
                         time = time,
-                        artistThumb = artistThumb
+                        artistThumb = shareArtistThumb?.get(shareArtistThumb!!.size - 1)
                     )
                 )
 
