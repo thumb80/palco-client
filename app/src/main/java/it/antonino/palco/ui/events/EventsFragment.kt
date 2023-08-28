@@ -24,6 +24,7 @@ import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
+import it.antonino.palco.databinding.ConcertoCardViewBinding
 import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.*
 import it.antonino.palco.model.Concerto
@@ -44,7 +45,6 @@ class EventsFragment: Fragment() {
     private val viewModel: SharedViewModel by sharedViewModel()
     private var adapter: CustomAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
-    private var position : Int? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
     private lateinit var locationManager: LocationManager
     private lateinit var binding: FragmentEventsBinding

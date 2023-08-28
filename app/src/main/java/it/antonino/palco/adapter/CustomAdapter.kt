@@ -1,6 +1,5 @@
 package it.antonino.palco.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,13 +25,15 @@ private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
 class CustomAdapter(
     val concerti: JsonArray,
-    val listener: (ConcertRow) -> Unit) : RecyclerView.Adapter<CustomAdapter.ConcertiViewHolder>() {
+    val listener: (ConcertRow) -> Unit
+    ) : RecyclerView.Adapter<CustomAdapter.ConcertiViewHolder>() {
 
-    private var shareArtistThumb: ArrayList<String?>? = null
     private var artistThumb: String? = null
     private lateinit var binding: ConcertoCardViewBinding
 
-    inner class ConcertiViewHolder(val binding: ConcertoCardViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ConcertiViewHolder(
+        val binding: ConcertoCardViewBinding
+        ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(concerto: JsonObject) {
 
@@ -45,8 +46,6 @@ class CustomAdapter(
             binding.mainContainer.layoutParams = layoutParams
             binding.mainContainer.visibility = View.VISIBLE
 
-            shareArtistThumb = arrayListOf()
-
             val artist = concerto.get("artist")?.asString
             val place = concerto.get("place")?.asString
             val city = concerto.get("city")?.asString
@@ -55,6 +54,14 @@ class CustomAdapter(
             binding.artist.text = artist
             binding.place.text = place
             binding.city.text = city
+
+            var concertRow = ConcertRow(
+                artist = artist,
+                place = place,
+                city = city,
+                time = time,
+                artistThumb = null
+            )
 
             viewModel.getArtistThumb(artist).observeForever {
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
@@ -70,6 +77,7 @@ class CustomAdapter(
                                 R.drawable.placeholder_scheda, null)
                         )
                     } else {
+                        concertRow.addArtistThumb(artistThumb)
                         Glide
                             .with(PalcoApplication.instance)
                             .load(artistThumb)
@@ -81,7 +89,7 @@ class CustomAdapter(
                             .into(binding.artistImage)
                     }
                 }
-                else {
+                else  {
                     artistThumb = null
                     binding.artistImage.setImageDrawable(
                         ResourcesCompat.getDrawable(
@@ -91,19 +99,10 @@ class CustomAdapter(
                         )
                     )
                 }
-                shareArtistThumb?.add(artistThumb)
             }
 
             binding.cardContainer.setOnClickListener {
-                listener.invoke(
-                    ConcertRow(
-                        artist = artist,
-                        place = place,
-                        city = city,
-                        time = time,
-                        artistThumb = shareArtistThumb?.get(shareArtistThumb!!.size - 1)
-                    )
-                )
+                listener.invoke(concertRow)
 
             }
         }
