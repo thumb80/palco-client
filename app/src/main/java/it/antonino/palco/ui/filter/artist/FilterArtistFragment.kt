@@ -95,8 +95,13 @@ class FilterArtistFragment : Fragment() {
                 (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 showConcerti()
 
+                val concerti = it.sortedBy { item -> item?.getTime() }
+                val sortedByDateItems: ArrayList<Concerto?> = arrayListOf()
+                concerti.forEach {
+                    sortedByDateItems.add(it)
+                }
                 adapter = CustomFilterArtistAdapter(
-                    it
+                    sortedByDateItems
                 ) { concertRow ->
                     val dialog = CustomDialog(concertRow)
                     dialog.show(childFragmentManager,null)

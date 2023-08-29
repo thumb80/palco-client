@@ -20,7 +20,6 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.util.*
 import kotlin.collections.ArrayList
 
 class FilterCityFragment : Fragment() {
@@ -29,10 +28,6 @@ class FilterCityFragment : Fragment() {
     private var cityList = ArrayList<String>()
     private var cityAdapter: CityListAdapter? = null
     private var adapter: CustomFilterAdapter? = null
-    var artisti = ArrayList<String?>()
-    var places = ArrayList<String?>()
-    var times = ArrayList<Date?>()
-    var cities = ArrayList<String?>()
     private lateinit var binding: FragmentFilterCityBinding
 
     override fun onCreateView(
@@ -77,11 +72,6 @@ class FilterCityFragment : Fragment() {
                 cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
 
-                    artisti = arrayListOf()
-                    places = arrayListOf()
-                    cities = arrayListOf()
-                    times = arrayListOf()
-
                     binding.filterHeaderCity.text = getString(R.string.filter_city_selected, it)
                     (activity as MainActivity).progressBar?.visibility = View.VISIBLE
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
@@ -107,15 +97,13 @@ class FilterCityFragment : Fragment() {
                 (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 showConcerti()
 
-                for (concerto in it) {
-                    artisti.add(concerto?.getArtist())
-                    places.add(concerto?.getPlace())
-                    cities.add(concerto?.getCity())
-                    times.add(concerto?.getTime())
+                val concerti = it.sortedBy { item -> item?.getTime() }
+                val sortedByDateItems: ArrayList<Concerto?> = arrayListOf()
+                concerti.forEach {
+                    sortedByDateItems.add(it)
                 }
-
                 adapter = CustomFilterAdapter(
-                    it
+                    sortedByDateItems
                 ) { concertRow ->
                     val dialog = CustomDialog(concertRow)
                     dialog.show(childFragmentManager,null)
@@ -160,5 +148,4 @@ class FilterCityFragment : Fragment() {
         binding.filterHeaderCity.visibility = View.GONE
         binding.filterConcertCityList.visibility = View.GONE
     }
-
 }
