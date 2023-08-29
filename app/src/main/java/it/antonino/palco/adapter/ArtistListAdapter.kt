@@ -6,14 +6,16 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
+import it.antonino.palco.databinding.ArtistListBinding
 import it.antonino.palco.databinding.CityListBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
-private lateinit var binding: CityListBinding
 
 class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String) -> Unit)
-    : RecyclerView.Adapter<ArtistViewHolder>(), Filterable {
+    : RecyclerView.Adapter<ArtistListAdapter.ArtistListViewHolder>(), Filterable {
+
+    private lateinit var binding: ArtistListBinding
 
     val initialCityDataList = ArrayList<String>().apply {
         artists.let {
@@ -23,13 +25,27 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
-        binding = CityListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ArtistViewHolder(binding.root)
+    inner class ArtistListViewHolder(
+        val binding: ArtistListBinding
+    ): RecyclerView.ViewHolder(binding.root) {
+
+
+        fun bind(artist: String) {
+
+            binding.artistItem.text = artist
+            binding.root.setOnClickListener {
+                listener.invoke(artist)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
-        holder.bind(artists.get(position)!!, listener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistListViewHolder {
+        binding = ArtistListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ArtistListViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ArtistListViewHolder, position: Int) {
+        holder.bind(artists[position]!!)
     }
 
     override fun getItemCount(): Int = artists.size
@@ -65,11 +81,4 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
         }
     }
 
-}
-
-class ArtistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(item: String, listener: (String) -> Unit) = with(itemView) {
-        binding.city.text = item
-        setOnClickListener { listener(item) }
-    }
 }

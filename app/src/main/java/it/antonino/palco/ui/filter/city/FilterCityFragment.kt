@@ -15,7 +15,7 @@ import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
-import it.antonino.palco.databinding.FilterCityFragmentBinding
+import it.antonino.palco.databinding.FragmentFilterCityBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
@@ -33,14 +33,14 @@ class FilterCityFragment : Fragment() {
     var places = ArrayList<String?>()
     var times = ArrayList<Date?>()
     var cities = ArrayList<String?>()
-    private lateinit var binding: FilterCityFragmentBinding
+    private lateinit var binding: FragmentFilterCityBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FilterCityFragmentBinding.inflate(layoutInflater)
+        binding = FragmentFilterCityBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -115,12 +115,9 @@ class FilterCityFragment : Fragment() {
                 }
 
                 adapter = CustomFilterAdapter(
-                    artisti,
-                    places,
-                    cities,
-                    times
-                ) {
-                    val dialog = CustomDialog(it)
+                    it
+                ) { concertRow ->
+                    val dialog = CustomDialog(concertRow)
                     dialog.show(childFragmentManager,null)
                 }
 

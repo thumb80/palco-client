@@ -15,7 +15,7 @@ import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
-import it.antonino.palco.databinding.FilterArtistFragmentBinding
+import it.antonino.palco.databinding.FragmentFilterArtistBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
@@ -28,19 +28,14 @@ class FilterArtistFragment : Fragment() {
     private val viewModel: SharedViewModel by sharedViewModel()
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterArtistAdapter? = null
-    private lateinit var binding: FilterArtistFragmentBinding
-
-    var artisti = ArrayList<String?>()
-    var places = ArrayList<String?>()
-    var cities = ArrayList<String?>()
-    var times = ArrayList<Date?>()
+    private lateinit var binding: FragmentFilterArtistBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FilterArtistFragmentBinding.inflate(layoutInflater)
+    ): View {
+        binding = FragmentFilterArtistBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -75,11 +70,6 @@ class FilterArtistFragment : Fragment() {
 
                 artistAdapter = ArtistListAdapter(it) { artist ->
 
-                    artisti = arrayListOf()
-                    places = arrayListOf()
-                    cities = arrayListOf()
-                    times = arrayListOf()
-
                     binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, artist)
                     (activity as MainActivity).progressBar?.visibility = View.VISIBLE
                     viewModel.getNationalConcertsByArtist(artist).observe(viewLifecycleOwner, concertsObserver)
@@ -105,20 +95,10 @@ class FilterArtistFragment : Fragment() {
                 (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 showConcerti()
 
-                for (concerto in it) {
-                    artisti.add(concerto?.getArtist())
-                    places.add(concerto?.getPlace())
-                    cities.add(concerto?.getCity())
-                    times.add(concerto?.getTime())
-                }
-
                 adapter = CustomFilterArtistAdapter(
-                    artisti,
-                    places,
-                    cities,
-                    times
-                ) {
-                    val dialog = CustomDialog(it)
+                    it
+                ) { concertRow ->
+                    val dialog = CustomDialog(concertRow)
                     dialog.show(childFragmentManager,null)
                 }
 

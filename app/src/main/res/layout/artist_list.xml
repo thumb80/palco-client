@@ -7,7 +7,7 @@
     android:background="@color/colorWhite">
 
     <TextView
-        android:id="@+id/city_item"
+        android:id="@+id/artist_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"

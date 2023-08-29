@@ -11,22 +11,37 @@ import it.antonino.palco.databinding.CityListBinding
 import it.antonino.palco.ext.inflate
 import java.util.*
 
-private lateinit var binding: CityListBinding
 
 class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> Unit)
-    : RecyclerView.Adapter<CityViewHolder>(), Filterable{
+    : RecyclerView.Adapter<CityListAdapter.CityListViewHolder>(), Filterable{
+
+
+    private lateinit var binding: CityListBinding
 
     val initialCityDataList = ArrayList<String>().apply {
         city?.let { addAll(it) }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
-        binding = CityListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CityViewHolder(binding.root)
+    inner class CityListViewHolder(
+        val binding: CityListBinding
+    ): RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(city: String) {
+
+            binding.cityItem.text = city
+            binding.root.setOnClickListener {
+                listener.invoke(city)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
-        holder.bind(city?.get(position)!!,listener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityListViewHolder {
+        binding = CityListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CityListViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: CityListViewHolder, position: Int) {
+        holder.bind(city?.get(position)!!)
     }
 
     override fun getItemCount(): Int = city?.size ?: 0
@@ -62,11 +77,4 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
         }
     }
 
-}
-
-class CityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(item: String, listener: (String) -> Unit) = with(itemView) {
-        binding.city.text = item
-        setOnClickListener { listener(item) }
-    }
 }
