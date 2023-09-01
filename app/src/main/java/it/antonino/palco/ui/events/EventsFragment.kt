@@ -7,35 +7,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomAdapter
 import it.antonino.palco.common.CustomSnapHelper
 import it.antonino.palco.common.DotsItemDecoration
-import it.antonino.palco.databinding.ConcertoCardViewBinding
 import it.antonino.palco.databinding.FragmentEventsBinding
-import it.antonino.palco.ext.*
+import it.antonino.palco.ext.CustomDialog
+import it.antonino.palco.ext.compareDate
+import it.antonino.palco.ext.isActualMonth
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.time.ZoneId
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -58,7 +56,7 @@ class EventsFragment: Fragment() {
 
         binding = FragmentEventsBinding.inflate(layoutInflater)
 
-        currentDayInstance = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
+        currentDayInstance = Calendar.getInstance(DateTimeUtils.toTimeZone(ZoneId.systemDefault()))
 
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -94,7 +92,7 @@ class EventsFragment: Fragment() {
             monthDateFormat.format(it)
         }
 
-        binding.calendarView.setLocale(TimeZone.getTimeZone(ZoneId.systemDefault()), Locale.ITALY)
+        binding.calendarView.setLocale(DateTimeUtils.toTimeZone(ZoneId.systemDefault()), Locale.ITALY)
         binding.calendarView.setUseThreeLetterAbbreviation(true)
 
         binding.calendarView.setListener(object :
