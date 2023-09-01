@@ -3,15 +3,12 @@ package it.antonino.palco.ext
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.gson.JsonElement
-import it.antonino.palco.PalcoApplication
-import it.antonino.palco.model.Concerto
 import it.antonino.palco.util.Constant.actualDateFormat
 import it.antonino.palco.util.Constant.dateTimeDateFormat
-import it.antonino.palco.util.Constant.densityPixelOffset
 import it.antonino.palco.util.Constant.offsetDayMillis
 import it.antonino.palco.util.Constant.shareDateFormat
-import java.time.Instant
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.Instant
 import java.util.*
 
 fun ViewGroup.inflate(layoutRes: Int): View {
@@ -23,7 +20,7 @@ fun Date.compareDate(): Boolean {
 }
 
 fun Date?.isActualMonth(): Boolean? {
-    val currentDate = actualDateFormat.format(Date.from(Instant.now()))
+    val currentDate = actualDateFormat.format(DateTimeUtils.toDate(Instant.now()))
     return try {
         this?.let { actualDateFormat.format(it).equals(currentDate, true) }
     } catch (e: Exception) {
