@@ -100,7 +100,8 @@ class EventsFragment: Fragment() {
         binding.calendarView.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
-                displayCurrentEvents(dateClicked)
+                if (dateClicked?.compareDate() == false)
+                    displayCurrentEvents(dateClicked)
             }
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
