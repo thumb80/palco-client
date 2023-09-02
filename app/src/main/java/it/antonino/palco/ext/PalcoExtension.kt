@@ -7,8 +7,7 @@ import it.antonino.palco.util.Constant.actualDateFormat
 import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.offsetDayMillis
 import it.antonino.palco.util.Constant.shareDateFormat
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.Instant
+import java.time.Instant
 import java.util.*
 
 fun ViewGroup.inflate(layoutRes: Int): View {
@@ -20,7 +19,7 @@ fun Date.compareDate(): Boolean {
 }
 
 fun Date?.isActualMonth(): Boolean? {
-    val currentDate = actualDateFormat.format(DateTimeUtils.toDate(Instant.now()))
+    val currentDate = actualDateFormat.format(Date.from(Instant.now()))
     return try {
         this?.let { actualDateFormat.format(it).equals(currentDate, true) }
     } catch (e: Exception) {

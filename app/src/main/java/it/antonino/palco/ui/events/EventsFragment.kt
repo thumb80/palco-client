@@ -32,8 +32,6 @@ import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -56,7 +54,7 @@ class EventsFragment: Fragment() {
 
         binding = FragmentEventsBinding.inflate(layoutInflater)
 
-        currentDayInstance = Calendar.getInstance(DateTimeUtils.toTimeZone(ZoneId.systemDefault()))
+        currentDayInstance = Calendar.getInstance(TimeZone.getDefault())
 
         locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -92,7 +90,7 @@ class EventsFragment: Fragment() {
             monthDateFormat.format(it)
         }
 
-        binding.calendarView.setLocale(DateTimeUtils.toTimeZone(ZoneId.systemDefault()), Locale.ITALY)
+        binding.calendarView.setLocale(TimeZone.getDefault(), Locale.ITALY)
         binding.calendarView.setUseThreeLetterAbbreviation(true)
 
         binding.calendarView.setListener(object :

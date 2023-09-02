@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.WindowManager
 import com.google.gson.Gson
 import it.antonino.palco.PalcoApplication
-import it.antonino.palco.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,10 +25,10 @@ object Constant {
     const val delayMillis = 1500L
     const val bitMapQuality = 100
     const val cacheSize = (5 * 1024 * 1024).toLong()
-    val monthDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
+    val monthDateFormat = SimpleDateFormat("MMMM yyyy")
     val shareDateFormat = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-    val dateTimeDateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ITALY)
-    val actualDateFormat = SimpleDateFormat("yyyy-MM", Locale.ITALY)
+    val dateTimeDateFormat = SimpleDateFormat("MMMM dd, yyyy")
+    val actualDateFormat = SimpleDateFormat("yyyy-MM")
     const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
     val gson: Gson = Gson()
         .newBuilder()

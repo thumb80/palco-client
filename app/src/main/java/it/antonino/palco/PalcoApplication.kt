@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.multidex.MultiDex
-import com.jakewharton.threetenabp.AndroidThreeTen
 import it.antonino.palco.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -24,7 +23,6 @@ class PalcoApplication: Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(this)
-        AndroidThreeTen.init(this)
     }
 
     override fun onCreate() {

@@ -2,10 +2,7 @@ package it.antonino.palco.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.network.DiscogsAPI
-import it.antonino.palco.network.NetworkAPI
-import it.antonino.palco.network.NetworkRepository
-import it.antonino.palco.network.UnsplashAPI
+import it.antonino.palco.network.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,6 +25,8 @@ class SharedViewModelTest {
     @Mock
     private lateinit var unsplashAPI: UnsplashAPI
     @Mock
+    private lateinit var wikiPediaAPI: WikiPediaAPI
+    @Mock
     private lateinit var networkRepository: NetworkRepository
     @Mock
     private lateinit var sharedViewModel: SharedViewModel
@@ -36,7 +35,7 @@ class SharedViewModelTest {
     @Before
     fun setUp() {
         networkRepository = NetworkRepository(
-            networkAPI, discogsAPI, unsplashAPI
+            networkAPI, discogsAPI, unsplashAPI, wikiPediaAPI
         )
         sharedViewModel = SharedViewModel(networkRepository)
     }
