@@ -96,8 +96,12 @@ class EventsFragment: Fragment() {
         binding.calendarView.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
-                if (dateClicked?.compareDate() == false)
+                if (dateClicked?.compareDate() == false) {
+                    hideEmpty()
                     displayCurrentEvents(dateClicked)
+                }
+                else
+                    showEmpty()
             }
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
@@ -151,26 +155,24 @@ class EventsFragment: Fragment() {
         binding.noData.visibility = View.INVISIBLE
 
         val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
-        val concerti = JsonArray(events.size)
-
-        for (event in events)
-        {
-            concerti.add(JsonParser().parse(GsonBuilder().setLenient().create().toJson(event.data)))
-        }
-
-        concerti.set(0, GsonBuilder().create().toJsonTree(Concerto(
-            artist = "",
-            place = "",
-            city = "",
-            time = java.sql.Date(0L)
-        )))
-        adapter = CustomAdapter(concerti) { concertRow ->
-            val dialog = CustomDialog(concertRow)
-            dialog.show(childFragmentManager,null)
-
-        }
 
         if (events.isNotEmpty()) {
+            val concerti = JsonArray(events.size)
+            for (event in events)
+            {
+                concerti.add(JsonParser().parse(GsonBuilder().setLenient().create().toJson(event.data)))
+            }
+            concerti.set(0, GsonBuilder().create().toJsonTree(Concerto(
+                artist = "",
+                place = "",
+                city = "",
+                time = java.sql.Date(0L)
+            )))
+            adapter = CustomAdapter(concerti) { concertRow ->
+                val dialog = CustomDialog(concertRow)
+                dialog.show(childFragmentManager,null)
+
+            }
             binding.concertiRecycler.adapter = adapter
             hideEmpty()
         }
@@ -209,6 +211,6 @@ class EventsFragment: Fragment() {
 
     private fun hideEmpty() {
         binding.noData.visibility = View.INVISIBLE
-        binding.calendarView.visibility = View.VISIBLE
+        binding.concertiRecycler.visibility = View.VISIBLE
     }
 }
