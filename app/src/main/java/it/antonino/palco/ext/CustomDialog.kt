@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.gson.JsonElement
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.CustomDialogBinding
@@ -64,10 +65,17 @@ class CustomDialog(
         binding.infoButton.setOnClickListener {
             sharedViewModel.getArtistInfos(concertRow.artist).observe(this) {
                 if (it?.isJsonNull == false) {
-                    val artistInfo = it.get("query")
-                        ?.asJsonObject?.entrySet()?.iterator()?.next()
-                        ?.value?.asJsonObject?.entrySet()?.first()?.value
-                        ?.asJsonObject?.get("extract")?.asString ?: getString(R.string.unavailable_infos)
+                    var artistInfoExtract: JsonElement? = null
+                    var artistInfo: String
+                    try {
+                        artistInfoExtract = it.get("query")
+                            ?.asJsonObject?.entrySet()?.iterator()?.next()
+                            ?.value?.asJsonObject?.entrySet()?.first()?.value
+                            ?.asJsonObject?.get("extract")
+                        artistInfo = if (artistInfoExtract != null) artistInfoExtract.asString else getString(R.string.unavailable_infos)
+                    } catch (e: Exception) {
+                        artistInfo = getString(R.string.unavailable_infos)
+                    }
                     val dialog = CustomInfosDialog(artistInfo)
                     activity?.supportFragmentManager?.let { frManager -> dialog.show(frManager, null) }
                 } else {
