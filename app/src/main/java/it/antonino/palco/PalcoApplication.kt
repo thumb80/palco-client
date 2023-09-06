@@ -5,15 +5,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.multidex.MultiDex
 import it.antonino.palco.di.appModule
+import it.antonino.palco.ext.getShared
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class PalcoApplication: Application() {
 
-    var sharedPreferences: SharedPreferences? = null
-
     companion object {
         lateinit var instance: PalcoApplication
+        var sharedPreferences: SharedPreferences? = null
     }
 
     init {
@@ -33,7 +33,6 @@ class PalcoApplication: Application() {
             modules(appModule)
         }
 
-        sharedPreferences = instance.getSharedPreferences("palco_prefs", Context.MODE_PRIVATE)
-
+        sharedPreferences = sharedPreferences.getShared()
     }
 }

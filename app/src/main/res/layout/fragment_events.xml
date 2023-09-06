@@ -68,6 +68,7 @@
         app:compactCalendarTextSize="@dimen/sp_12"
         app:compactCalendarBackgroundColor="@color/colorPrimary"
         app:compactCalendarTextColor="@color/colorWhite"
+        app:compactCalendarCurrentDayBackgroundColor="@color/colorAccent"
         app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorAccent"
         app:compactCalendarMultiEventIndicatorColor="@color/colorAccent"
         app:compactCalendarCurrentDayIndicatorStyle="fill_large_indicator"

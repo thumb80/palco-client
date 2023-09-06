@@ -1,7 +1,5 @@
 package it.antonino.palco
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -16,10 +14,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity: AppCompatActivity() {
 
     private val viewModel: SharedViewModel by viewModel()
-    private var sharedPreferences: SharedPreferences? = null
     private var timeStamp: Long = 0
-    var progressBar: ProgressBar? = null
     private lateinit var binding: ActivityMainBinding
+    var progressBar: ProgressBar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -28,8 +25,6 @@ class MainActivity: AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
         binding.progressBar.visibility = View.VISIBLE
 

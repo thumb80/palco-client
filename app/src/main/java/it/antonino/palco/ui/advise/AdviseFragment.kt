@@ -1,13 +1,10 @@
 package it.antonino.palco.ui.advise
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import it.antonino.palco.MainActivity
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentAdviseBinding
@@ -52,7 +49,7 @@ class AdviseFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (PalcoApplication.instance.sharedPreferences?.getBoolean("ok_consent", false) == true) {
+        if (PalcoApplication.sharedPreferences?.getBoolean("ok_consent", false) == true) {
             binding.adviseContainer.visibility = View.INVISIBLE
             childFragmentManager.beginTransaction()
                 .replace(R.id.second_container, ConcertiFragment.newInstance())
@@ -66,7 +63,7 @@ class AdviseFragment: Fragment() {
 
             binding.okConsent.setOnClickListener {
                 binding.adviseContainer.visibility = View.INVISIBLE
-                PalcoApplication.instance.sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
+                PalcoApplication.sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
                 childFragmentManager.beginTransaction()
                     .replace(R.id.second_container, ConcertiFragment.newInstance())
                     .commit()

@@ -72,7 +72,7 @@ class CustomDialog(
                             ?.asJsonObject?.entrySet()?.iterator()?.next()
                             ?.value?.asJsonObject?.entrySet()?.first()?.value
                             ?.asJsonObject?.get("extract")
-                        artistInfo = if (artistInfoExtract != null) artistInfoExtract.asString else getString(R.string.unavailable_infos)
+                        artistInfo = if (artistInfoExtract != null && artistInfoExtract.asString?.isNotEmpty() == true) artistInfoExtract.asString else getString(R.string.unavailable_infos)
                     } catch (e: Exception) {
                         artistInfo = getString(R.string.unavailable_infos)
                     }

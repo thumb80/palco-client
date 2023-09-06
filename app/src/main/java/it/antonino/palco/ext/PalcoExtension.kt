@@ -1,8 +1,13 @@
 package it.antonino.palco.ext
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.util.Constant.actualDateFormat
 import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.offsetDayMillis
@@ -43,4 +48,17 @@ fun String?.getDate(): Date? {
     } catch (e: Exception) {
         return null
     }
+}
+
+fun SharedPreferences?.getShared() : SharedPreferences {
+    val masterKey = MasterKey.Builder(PalcoApplication.instance)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+    return EncryptedSharedPreferences.create(
+        PalcoApplication.instance,
+        "palco_prefs",
+        masterKey,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
 }
