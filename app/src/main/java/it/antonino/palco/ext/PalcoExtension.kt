@@ -1,6 +1,5 @@
 package it.antonino.palco.ext
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import it.antonino.palco.util.Constant.dateTimeDateFormat
 import it.antonino.palco.util.Constant.offsetDayMillis
 import it.antonino.palco.util.Constant.shareDateFormat
 import java.time.Instant
-import java.util.*
+import java.util.Date
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
