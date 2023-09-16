@@ -15,7 +15,6 @@ import retrofit2.http.Url
 class NetworkRepository(
     private val networkAPI: NetworkAPI,
     private val discogsAPI: DiscogsAPI,
-    private val unsplashAPI: UnsplashAPI,
     private val wikipediaAPI: WikiPediaAPI
 ) {
 
@@ -23,7 +22,6 @@ class NetworkRepository(
             NetworkRepository,
             NetworkAPI,
             DiscogsAPI,
-            UnsplashAPI,
             WikiPediaAPI
             >(::NetworkRepository)
 
@@ -147,26 +145,6 @@ class NetworkRepository(
                     response: Response<JsonObject?>
                 ) {
                     responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        return responseObject
-    }
-
-    fun getPlacePhoto(place: String): MutableLiveData<JsonObject?> {
-        val responseObject = MutableLiveData<JsonObject?>()
-        unsplashAPI.getPhoto(
-            "Client-ID ${BuildConfig.unsplashAccessKey}",
-            place
-        ).enqueue(
-            object : Callback<JsonObject?> {
-                override fun onResponse(call: Call<JsonObject?>, response: Response<JsonObject?>) {
-                    responseObject.postValue(response.body())
-                }
-
-                override fun onFailure(call: Call<JsonObject?>, t: Throwable) {
-                    responseObject.postValue(null)
                 }
 
             }

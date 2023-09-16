@@ -33,7 +33,12 @@ fun Date?.isActualMonth(): Boolean? {
 
 fun Date?.getString(): String? {
     return try {
-        this?.let { shareDateFormat.format(it) }
+        this?.let {
+            val dateStringSplitted = shareDateFormat.format(it).split(" ")
+            val day = dateStringSplitted[0].capitalize()
+            val month = dateStringSplitted[2].capitalize()
+            return day + " " + dateStringSplitted[1] + " " + month + " " + dateStringSplitted[3]
+        }
     } catch (e: Exception) {
         return null
     }

@@ -10,23 +10,23 @@ import retrofit2.http.Path
 interface NetworkAPI {
 
     @Headers("x-api-key:${BuildConfig.authToken}")
-    @GET("getconcerti")
+    @GET("events")
     fun getConcertiNazionali(): Call<ArrayList<Concerto?>?>
 
     @Headers("x-api-key:${BuildConfig.authToken}")
-    @GET("getconcerticity/{city}")
+    @GET("city/{city}")
     fun getConcertiNazionaliByCity(@Path("city") city: String): Call<ArrayList<Concerto?>?>
 
     @Headers("x-api-key:${BuildConfig.authToken}")
-    @GET("getconcertiartist/{artist}")
+    @GET("artist/{artist}")
     fun getConcertiNazionaliByArtist(@Path("artist") artist: String): Call<ArrayList<Concerto?>?>
 
     @Headers("x-api-key:${BuildConfig.authToken}")
-    @GET("getcities")
+    @GET("cities")
     fun getCities(): Call<ArrayList<String?>?>
 
     @Headers("x-api-key:${BuildConfig.authToken}")
-    @GET("getartists")
+    @GET("artists")
     fun getNationalArtists(): Call<ArrayList<String?>?>
 
 }

@@ -19,7 +19,7 @@ import java.util.*
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
-private var placeThumb: String? = null
+private var artistThumb: String? = null
 
 class CustomFilterArtistAdapter(
     val concerti: ArrayList<Concerto?>,
@@ -45,28 +45,42 @@ class CustomFilterArtistAdapter(
                 artistThumb = null
             )
 
-            viewModel.getPlacePhoto(concerto.place!!).observeForever {
-                if (it?.isJsonNull == false) {
-                    placeThumb = it
-                        .get("results")
+            viewModel.getArtistThumb(concerto.artist).observeForever {
+                if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
+                    artistThumb = it.get("results")
                         ?.asJsonArray
                         ?.get(0)
                         ?.asJsonObject
-                        ?.get("urls")
-                        ?.asJsonObject
-                        ?.get("thumb")?.asString
-                    concerto.addArtistThumb(placeThumb)
-                    Glide.with(PalcoApplication.instance)
-                        .load(placeThumb)
-                        .transform(RoundedCorners(roundRadius))
-                        .error(ResourcesCompat.getDrawable(PalcoApplication.instance.resources, R.drawable.placeholder_scheda, null))
-                        .into(binding.artistImage)
-                }
-                else
-                    binding.artistImage
-                        .setImageDrawable(
-                            ResourcesCompat.getDrawable(PalcoApplication.instance.resources, R.drawable.placeholder_scheda, null)
+                        ?.get("cover_image")?.asString
+                    if (artistThumb?.contains(".gif") == true) {
+                        binding.artistImage.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                PalcoApplication.instance.resources,
+                                R.drawable.placeholder_scheda, null)
                         )
+                    } else {
+                        concertRow.addArtistThumb(artistThumb)
+                        Glide
+                            .with(PalcoApplication.instance)
+                            .load(artistThumb)
+                            .transform(RoundedCorners(roundRadius))
+                            .error(ResourcesCompat.getDrawable(
+                                PalcoApplication.instance.resources,
+                                R.drawable.placeholder_scheda, null)
+                            )
+                            .into(binding.artistImage)
+                    }
+                }
+                else  {
+                    artistThumb = null
+                    binding.artistImage.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            PalcoApplication.instance.resources,
+                            R.drawable.placeholder_scheda,
+                            null
+                        )
+                    )
+                }
             }
 
             binding.root.setOnClickListener {
@@ -88,7 +102,7 @@ class CustomFilterArtistAdapter(
             concerti[position]?.getPlace(),
             concerti[position]?.getCity(),
             concerti[position]?.getTime(),
-            placeThumb
+            artistThumb
         ))
     }
 
