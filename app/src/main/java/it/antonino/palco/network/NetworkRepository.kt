@@ -1,16 +1,12 @@
 package it.antonino.palco.network
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
-import it.antonino.palco.BuildConfig
 import it.antonino.palco.common.SingletonHolder
 import it.antonino.palco.model.Concerto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Url
 
 class NetworkRepository(
     private val networkAPI: NetworkAPI,
@@ -24,8 +20,6 @@ class NetworkRepository(
             DiscogsAPI,
             WikiPediaAPI
             >(::NetworkRepository)
-
-    val TAG = NetworkRepository::class.java.simpleName
 
     fun getConcertiNazionali(): MutableLiveData<ArrayList<Concerto?>?> {
         val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
@@ -69,11 +63,9 @@ class NetworkRepository(
 
     fun getConcertiNazionaliByArtist(artist: String): MutableLiveData<ArrayList<Concerto?>?> {
         val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        val response = networkAPI.getConcertiNazionaliByArtist(artist).enqueue(
+        networkAPI.getConcertiNazionaliByArtist(artist).enqueue(
             object : Callback<ArrayList<Concerto?>?> {
                 override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    Log.d(TAG, "FAILURE")
-                    Log.d(TAG, t.toString())
                     responseObject.postValue(arrayListOf())
                 }
 
@@ -81,14 +73,11 @@ class NetworkRepository(
                     call: Call<ArrayList<Concerto?>?>,
                     response: Response<ArrayList<Concerto?>?>
                 ) {
-                    Log.d(TAG, "SUCCESS")
-                    Log.d(TAG, "$response")
                     responseObject.postValue(response.body())
                 }
 
             }
         )
-        Log.d(TAG, "$response")
         return responseObject
     }
 
