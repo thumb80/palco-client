@@ -114,7 +114,7 @@ class NetworkRepository(
 
     fun getNationalArtists(): MutableLiveData<ArrayList<String?>?> {
         val responseObject = MutableLiveData<ArrayList<String?>?>()
-        val response = networkAPI.getNationalArtists().enqueue(
+        networkAPI.getNationalArtists().enqueue(
             object : Callback<ArrayList<String?>?> {
                 override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
                     responseObject.postValue(arrayListOf())
