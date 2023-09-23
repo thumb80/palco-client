@@ -87,7 +87,7 @@ class EventsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.monthView.text = currentDayInstance?.time?.let {
-            monthDateFormat.format(it)
+            monthDateFormat.format(it).capitalize()
         }
 
         binding.calendarView.setLocale(TimeZone.getDefault(), Locale.ITALY)

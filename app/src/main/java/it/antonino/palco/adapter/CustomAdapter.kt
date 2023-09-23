@@ -3,16 +3,19 @@ package it.antonino.palco.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoCardViewBinding
+import it.antonino.palco.ext.CustomInfosDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.util.Constant.itemDimension
@@ -29,6 +32,7 @@ class CustomAdapter(
     ) : RecyclerView.Adapter<CustomAdapter.ConcertiViewHolder>() {
 
     private var artistThumb: String? = null
+    private var artistInfo: String? = null
     private lateinit var binding: ConcertoCardViewBinding
 
     inner class ConcertiViewHolder(
@@ -60,7 +64,8 @@ class CustomAdapter(
                 place = place,
                 city = city,
                 time = time,
-                artistThumb = null
+                artistThumb = null,
+                artistInfo = null
             )
 
             viewModel.getArtistThumb(artist).observeForever {
@@ -98,6 +103,24 @@ class CustomAdapter(
                             null
                         )
                     )
+                }
+            }
+
+            viewModel.getArtistInfos(artist).observeForever {
+                if (it?.isJsonNull == false) {
+                    var artistInfoExtract: JsonElement? = null
+                    try {
+                        artistInfoExtract = it.get("query")
+                            ?.asJsonObject?.entrySet()?.iterator()?.next()
+                            ?.value?.asJsonObject?.entrySet()?.first()?.value
+                            ?.asJsonObject?.get("extract")
+                        artistInfo = if (artistInfoExtract != null && artistInfoExtract.asString?.isNotEmpty() == true) artistInfoExtract.asString else null
+                        concertRow.addArtistInfo(artistInfo)
+                    } catch (e: Exception) {
+                        artistInfo = null
+                    }
+                } else {
+                    artistInfo = null
                 }
             }
 

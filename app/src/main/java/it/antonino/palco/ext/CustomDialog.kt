@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -36,7 +38,6 @@ class CustomDialog(
 
     private lateinit var binding: CustomDialogBinding
     private lateinit var builder: Builder
-    private val sharedViewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
@@ -62,27 +63,14 @@ class CustomDialog(
             dismiss()
         }
 
-        binding.infoButton.setOnClickListener {
-            sharedViewModel.getArtistInfos(concertRow.artist).observe(this) {
-                if (it?.isJsonNull == false) {
-                    var artistInfoExtract: JsonElement? = null
-                    var artistInfo: String
-                    try {
-                        artistInfoExtract = it.get("query")
-                            ?.asJsonObject?.entrySet()?.iterator()?.next()
-                            ?.value?.asJsonObject?.entrySet()?.first()?.value
-                            ?.asJsonObject?.get("extract")
-                        artistInfo = if (artistInfoExtract != null && artistInfoExtract.asString?.isNotEmpty() == true) artistInfoExtract.asString else getString(R.string.unavailable_infos)
-                    } catch (e: Exception) {
-                        artistInfo = getString(R.string.unavailable_infos)
-                    }
-                    val dialog = CustomInfosDialog(artistInfo)
-                    activity?.supportFragmentManager?.let { frManager -> dialog.show(frManager, null) }
-                } else {
-                    Toast.makeText(activity, resources.getString(R.string.server_error), Toast.LENGTH_LONG).show()
-                }
+        if (concertRow.artistInfo != null) {
+            binding.infoButton.setOnClickListener {
+                val dialog = CustomInfosDialog(concertRow.artistInfo)
+                activity?.supportFragmentManager?.let { frManager -> dialog.show(frManager, null) }
             }
-
+        } else {
+            binding.infoButton.background = getDrawable(resources, R.drawable.dialog_background_grey, null)
+            binding.infoButton.setTextColor(getColor(resources, R.color.colorWhite, null))
         }
 
         binding.shareButton.setOnClickListener {
