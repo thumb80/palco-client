@@ -23,8 +23,6 @@ class SharedViewModelTest {
     @Mock
     private lateinit var discogsAPI: DiscogsAPI
     @Mock
-    private lateinit var unsplashAPI: UnsplashAPI
-    @Mock
     private lateinit var wikiPediaAPI: WikiPediaAPI
     @Mock
     private lateinit var networkRepository: NetworkRepository
@@ -35,7 +33,7 @@ class SharedViewModelTest {
     @Before
     fun setUp() {
         networkRepository = NetworkRepository(
-            networkAPI, discogsAPI, unsplashAPI, wikiPediaAPI
+            networkAPI, discogsAPI, wikiPediaAPI
         )
         sharedViewModel = SharedViewModel(networkRepository)
     }

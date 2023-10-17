@@ -64,7 +64,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/placeholder_scheda"
                 android:maxWidth="225dp"
-                android:scaleType="fitXY"
+                android:scaleType="fitCenter"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
