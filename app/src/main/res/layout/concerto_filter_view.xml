@@ -29,7 +29,7 @@
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintGuide_percent="0.45"/>
+            app:layout_constraintGuide_percent="0.25"/>
 
         <TextView
             tools:text="Artista"
@@ -64,7 +64,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/placeholder_scheda"
                 android:maxWidth="225dp"
-                android:scaleType="fitCenter"
+                android:scaleType="fitStart"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
