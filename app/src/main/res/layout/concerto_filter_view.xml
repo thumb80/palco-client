@@ -4,32 +4,68 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
+    android:paddingRight="@dimen/dp_8"
+    android:paddingLeft="@dimen/dp_8"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/dp_12"
+    android:paddingBottom="@dimen/dp_12"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/filter_guideline"
+        android:layout_width="@dimen/dp_2"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintGuide_percent="0.35"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/filter_end_guideline"
+        android:layout_width="@dimen/dp_2"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintGuide_percent="0.95"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cardFilterContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="@dimen/dp_4"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/filter_guideline">
+
+        <ImageView
+            android:id="@+id/artist_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/placeholder_scheda"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:focusable="true"
-        android:background="@drawable/card_view_background_white"
+        android:background="@drawable/card_view_background_grey"
         android:paddingRight="@dimen/dp_8"
         android:paddingLeft="@dimen/dp_8"
-        android:orientation="horizontal"
         android:paddingTop="@dimen/dp_12"
         android:paddingBottom="@dimen/dp_12"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/filter_guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintGuide_percent="0.25"/>
+        app:layout_constraintStart_toEndOf="@+id/filter_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/filter_end_guideline">
 
         <TextView
             tools:text="Artista"
@@ -44,33 +80,8 @@
             android:maxLines="2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/place"
-            app:layout_constraintStart_toEndOf="@+id/filter_guideline"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:paddingTop="@dimen/dp_4"
-            android:paddingLeft="@dimen/dp_8"
-            android:paddingRight="@dimen/dp_8"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/filter_guideline">
-
-            <ImageView
-                android:id="@+id/artist_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/placeholder_scheda"
-                android:maxWidth="225dp"
-                android:scaleType="fitStart"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             tools:text="Locale"
@@ -86,7 +97,7 @@
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/artist"
             app:layout_constraintBottom_toTopOf="@+id/city"
-            app:layout_constraintStart_toEndOf="@+id/filter_guideline"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
@@ -103,7 +114,7 @@
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/place"
             app:layout_constraintBottom_toTopOf="@+id/time"
-            app:layout_constraintStart_toEndOf="@+id/filter_guideline"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
@@ -119,8 +130,8 @@
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/city"
-            app:layout_constraintStart_toEndOf="@+id/filter_guideline"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

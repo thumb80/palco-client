@@ -1,8 +1,6 @@
 package it.antonino.palco.ui.events
 
-import android.content.Context
 import android.graphics.Color
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,8 +30,10 @@ import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 class EventsFragment: Fragment() {
@@ -42,7 +42,6 @@ class EventsFragment: Fragment() {
     private var adapter: CustomAdapter? = null
     private var layoutManager: LinearLayoutManager? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
-    private lateinit var locationManager: LocationManager
     private lateinit var binding: FragmentEventsBinding
 
     companion object {
@@ -55,8 +54,6 @@ class EventsFragment: Fragment() {
         binding = FragmentEventsBinding.inflate(layoutInflater)
 
         currentDayInstance = Calendar.getInstance(TimeZone.getDefault())
-
-        locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         dotsItemDecoration = DotsItemDecoration(
             resources.getDimension(R.dimen.dp_4).toInt(),
@@ -105,7 +102,9 @@ class EventsFragment: Fragment() {
             }
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
-                binding.monthView.text = monthDateFormat.format(firstDayOfNewMonth?.time)
+                binding.monthView.text = monthDateFormat
+                    .format(firstDayOfNewMonth?.time)
+                    .capitalize()
                 if (firstDayOfNewMonth?.isActualMonth() == true) {
                     binding.prevMonth.visibility = View.GONE
                     binding.calendarView.setCurrentDate(currentDayInstance?.time)
