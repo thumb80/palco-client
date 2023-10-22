@@ -80,5 +80,15 @@
         <item name="android:fadeScrollbars">false</item>
     </style>
 
+    <style name="CornerRound">
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerSizeBottomRight">16dp</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+    </style>
 
 </resources>

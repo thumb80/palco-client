@@ -34,20 +34,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="@dimen/dp_4"
+        android:paddingTop="@dimen/dp_8"
         android:paddingLeft="@dimen/dp_8"
         android:paddingRight="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:background="@drawable/card_view_background_primary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/filter_guideline">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/artist_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/placeholder_scheda"
             android:scaleType="fitXY"
+            app:shapeAppearanceOverlay="@style/CornerRound"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +61,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_view_background_grey"
+        android:background="@drawable/card_view_background_accent"
+        android:layout_marginLeft="@dimen/dp_16"
         android:paddingRight="@dimen/dp_8"
         android:paddingLeft="@dimen/dp_8"
         android:paddingTop="@dimen/dp_12"
