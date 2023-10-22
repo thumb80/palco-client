@@ -7,7 +7,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import it.antonino.palco.databinding.ActivityMainBinding
-import it.antonino.palco.ui.advise.AdviseFragment
+import it.antonino.palco.ui.advice.AdviceFragment
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -38,7 +38,7 @@ class MainActivity: AppCompatActivity() {
             binding.progressBar.visibility = View.INVISIBLE
 
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, AdviseFragment())
+                .replace(R.id.container, AdviceFragment())
                 .commit()
         }
     }

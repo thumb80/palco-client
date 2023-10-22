@@ -1,4 +1,4 @@
-package it.antonino.palco.ui.advise
+package it.antonino.palco.ui.advice
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import java.io.InputStream
 import kotlin.system.exitProcess
 
 
-class AdviseFragment: Fragment() {
+class AdviceFragment: Fragment() {
 
     private lateinit var builder: StringBuilder
     private lateinit var binding: FragmentAdviseBinding
@@ -22,7 +22,7 @@ class AdviseFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val `in`: InputStream = resources.openRawResource(R.raw.advise)
+        val `in`: InputStream = resources.openRawResource(R.raw.advice)
 
         try {
             var count = 0
