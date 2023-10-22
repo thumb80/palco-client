@@ -42,7 +42,8 @@ val appModule = module {
                                 .removeHeader("Pragma")
                                 .build()
                         }
-                    ).cache(Cache(androidContext().cacheDir, cacheSize))
+                    )
+                    .cache(Cache(androidContext().cacheDir, cacheSize))
                     .build()
                 /*CustomTrust(androidContext())
                     .client
