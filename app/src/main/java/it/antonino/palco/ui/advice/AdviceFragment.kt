@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
-import it.antonino.palco.databinding.FragmentAdviseBinding
+import it.antonino.palco.databinding.FragmentAdviceBinding
 import it.antonino.palco.ui.ConcertiFragment
 import java.io.IOException
 import java.io.InputStream
@@ -17,7 +17,7 @@ import kotlin.system.exitProcess
 class AdviceFragment: Fragment() {
 
     private lateinit var builder: StringBuilder
-    private lateinit var binding: FragmentAdviseBinding
+    private lateinit var binding: FragmentAdviceBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class AdviceFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAdviseBinding.inflate(layoutInflater)
+        binding = FragmentAdviceBinding.inflate(layoutInflater)
         return binding.root
     }
 
