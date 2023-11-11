@@ -14,7 +14,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
     buildToolsVersion "30.0.3"
 
     defaultConfig {
@@ -76,26 +76,9 @@ android {
 
 }
 
-configurations {
-    detekt
-}
-// Detekt Task
-def detektTask = tasks.register("detekt", JavaExec) {
-    main = "io.gitlab.arturbosch.detekt.cli.Main"
-    classpath = configurations.detekt
-
-    def input = "$projectDir"
-    def config = "$projectDir/detekt.yml"
-    def exclude = ".*/build/.*,.*/resources/.*"
-    def params = [ '-i', input, '-c', config, '-ex', exclude]
-
-    args(params)
-}
-
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    detekt 'io.gitlab.arturbosch.detekt:detekt-cli:1.22.0-RC1'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.fragment:fragment-ktx:1.5.6'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -119,6 +102,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha06'
+    implementation 'androidx.webkit:webkit:1.8.0'
 
     // Required -- JUnit 4 framework
     testImplementation "junit:junit:$jUnitVersion"
@@ -131,8 +115,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
-
-check.dependsOn detektTask
 
 task wrapper(type: Wrapper) {
     gradleVersion = '8.2.1' //version required

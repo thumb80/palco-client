@@ -1,41 +1,26 @@
 package it.antonino.palco.ui.advice
 
+import android.annotation.SuppressLint
+import android.content.DialogInterface
+import android.content.DialogInterface.OnClickListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import it.antonino.palco.BuildConfig
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentAdviceBinding
+import it.antonino.palco.ext.CustomWebViewClient
 import it.antonino.palco.ui.ConcertiFragment
-import java.io.IOException
-import java.io.InputStream
 import kotlin.system.exitProcess
 
 
 class AdviceFragment: Fragment() {
 
-    private lateinit var builder: StringBuilder
     private lateinit var binding: FragmentAdviceBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val `in`: InputStream = resources.openRawResource(R.raw.advice)
-
-        try {
-            var count = 0
-            val bytes = ByteArray(32768)
-            builder = StringBuilder()
-            while (`in`.read(bytes, 0, 32768).also { count = it } > 0) {
-                builder.append(String(bytes, 0, count))
-            }
-            `in`.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,8 +31,26 @@ class AdviceFragment: Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val dialog = AlertDialog.Builder(requireContext())
+        dialog.setTitle(R.string.disclaimer_title)
+        dialog.setMessage(R.string.disclaimer)
+        dialog.setPositiveButton(R.string.ok_consent, object : OnClickListener {
+            override fun onClick(p0: DialogInterface?, p1: Int) {
+                p0?.cancel()
+            }
+
+        })
+        dialog.setNegativeButton(R.string.no_consent, object : OnClickListener {
+            override fun onClick(p0: DialogInterface?, p1: Int) {
+                exitProcess(0)
+            }
+        })
+        dialog.create()
+        dialog.show()
 
         if (PalcoApplication.sharedPreferences?.getBoolean("ok_consent", false) == true) {
             binding.adviseContainer.visibility = View.INVISIBLE
@@ -55,19 +58,16 @@ class AdviceFragment: Fragment() {
                 .replace(R.id.second_container, ConcertiFragment.newInstance())
                 .commit()
         } else {
-            binding.adviseText.text = builder.toString()
+            binding.webview.webViewClient = CustomWebViewClient(
+                binding.privacyProgress,
+                binding.okConsent,
+                binding.noConsent,
+                binding.adviseContainer,
+                childFragmentManager
+            )
+            binding.webview.settings.javaScriptEnabled = true
+            binding.webview.loadUrl(BuildConfig.privacyUrl)
 
-            binding.noConsent.setOnClickListener {
-                exitProcess(0)
-            }
-
-            binding.okConsent.setOnClickListener {
-                binding.adviseContainer.visibility = View.INVISIBLE
-                PalcoApplication.sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
-                childFragmentManager.beginTransaction()
-                    .replace(R.id.second_container, ConcertiFragment.newInstance())
-                    .commit()
-            }
         }
     }
 }

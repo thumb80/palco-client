@@ -25,21 +25,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <ScrollView
+        <WebView
+            android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/dp_24"
+            android:layout_marginRight="@dimen/dp_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_guideline"
-            app:layout_constraintBottom_toTopOf="@+id/advise_guideline">
+            app:layout_constraintBottom_toTopOf="@+id/advise_guideline"
+            />
 
-            <TextView
-                style="@style/Descrizioni"
-                android:id="@+id/advise_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_24"
-                android:layout_marginRight="@dimen/dp_24"/>
-
-        </ScrollView>
+        <ProgressBar
+            android:id="@+id/privacyProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/advise_guideline"

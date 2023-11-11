@@ -21,4 +21,6 @@
     <string name="version_error">Ops.. c\'è un problema, scarica la nuova versione</string>
     <string name="back_exit">Premere due volte per uscire dall\'app</string>
     <string name="share_text">Scegli con quale app vuoi condividere il concerto</string>
+    <string name="disclaimer_title">Attenzione</string>
+    <string name="disclaimer">L\'app Palco ha il solo scopo di informativa sui concerti nazionali e non riserva nessun diritto sugli eventi pubblicati, sull\'organizzazione nè sulla vendita dei biglietti.</string>
 </resources>
