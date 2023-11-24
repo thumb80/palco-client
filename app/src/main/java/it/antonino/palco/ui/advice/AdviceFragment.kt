@@ -17,7 +17,6 @@ import it.antonino.palco.ext.CustomWebViewClient
 import it.antonino.palco.ui.ConcertiFragment
 import kotlin.system.exitProcess
 
-
 class AdviceFragment: Fragment() {
 
     private lateinit var binding: FragmentAdviceBinding
@@ -35,29 +34,28 @@ class AdviceFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dialog = AlertDialog.Builder(requireContext())
-        dialog.setTitle(R.string.disclaimer_title)
-        dialog.setMessage(R.string.disclaimer)
-        dialog.setPositiveButton(R.string.ok_consent, object : OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                p0?.cancel()
-            }
-
-        })
-        dialog.setNegativeButton(R.string.no_consent, object : OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                exitProcess(0)
-            }
-        })
-        dialog.create()
-        dialog.show()
-
         if (PalcoApplication.sharedPreferences?.getBoolean("ok_consent", false) == true) {
             binding.adviseContainer.visibility = View.INVISIBLE
             childFragmentManager.beginTransaction()
                 .replace(R.id.second_container, ConcertiFragment.newInstance())
                 .commit()
         } else {
+            val dialog = AlertDialog.Builder(requireContext())
+            dialog.setView(R.layout.dialog_advice)
+            dialog.setPositiveButton(R.string.ok_consent, object : OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    p0?.cancel()
+                }
+
+            })
+            dialog.setNegativeButton(R.string.no_consent, object : OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    exitProcess(0)
+                }
+            })
+            dialog.create()
+            dialog.show()
+
             binding.webview.webViewClient = CustomWebViewClient(
                 binding.privacyProgress,
                 binding.okConsent,

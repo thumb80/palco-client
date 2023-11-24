@@ -44,26 +44,7 @@ val appModule = module {
                         }
                     )
                     .cache(Cache(androidContext().cacheDir, cacheSize))
-                    .build()
-                /*CustomTrust(androidContext())
-                    .client
-                    .newBuilder()
-                    .callTimeout(2, TimeUnit.MINUTES)
-                    .connectTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(30, TimeUnit.SECONDS)
-                    .addNetworkInterceptor(
-                        Interceptor { chain ->
-                            val response = chain.proceed(chain.request())
-                            val maxAge = 60 * 60 * 4
-                            response.newBuilder()
-                                .header("Cache-Control", "public, max-age=$maxAge")
-                                .removeHeader("Pragma")
-                                .build()
-                        }
-                    ).cache(Cache(androidContext().cacheDir, cacheSize))
-                    .retryOnConnectionFailure(true)
-                    .build()*/)
+                    .build())
             .baseUrl(BuildConfig.baseUrl)
             .build()
     }
