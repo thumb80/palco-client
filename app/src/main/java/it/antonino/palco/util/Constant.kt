@@ -38,4 +38,8 @@ object Constant {
         .defaultDisplay.width/defaultDisplayFactor
     val itemDimension = (260 * PalcoApplication.instance
         .resources.displayMetrics.density + densityPixelOffset).toInt()
+    val itemDimensionTablet = (320 * PalcoApplication.instance
+        .resources.displayMetrics.density + densityPixelOffset).toInt()
+    val itemDimensionTabletMax = (560 * PalcoApplication.instance
+        .resources.displayMetrics.density + densityPixelOffset).toInt()
 }

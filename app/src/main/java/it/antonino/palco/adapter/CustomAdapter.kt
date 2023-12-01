@@ -1,9 +1,10 @@
 package it.antonino.palco.adapter
 
+import android.content.Context
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -15,14 +16,16 @@ import com.google.gson.JsonObject
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoCardViewBinding
-import it.antonino.palco.ext.CustomInfosDialog
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.util.Constant.itemDimension
+import it.antonino.palco.util.Constant.itemDimensionTablet
+import it.antonino.palco.util.Constant.itemDimensionTabletMax
 import it.antonino.palco.util.Constant.nullItemDimension
 import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent.inject
+
 
 private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
@@ -45,7 +48,18 @@ class CustomAdapter(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
             )
-            layoutParams.width = itemDimension
+
+            layoutParams.width = when (isTablet(PalcoApplication.instance)) {
+                0 -> {
+                    itemDimensionTabletMax
+                }
+                1 -> {
+                    itemDimensionTablet
+                }
+                else -> {
+                    itemDimension
+                }
+            }
 
             binding.mainContainer.layoutParams = layoutParams
             binding.mainContainer.visibility = View.VISIBLE
@@ -160,5 +174,14 @@ class CustomAdapter(
 
     override fun getItemCount(): Int {
         return concerti.size()
+    }
+
+    fun isTablet(context: Context): Int? {
+        val xlarge =
+            context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK === 4
+        val large =
+            context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK === Configuration.SCREENLAYOUT_SIZE_LARGE
+        val ret = if (xlarge) 0 else if (large) 1 else null
+        return ret
     }
 }
