@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
+import it.antonino.palco.BuildConfig
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ConcertiAdapter
 import it.antonino.palco.databinding.FragmentConcertiBinding

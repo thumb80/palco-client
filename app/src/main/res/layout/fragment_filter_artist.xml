@@ -75,6 +75,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
+            <TextView
+                android:id="@+id/no_data_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_data_artist_filter"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:fontFamily="@font/gotham_book"
+                android:textSize="@dimen/sp_32"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout

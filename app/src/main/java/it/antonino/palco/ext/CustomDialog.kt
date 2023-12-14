@@ -84,87 +84,26 @@ class CustomDialog(
     }
 
     private fun shareConcert() {
-        if (concertRow.artistThumb != null) {
-            Glide.with(requireContext()).asBitmap().load(concertRow.artistThumb)
-                .into(object : CustomTarget<Bitmap>() {
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-
-                    }
-
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-
-                        val cachePath = File(requireContext().cacheDir, "images")
-                        cachePath.mkdirs()
-                        val stream =
-                            FileOutputStream("$cachePath/image.png") // overwrites this image every time
-                        resource.compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
-                        stream.close()
-
-                        val imagePath = File(requireContext().cacheDir, "images")
-                        val newFile = File(imagePath, "image.png")
-                        val contentUri: Uri = FileProvider.getUriForFile(
-                            requireContext(),
-                            "it.antonino.palco.provider",
-                            newFile
-                        )
-
-                        val intent = Intent(Intent.ACTION_SEND)
-                        intent.type = "text/*"
-                        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
-                        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-                        intent.putExtra(
-                            Intent.EXTRA_TEXT, getString(
-                                R.string.share_concert_string,
-                                concertRow.artist,
-                                concertRow.city,
-                                concertRow.time?.getString(),
-                                concertRow.place
-                            )
-                        )
-                        intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                        context?.startActivity(
-                            Intent.createChooser(
-                                intent,
-                                "Scegli con quale app vuoi condividere il concerto"
-                            )
-                        )
-                        dismiss()
-                    }
-                })
-        }
-        else {
-            val cachePath = File(requireContext().cacheDir, "images")
-            cachePath.mkdirs()
-            val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
-            BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
-            stream.close()
-
-            val imagePath = File(requireContext().cacheDir, "images")
-            val newFile = File(imagePath, "image.png")
-            val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
-
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/*"
-            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-            intent.putExtra(Intent.EXTRA_TEXT, getString(
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/*"
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        intent.putExtra(
+            Intent.EXTRA_TEXT, getString(
                 R.string.share_concert_string,
                 concertRow.artist,
                 concertRow.city,
                 concertRow.time?.getString(),
-                concertRow.place)
+                concertRow.place
             )
-            intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-            context?.startActivity(
-                Intent.createChooser(intent, PalcoApplication.instance.getString(R.string.share_text))
+        )
+        context?.startActivity(
+            Intent.createChooser(
+                intent,
+                "Scegli con quale app vuoi condividere il concerto"
             )
-            dismiss()
-        }
+        )
+        dismiss()
     }
 }

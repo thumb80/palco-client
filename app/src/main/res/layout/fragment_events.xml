@@ -24,11 +24,13 @@
 
         <Button
             android:id="@+id/prevMonth"
-            android:layout_width="@dimen/dp_112"
-            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:text="@string/prev_month"
             android:layout_alignParentLeft="true"
             android:visibility="gone"
-            android:background="@drawable/ic_icon_left">
+            android:background="@color/colorPrimary"
+            android:drawableStart="@drawable/ic_icon_left">
 
         </Button>
 
@@ -37,6 +39,7 @@
             android:id="@+id/monthView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
             tools:text="@string/app_name"
@@ -44,11 +47,13 @@
 
         <Button
             android:id="@+id/nextMonth"
-            android:layout_width="@dimen/dp_112"
-            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:text="@string/next_month"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_icon_right">
+            android:background="@color/colorPrimary"
+            android:drawableEnd="@drawable/ic_icon_right">
 
         </Button>
 

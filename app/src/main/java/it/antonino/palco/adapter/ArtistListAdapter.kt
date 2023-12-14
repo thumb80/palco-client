@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
+import android.widget.Filter.FilterResults
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.databinding.ArtistListBinding
@@ -16,6 +17,7 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
     : RecyclerView.Adapter<ArtistListAdapter.ArtistListViewHolder>(), Filterable {
 
     private lateinit var binding: ArtistListBinding
+    var artistsFiltered: ArrayList<String?>? = null
 
     val initialCityDataList = ArrayList<String>().apply {
         artists.let {
@@ -69,6 +71,7 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
             }
             val results = FilterResults()
             results.values = filteredList
+            artistsFiltered?.addAll(filteredList)
             return results
         }
 

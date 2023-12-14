@@ -15,7 +15,7 @@
         android:fontFamily="@font/gotham_bold"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/sp_14"
+        android:textSize="@dimen/sp_21"
         android:paddingTop="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_8"
         app:layout_constraintTop_toTopOf="parent"

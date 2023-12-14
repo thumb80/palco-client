@@ -19,6 +19,7 @@ import it.antonino.palco.databinding.FragmentFilterArtistBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
+import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,18 +47,28 @@ class FilterArtistFragment : Fragment() {
 
         hideConcerti()
 
+        binding.searchBar.queryHint = getString(R.string.search_artist)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 artistAdapter?.filter?.filter(query)
+                if (artistAdapter?.artistsFiltered?.isEmpty() == true)
+                    binding.noDataArtist.visibility = View.VISIBLE
+                else
+                    binding.noDataArtist.visibility = View.INVISIBLE
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 artistAdapter?.filter?.filter(newText)
+                if (artistAdapter?.artistsFiltered?.isEmpty() == true)
+                    binding.noDataArtist.visibility = View.VISIBLE
+                else
+                    binding.noDataArtist.visibility = View.INVISIBLE
                 return true
             }
-
         })
+
+        binding.searchBar
 
     }
 

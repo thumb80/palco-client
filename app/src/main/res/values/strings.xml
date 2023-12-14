@@ -5,6 +5,12 @@
     <string name="filter_city">Città</string>
     <string name="filter_artist">Artista</string>
     <string name="no_data">Non ci sono concerti nel giorno selezionato</string>
+    <string name="no_data_city_filter">Non ci sono concerti per questa città</string>
+    <string name="no_data_artist_filter">Non ci sono concerti per questo artista</string>
+    <string name="search_city">Cerca una città</string>
+    <string name="search_artist">Cerca un artista</string>
+    <string name="next_month">mese successivo</string>
+    <string name="prev_month">mese precendente</string>
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Condividi</string>
     <string name="info_string">Informazioni</string>
@@ -13,7 +19,7 @@
     <string name="close_button_string">Chiudi</string>
     <string name="filter_city_selected">Città selezionata : %1$s. Fai tap quì per cambiare città</string>
     <string name="filter_artist_selected">Artista selezionato : %1$s. Fai tap quì per cambiare artista</string>
-    <string name="share_concert_string">C\'è un concerto \n%1$s a %2$s\n%3$s - %4$s</string>
+    <string name="share_concert_string">C\'è un concerto \n%1$s a %2$s\n%3$s - %4$s\nScarica Palco per cercare altri concerti\nhttps://play.google.com/store/apps/details?id=it.antonino.palco</string>
     <string name="no_consent">Rifiuta</string>
     <string name="ok_consent">Accetta</string>
     <string name="version_text">ver %1$s</string>

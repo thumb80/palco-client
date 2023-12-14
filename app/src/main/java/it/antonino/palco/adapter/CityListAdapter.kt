@@ -10,6 +10,7 @@ import it.antonino.palco.R
 import it.antonino.palco.databinding.CityListBinding
 import it.antonino.palco.ext.inflate
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> Unit)
@@ -17,6 +18,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
 
 
     private lateinit var binding: CityListBinding
+    private var cities: ArrayList<String?>? = null
 
     val initialCityDataList = ArrayList<String>().apply {
         city?.let { addAll(it) }
@@ -65,6 +67,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
             }
             val results = FilterResults()
             results.values = filteredList
+            cities?.addAll(filteredList)
             return results
         }
 
