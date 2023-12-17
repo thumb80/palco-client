@@ -47,7 +47,7 @@ class DotsItemDecoration(
         // center vertically in the allotted space
         val indicatorPosY = parent.y + indicatorItemPadding.toFloat()
 
-        if (itemCount == 2) {
+        if (itemCount == 1) {
             return
         }
         else if (itemCount > maximumCardNumber) {
@@ -56,7 +56,7 @@ class DotsItemDecoration(
         }
 
         else {
-            drawInactiveDots(c, indicatorStartX, indicatorPosY, itemCount - 1)
+            drawInactiveDots(c, indicatorStartX, indicatorPosY, itemCount)
 
             activePosition =
                 if ((parent.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition() < 0)
@@ -70,10 +70,11 @@ class DotsItemDecoration(
 
             // find offset of active page if the user is scrolling
             parent.layoutManager!!.findViewByPosition(activePosition) ?: return
-            if (activePosition == 0)
+            drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
+            /*if (activePosition == 0)
                 drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
             else
-                drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition - 1)
+                drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition - 1)*/
         }
     }
 
@@ -127,7 +128,7 @@ class DotsItemDecoration(
         @NotNull state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        if (parent.getChildAdapterPosition(view) == parent.adapter?.itemCount!! - 1)
+        if (parent.getChildAdapterPosition(view) == parent.adapter?.itemCount!!)
             outRect.right = (parent.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
                 .defaultDisplay.width/ defaultDisplayFactor
     }

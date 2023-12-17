@@ -4,6 +4,7 @@ import android.app.AlertDialog.Builder
 import android.app.Dialog
 import android.app.SearchManager
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -20,17 +21,14 @@ import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.gson.JsonElement
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.CustomDialogBinding
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.ui.maps.MapsActivity
 import it.antonino.palco.util.Constant.bitMapQuality
-import it.antonino.palco.viewmodel.SharedViewModel
-import org.koin.java.KoinJavaComponent
 import java.io.File
 import java.io.FileOutputStream
+
 
 class CustomDialog(
     private val concertRow: ConcertRow
@@ -84,26 +82,92 @@ class CustomDialog(
     }
 
     private fun shareConcert() {
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/*"
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
-        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-        intent.putExtra(
-            Intent.EXTRA_TEXT, getString(
-                R.string.share_concert_string,
-                concertRow.artist,
-                concertRow.city,
-                concertRow.time?.getString(),
-                concertRow.place
-            )
-        )
-        context?.startActivity(
-            Intent.createChooser(
-                intent,
-                "Scegli con quale app vuoi condividere il concerto"
-            )
-        )
-        dismiss()
+        val pm = requireContext().packageManager
+        val isInstalled: Boolean = isPackageInstalled("com.whatsapp", pm)
+
+        if (isInstalled) {
+            if (concertRow.artistThumb != null)
+                Glide.with(requireContext()).asBitmap().load(concertRow.artistThumb)
+                    .into(object: CustomTarget<Bitmap>() {
+
+                        override fun onLoadCleared(placeholder: Drawable?) {
+
+                        }
+
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+
+                            val cachePath = File(requireContext().cacheDir, "images")
+                            cachePath.mkdirs()
+                            val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
+                            resource.compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
+                            stream.close()
+
+                            val imagePath = File(requireContext().cacheDir, "images")
+                            val newFile = File(imagePath, "image.png")
+                            val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
+
+                            val intent = Intent(Intent.ACTION_SEND)
+                            intent.type = "text/*"
+                            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+                            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+                            intent.putExtra(
+                                Intent.EXTRA_TEXT, getString(
+                                    R.string.share_concert_string,
+                                    concertRow.artist,
+                                    concertRow.city,
+                                    concertRow.time?.getString(),
+                                    concertRow.place
+                                )
+                            )
+                            intent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                            intent.setPackage("com.whatsapp")
+                            context?.startActivity(intent)
+                            dismiss()
+                        }
+                    })
+            else {
+                val cachePath = File(requireContext().cacheDir, "images")
+                cachePath.mkdirs()
+                val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
+                BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
+                stream.close()
+
+                val imagePath = File(requireContext().cacheDir, "images")
+                val newFile = File(imagePath, "image.png")
+                val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+                intent.putExtra(
+                    Intent.EXTRA_TEXT, getString(
+                        R.string.share_concert_string,
+                        concertRow.artist,
+                        concertRow.city,
+                        concertRow.time?.getString(),
+                        concertRow.place
+                    )
+                )
+                intent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                intent.setPackage("com.whatsapp")
+                context?.startActivity(intent)
+                dismiss()
+            }
+        } else {
+            Toast.makeText(context, R.string.no_share_string, Toast.LENGTH_LONG).show()
+        }
     }
+
+    private fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean {
+        return try {
+            packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
 }

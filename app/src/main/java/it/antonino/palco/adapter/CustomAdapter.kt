@@ -158,12 +158,13 @@ class CustomAdapter(
 
     override fun onBindViewHolder(holder: ConcertiViewHolder, position: Int) {
 
-        if (position == 0) {
+        /*if (position == 0) {
             holder.bindNullItem()
         }
         else {
             holder.bind(concerti[position].asJsonObject)
-        }
+        }*/
+        holder.bind(concerti[position].asJsonObject)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConcertiViewHolder {

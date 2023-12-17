@@ -156,13 +156,13 @@ class EventsFragment: Fragment() {
         val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
 
         if (events.isNotEmpty()) {
-            val concerti = JsonArray(events.size + 1)
-            concerti.add(GsonBuilder().create().toJsonTree(Concerto(
+            val concerti = JsonArray(events.size )
+            /*concerti.add(GsonBuilder().create().toJsonTree(Concerto(
                 artist = "",
                 place = "",
                 city = "",
                 time = java.sql.Date(0L)
-            )))
+            )))*/
             for (event in events)
             {
                 concerti.add(JsonParser().parse(GsonBuilder().setLenient().create().toJson(event.data)))
