@@ -6,12 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
-import com.squareup.moshi.Json
-import it.antonino.palco.PalcoApplication
-import it.antonino.palco.R
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.network.NetworkRepository
-import it.antonino.palco.util.Constant.nullItemDimension
 import kotlinx.coroutines.launch
 
 class SharedViewModel(

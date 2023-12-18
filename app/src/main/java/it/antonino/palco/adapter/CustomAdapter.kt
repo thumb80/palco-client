@@ -21,7 +21,6 @@ import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.util.Constant.itemDimension
 import it.antonino.palco.util.Constant.itemDimensionTablet
 import it.antonino.palco.util.Constant.itemDimensionTabletMax
-import it.antonino.palco.util.Constant.nullItemDimension
 import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent.inject
@@ -143,27 +142,9 @@ class CustomAdapter(
 
             }
         }
-
-        fun bindNullItem() {
-            val layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.MATCH_PARENT
-            )
-            layoutParams.width = nullItemDimension
-
-            binding.mainContainer.layoutParams = layoutParams
-            binding.mainContainer.visibility = View.INVISIBLE
-        }
     }
 
     override fun onBindViewHolder(holder: ConcertiViewHolder, position: Int) {
-
-        /*if (position == 0) {
-            holder.bindNullItem()
-        }
-        else {
-            holder.bind(concerti[position].asJsonObject)
-        }*/
         holder.bind(concerti[position].asJsonObject)
     }
 

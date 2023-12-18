@@ -83,10 +83,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         if (addresses.size > 0) {
-            binding.locationName.text = addresses.get(0).adminArea + " - " + addresses.get(0).locality
-            // Add a marker in Sydney and move the camera
+            binding.locationName.text = getString(
+                R.string.maps_text_view,
+                addresses.get(0).adminArea,
+                addresses.get(0).locality,
+                this.artist,
+                this.place)
             val place = LatLng(addresses.get(0).latitude, addresses.get(0).longitude)
-            mMap.addMarker(MarkerOptions().position(place).title("${this.artist} a ${this.place}"))
+
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, zoomIn))
 
             mMap.uiSettings.setAllGesturesEnabled(true)

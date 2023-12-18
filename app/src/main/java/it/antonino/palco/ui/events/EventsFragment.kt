@@ -104,15 +104,13 @@ class EventsFragment: Fragment() {
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
                 binding.monthView.text = monthDateFormat
                     .format(firstDayOfNewMonth?.time)
-                    .capitalize()
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
                 if (firstDayOfNewMonth?.isActualMonth() == true) {
-                    binding.prevMonth.visibility = View.GONE
                     binding.calendarView.setCurrentDate(currentDayInstance?.time)
                     displayCurrentEvents(currentDayInstance?.time)
                 } else {
                     displayCurrentEvents(firstDayOfNewMonth)
                 }
-
             }
 
         })
@@ -121,7 +119,7 @@ class EventsFragment: Fragment() {
             context,
             LinearLayoutManager.HORIZONTAL
         )
-        dividerItemDecoration.setDrawable(resources?.getDrawable(R.drawable.card_view_divider)!!)
+        dividerItemDecoration.setDrawable(ResourcesCompat.getDrawable(resources, R.drawable.card_view_divider, null)!!)
 
         layoutManager = LinearLayoutManager(
             context,
@@ -138,7 +136,6 @@ class EventsFragment: Fragment() {
         dotsItemDecoration?.let { binding.concertiRecycler.addItemDecoration(it) }
 
         binding.nextMonth.setOnClickListener {
-            binding.prevMonth.visibility = View.VISIBLE
             binding.calendarView.shouldSelectFirstDayOfMonthOnScroll(true)
             binding.calendarView.scrollRight()
         }

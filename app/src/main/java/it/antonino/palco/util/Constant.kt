@@ -23,7 +23,6 @@ object Constant {
     const val redColorRGB = 241
     const val greenColorRGB = 90
     const val blueColorRGB = 36
-    const val delayMillis = 1500L
     const val bitMapQuality = 100
     const val cacheSize = (5 * 1024 * 1024).toLong()
     val monthDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
@@ -34,8 +33,6 @@ object Constant {
         .newBuilder()
         .setDateFormat(dateTimeFormat)
         .create()
-    val nullItemDimension = (PalcoApplication.instance.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-        .defaultDisplay.width/defaultDisplayFactor
     val itemDimension = (260 * PalcoApplication.instance
         .resources.displayMetrics.density + densityPixelOffset).toInt()
     val itemDimensionTablet = (320 * PalcoApplication.instance

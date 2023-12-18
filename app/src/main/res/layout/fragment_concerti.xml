@@ -17,7 +17,7 @@
         app:tabIndicatorColor="@color/colorWhite"
         app:tabTextAppearance="@style/customTabText"/>
 
-    <it.antonino.palco.ext.CustomViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -25,6 +25,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-    </it.antonino.palco.ext.CustomViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

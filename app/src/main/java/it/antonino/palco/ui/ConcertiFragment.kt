@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import it.antonino.palco.BuildConfig
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ConcertiAdapter
 import it.antonino.palco.databinding.FragmentConcertiBinding
-import it.antonino.palco.ext.CustomViewPager
 import it.antonino.palco.util.Constant.offscreenPageLimit
 
 class ConcertiFragment: Fragment()  {
@@ -32,11 +31,10 @@ class ConcertiFragment: Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val viewPager = view.findViewById<CustomViewPager>(R.id.pager)
+        val viewPager = view.findViewById<ViewPager>(R.id.pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val concertiViewPagerAdapter = ConcertiAdapter(childFragmentManager)
 
-        viewPager.setPagingEnabled(false)
         viewPager.adapter = concertiViewPagerAdapter
         viewPager.setCurrentItem(0,true)
         viewPager.offscreenPageLimit = offscreenPageLimit

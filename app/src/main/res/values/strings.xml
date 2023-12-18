@@ -14,6 +14,7 @@
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Invia su Whatsapp</string>
     <string name="no_share_string">Non hai whatsapp per condividere il concerto</string>
+    <string name="maps_text_view">%1$s - %2$s\n%3$s\n%4$s</string>
     <string name="info_string">Informazioni</string>
     <string name="unavailable_infos">Ops.. non siamo riusciti a fornire informazioni sull\'artista selezionato</string>
     <string name="maps_string">Maps</string>

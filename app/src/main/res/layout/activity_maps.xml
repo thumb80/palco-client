@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="top"
+        android:padding="@dimen/dp_12"
         android:background="@color/colorAccent">
         <TextView
             android:id="@+id/location_name"
