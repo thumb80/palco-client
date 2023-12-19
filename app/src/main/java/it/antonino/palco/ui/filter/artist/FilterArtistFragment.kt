@@ -51,19 +51,11 @@ class FilterArtistFragment : Fragment() {
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 artistAdapter?.filter?.filter(query)
-                if (artistAdapter?.artistsFiltered?.isEmpty() == true)
-                    binding.noDataArtist.visibility = View.VISIBLE
-                else
-                    binding.noDataArtist.visibility = View.INVISIBLE
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 artistAdapter?.filter?.filter(newText)
-                if (artistAdapter?.artistsFiltered?.isEmpty() == true)
-                    binding.noDataArtist.visibility = View.VISIBLE
-                else
-                    binding.noDataArtist.visibility = View.INVISIBLE
                 return true
             }
         })

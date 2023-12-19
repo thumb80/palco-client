@@ -91,6 +91,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 this.place)
             val place = LatLng(addresses.get(0).latitude, addresses.get(0).longitude)
 
+            val markerString = this.artist?.plus(" - ")?.plus(this.place)
+            mMap.addMarker(MarkerOptions().position(place).title(markerString))
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place, zoomIn))
 
             mMap.uiSettings.setAllGesturesEnabled(true)

@@ -5,8 +5,6 @@
     <string name="filter_city">Città</string>
     <string name="filter_artist">Artista</string>
     <string name="no_data">Non ci sono concerti nel giorno selezionato</string>
-    <string name="no_data_city_filter">Non ci sono concerti per questa città</string>
-    <string name="no_data_artist_filter">Non ci sono concerti per questo artista</string>
     <string name="search_city">Cerca una città</string>
     <string name="search_artist">Cerca un artista</string>
     <string name="next_month">mese successivo</string>
@@ -14,6 +12,8 @@
     <string name="listen_button_string">Ascolta</string>
     <string name="share_string">Invia su Whatsapp</string>
     <string name="no_share_string">Non hai whatsapp per condividere il concerto</string>
+    <string name="filter_city_list">Lista delle città</string>
+    <string name="filter_artist_list">Lista degli artisti</string>
     <string name="maps_text_view">%1$s - %2$s\n%3$s\n%4$s</string>
     <string name="info_string">Informazioni</string>
     <string name="unavailable_infos">Ops.. non siamo riusciti a fornire informazioni sull\'artista selezionato</string>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnCloseListener
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
@@ -50,19 +51,11 @@ class FilterCityFragment : Fragment() {
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 cityAdapter?.filter?.filter(query)
-                if (cityAdapter?.city?.isEmpty() == true)
-                    binding.noDataCity.visibility = View.VISIBLE
-                else
-                    binding.noDataCity.visibility = View.INVISIBLE
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 cityAdapter?.filter?.filter(newText)
-                if (cityAdapter?.city?.isEmpty() == true)
-                    binding.noDataCity.visibility = View.VISIBLE
-                else
-                    binding.noDataCity.visibility = View.INVISIBLE
                 return true
             }
 
@@ -103,7 +96,6 @@ class FilterCityFragment : Fragment() {
 
         when(!it.isNullOrEmpty()) {
             true -> {
-                binding.noDataCity.visibility = View.INVISIBLE
                 (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 showConcerti()
 
@@ -137,7 +129,6 @@ class FilterCityFragment : Fragment() {
 
             }
             else -> {
-                binding.noDataCity.visibility = View.VISIBLE
                 (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }

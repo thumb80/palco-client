@@ -47,8 +47,7 @@
             android:layout_height="0dp"
             android:layout_weight="18"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/filter_header_artist"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/filter_header_artist">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/filter_artist_list"
@@ -56,6 +55,7 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/dp_12"
                 android:orientation="vertical"
+                android:contentDescription="@string/filter_artist_list"
                 tools:listitem="@layout/city_list"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -72,18 +72,6 @@
                 tools:listitem="@layout/concerto_filter_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <TextView
-                android:id="@+id/no_data_artist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/no_data_artist_filter"
-                android:gravity="center"
-                android:visibility="invisible"
-                android:fontFamily="@font/gotham_book"
-                android:textSize="@dimen/sp_32"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

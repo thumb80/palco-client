@@ -109,6 +109,7 @@ class EventsFragment: Fragment() {
                     binding.calendarView.setCurrentDate(currentDayInstance?.time)
                     displayCurrentEvents(currentDayInstance?.time)
                 } else {
+                    binding.calendarView.setCurrentDate(firstDayOfNewMonth)
                     displayCurrentEvents(firstDayOfNewMonth)
                 }
             }
@@ -154,12 +155,6 @@ class EventsFragment: Fragment() {
 
         if (events.isNotEmpty()) {
             val concerti = JsonArray(events.size )
-            /*concerti.add(GsonBuilder().create().toJsonTree(Concerto(
-                artist = "",
-                place = "",
-                city = "",
-                time = java.sql.Date(0L)
-            )))*/
             for (event in events)
             {
                 concerti.add(JsonParser().parse(GsonBuilder().setLenient().create().toJson(event.data)))

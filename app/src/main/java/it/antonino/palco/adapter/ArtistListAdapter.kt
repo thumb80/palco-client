@@ -1,14 +1,11 @@
 package it.antonino.palco.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import android.widget.Filter.FilterResults
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.databinding.ArtistListBinding
-import it.antonino.palco.databinding.CityListBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -19,7 +16,7 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
     private lateinit var binding: ArtistListBinding
     var artistsFiltered: ArrayList<String?>? = null
 
-    val initialCityDataList = ArrayList<String>().apply {
+    val initialArtistDataList = ArrayList<String>().apply {
         artists.let {
             it.forEach {
                 add(it!!)
@@ -60,10 +57,10 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             val filteredList: ArrayList<String?> = ArrayList()
             if (constraint == null || constraint.isEmpty()) {
-                initialCityDataList.let { filteredList.addAll(it) }
+                initialArtistDataList.let { filteredList.addAll(it) }
             } else {
                 val query = constraint.toString().trim().toLowerCase()
-                initialCityDataList.forEach {
+                initialArtistDataList.forEach {
                     if (it.toLowerCase(Locale.ROOT).contains(query)) {
                         filteredList.add(it)
                     }
@@ -78,7 +75,7 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
             if (results?.values is ArrayList<*>) {
                 artists.clear()
-                artists.addAll(results.values as Collection<String?>)
+                artists.addAll(results.values as ArrayList<String>)
                 notifyDataSetChanged()
             }
         }
