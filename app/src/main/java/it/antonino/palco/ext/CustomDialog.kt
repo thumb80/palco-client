@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.Gravity
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat.getColor
@@ -78,7 +79,19 @@ class CustomDialog(
         builder.setView(binding.root)
         val popupDialog = builder.create()
         popupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val wlp = popupDialog.window?.attributes
+        wlp?.gravity = Gravity.TOP
+        popupDialog.window?.attributes = wlp
         return popupDialog
+    }
+
+    override fun getDialog(): Dialog? {
+        val dialog = super.getDialog()
+        val window = dialog?.window
+        val wlp = window?.attributes
+        wlp?.gravity = Gravity.TOP
+        window?.attributes = wlp
+        return dialog
     }
 
     private fun shareConcert() {

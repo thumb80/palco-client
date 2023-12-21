@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/dialog_background_grey"
-    android:layout_width="match_parent"
+    android:layout_width="@dimen/dp_278"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/dp_42">
 
     <Button
         android:id="@+id/listen_button"
-        android:layout_width="@dimen/dp_240"
+        android:layout_width="@dimen/dp_228"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_42"
         android:fontFamily="@font/gotham_bold"
@@ -22,7 +22,7 @@
 
     <Button
         android:id="@+id/share_button"
-        android:layout_width="@dimen/dp_240"
+        android:layout_width="@dimen/dp_228"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
         android:layout_marginBottom="@dimen/dp_64"
@@ -37,7 +37,7 @@
 
     <Button
         android:id="@+id/maps_button"
-        android:layout_width="@dimen/dp_240"
+        android:layout_width="@dimen/dp_228"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
         android:layout_marginBottom="@dimen/dp_64"
@@ -52,7 +52,7 @@
 
     <Button
         android:id="@+id/info_button"
-        android:layout_width="@dimen/dp_240"
+        android:layout_width="@dimen/dp_228"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_24"
         android:layout_marginBottom="@dimen/dp_64"
