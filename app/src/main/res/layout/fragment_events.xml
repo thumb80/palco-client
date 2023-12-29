@@ -113,6 +113,7 @@
                 android:paddingLeft="@dimen/dp_12"
                 android:layout_marginStart="@dimen/dp_48"
                 android:layout_marginEnd="@dimen/dp_48"
+                android:contentDescription="@string/concerti_recycler"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

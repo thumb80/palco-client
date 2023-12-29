@@ -31,4 +31,5 @@
     <string name="share_text">Scegli con quale app vuoi condividere il concerto</string>
     <string name="disclaimer_title">Attenzione</string>
     <string name="disclaimer">L\'app Palco ha il solo scopo di informativa sui concerti nazionali e non riserva nessun diritto sugli eventi pubblicati, sull\'organizzazione nè sulla vendita dei biglietti.</string>
+    <string name="concerti_recycler">Lista dei concerti</string>
 </resources>
