@@ -44,13 +44,13 @@ class CustomDialog(
 
         builder = Builder(activity)
 
-        binding.mapsButton.setOnClickListener {
+        /*binding.mapsButton.setOnClickListener {
             val intent = Intent(context, MapsActivity::class.java)
             intent.putExtra("place", concertRow.place)
             intent.putExtra("artist", concertRow.artist)
             intent.putExtra("city", concertRow.city)
             startActivity(intent)
-        }
+        }*/
 
         binding.listenButton.setOnClickListener {
             val intent = Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH).apply {
@@ -79,20 +79,20 @@ class CustomDialog(
         builder.setView(binding.root)
         val popupDialog = builder.create()
         popupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val wlp = popupDialog.window?.attributes
+        /*val wlp = popupDialog.window?.attributes
         wlp?.gravity = Gravity.TOP
-        popupDialog.window?.attributes = wlp
+        popupDialog.window?.attributes = wlp*/
         return popupDialog
     }
 
-    override fun getDialog(): Dialog? {
+    /*override fun getDialog(): Dialog? {
         val dialog = super.getDialog()
         val window = dialog?.window
         val wlp = window?.attributes
-        wlp?.gravity = Gravity.TOP
+        wlp?.gravity = Gravity.CENTER_VERTICAL
         window?.attributes = wlp
         return dialog
-    }
+    }*/
 
     private fun shareConcert() {
         val pm = requireContext().packageManager

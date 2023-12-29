@@ -91,4 +91,9 @@
         <item name="cornerFamilyBottomRight">rounded</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="@style/MaterialAlertDialog.Material3">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

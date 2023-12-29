@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,7 @@ class AdviceFragment: Fragment() {
                 .replace(R.id.second_container, ConcertiFragment.newInstance())
                 .commit()
         } else {
-            val dialog = AlertDialog.Builder(requireContext())
+            val dialog = AlertDialog.Builder(ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom))
             dialog.setView(R.layout.dialog_advice)
             dialog.setPositiveButton(R.string.ok_consent, object : OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
