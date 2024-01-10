@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -47,7 +51,24 @@ class FilterArtistFragment : Fragment() {
 
         hideConcerti()
 
+        val linearLayout = binding.searchBar.getChildAt(0) as LinearLayout
+        val linearLayout2 = linearLayout.getChildAt(2) as LinearLayout
+        val linearLayout3 = linearLayout2.getChildAt(1) as LinearLayout
+        val autoCompleteTextView = linearLayout3.getChildAt(0) as AutoCompleteTextView
+
+        autoCompleteTextView.textSize = 42f
+
+        val editText = binding.searchBar.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        layoutParams.weight = 16f
+
+        editText.layoutParams = layoutParams
+
         binding.searchBar.queryHint = getString(R.string.search_artist)
+        binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 artistAdapter?.filter?.filter(query)
@@ -69,10 +90,10 @@ class FilterArtistFragment : Fragment() {
         when (!it.isNullOrEmpty()) {
             true -> {
 
-                it.sortBy { element-> element?.strip() }
+                it.sortBy { element-> element }
 
                 artistAdapter = ArtistListAdapter(it) { artist ->
-
+                    binding.filterHeaderArtist.visibility = View.VISIBLE
                     binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, artist)
                     (activity as MainActivity).progressBar?.visibility = View.VISIBLE
                     viewModel.getNationalConcertsByArtist(artist).observe(viewLifecycleOwner, concertsObserver)
@@ -124,10 +145,12 @@ class FilterArtistFragment : Fragment() {
 
                 binding.filterHeaderArtist.setOnClickListener {
                     hideConcerti()
+                    binding.filterHeaderArtist.visibility = View.GONE
                 }
 
             }
             else -> {
+                binding.filterHeaderArtist.visibility = View.GONE
                 (activity as MainActivity).progressBar?.visibility = View.INVISIBLE
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
             }
@@ -137,16 +160,13 @@ class FilterArtistFragment : Fragment() {
 
     private fun showConcerti() {
         binding.filterArtistList.visibility = View.GONE
-        binding.searchBar.visibility = View.GONE
-        binding.filterHeaderArtist.visibility = View.VISIBLE
-        binding.filterHeaderArtist.background = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_background_grey)
+        binding.filterHeaderArtistContainer.visibility = View.GONE
         binding.filterConcertArtistList.visibility = View.VISIBLE
     }
 
     private fun hideConcerti() {
         binding.filterArtistList.visibility = View.VISIBLE
-        binding.searchBar.visibility = View.VISIBLE
-        binding.filterHeaderArtist.visibility = View.GONE
+        binding.filterHeaderArtistContainer.visibility = View.VISIBLE
         binding.filterConcertArtistList.visibility = View.GONE
     }
 

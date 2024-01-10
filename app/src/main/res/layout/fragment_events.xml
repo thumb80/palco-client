@@ -28,7 +28,7 @@
             android:layout_height="@dimen/dp_48"
             android:text="@string/prev_month"
             android:layout_alignParentStart="true"
-            android:background="@color/colorAccentBackground"
+            android:background="@color/colorWhite"
             android:drawableStart="@drawable/ic_icon_left">
 
         </Button>
@@ -50,7 +50,7 @@
             android:layout_height="@dimen/dp_48"
             android:text="@string/next_month"
             android:layout_alignParentEnd="true"
-            android:background="@color/colorAccentBackground"
+            android:background="@color/colorWhite"
             android:drawableEnd="@drawable/ic_icon_right">
 
         </Button>

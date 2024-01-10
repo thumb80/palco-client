@@ -70,7 +70,9 @@
     </style>
 
     <style name="customTabText" parent="TextAppearance.Design.Tab">
-        <item name="android:fontFamily">TitoliEBottoniGrandi</item>
+        <item name="fontFamily">@font/gotham_medium</item>
+        <item name="android:textSize">@dimen/sp_22</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="horizontalScrollBarStyle">
@@ -94,6 +96,15 @@
     <style name="AlertDialogCustom" parent="@style/MaterialAlertDialog.Material3">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:typeface">normal</item>
+        <item name="android:fontFamily">@font/gotham</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/search_icon</item>
+        <item name="closeIcon">@drawable/ic_clear_black</item>
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+
 </resources>

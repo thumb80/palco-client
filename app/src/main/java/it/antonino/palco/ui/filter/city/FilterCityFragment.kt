@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView.OnCloseListener
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,7 +25,7 @@ import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import kotlin.collections.ArrayList
+
 
 class FilterCityFragment : Fragment() {
 
@@ -47,7 +51,21 @@ class FilterCityFragment : Fragment() {
 
         hideConcerti()
 
+        val linearLayout = binding.searchBar.getChildAt(0) as LinearLayout
+        val linearLayout2 = linearLayout.getChildAt(2) as LinearLayout
+        val linearLayout3 = linearLayout2.getChildAt(1) as LinearLayout
+        val autoCompleteTextView = linearLayout3.getChildAt(0) as AutoCompleteTextView
+
+        autoCompleteTextView.textSize = 42f
+
+        val editText = binding.searchBar.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        layoutParams.weight = 16f
+
+        editText.layoutParams = layoutParams
+
         binding.searchBar.queryHint = getString(R.string.search_city)
+        binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 cityAdapter?.filter?.filter(query)
@@ -73,7 +91,7 @@ class FilterCityFragment : Fragment() {
                 }
                 cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
-
+                    binding.filterHeaderCity.visibility = View.VISIBLE
                     binding.filterHeaderCity.text = getString(R.string.filter_city_selected, it)
                     (activity as MainActivity).progressBar?.visibility = View.VISIBLE
                     viewModel.getNationalConcertsByCity(it).observe(viewLifecycleOwner, concertsObserver)
@@ -125,6 +143,7 @@ class FilterCityFragment : Fragment() {
 
                 binding.filterHeaderCity.setOnClickListener {
                     hideConcerti()
+                    binding.filterHeaderCity.visibility = View.GONE
                 }
 
             }
@@ -138,16 +157,13 @@ class FilterCityFragment : Fragment() {
 
     private fun showConcerti() {
         binding.filterCityList.visibility = View.GONE
-        binding.searchBar.visibility = View.GONE
-        binding.filterHeaderCity.visibility = View.VISIBLE
-        binding.filterHeaderCity.background = AppCompatResources.getDrawable(requireContext(), R.drawable.edit_background_grey)
+        binding.filterHeaderCityContainer.visibility = View.GONE
         binding.filterConcertCityList.visibility = View.VISIBLE
     }
 
     private fun hideConcerti() {
         binding.filterCityList.visibility = View.VISIBLE
-        binding.searchBar.visibility = View.VISIBLE
-        binding.filterHeaderCity.visibility = View.GONE
+        binding.filterHeaderCityContainer.visibility = View.VISIBLE
         binding.filterConcertCityList.visibility = View.GONE
     }
 }

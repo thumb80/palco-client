@@ -7,8 +7,8 @@
     android:paddingRight="@dimen/dp_8"
     android:paddingLeft="@dimen/dp_8"
     android:orientation="horizontal"
-    android:paddingTop="@dimen/dp_48"
-    android:paddingBottom="@dimen/dp_48"
+    android:paddingTop="@dimen/dp_24"
+    android:paddingBottom="@dimen/dp_24"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -20,7 +20,7 @@
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintGuide_percent="0.35"/>
+        app:layout_constraintGuide_percent="0.45"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/filter_end_guideline"
@@ -29,7 +29,7 @@
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintGuide_percent="0.95"/>
+        app:layout_constraintGuide_percent="1"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -60,7 +60,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@drawable/card_view_background_accent"
         android:layout_marginLeft="@dimen/dp_16"
         android:paddingRight="@dimen/dp_8"
@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="@+id/filter_end_guideline">
 
         <TextView
-            tools:text="Artista"
+            tools:text="Artista con nome lungo che va su due righe"
             android:id="@+id/artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            tools:text="Locale"
+            tools:text="Locale col nome luungo che va su due righe"
             android:id="@+id/place"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            tools:text="Città"
+            tools:text="Città con lil nome lunghio che va su due rjfd"
             android:id="@+id/city"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

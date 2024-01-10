@@ -8,14 +8,14 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/filter_tab_layout"
-        android:background="@color/colorAccentBackground"
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_44"
         android:layout_gravity="top"
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="@dimen/dp_8"
-        app:tabIndicatorColor="@color/colorWhite"
+        app:tabIndicatorColor="@color/colorPrimary"
         app:tabTextAppearance="@style/customTabText"/>
 
     <androidx.viewpager.widget.ViewPager

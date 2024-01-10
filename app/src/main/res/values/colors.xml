@@ -3,8 +3,9 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorAccent">#F15A24</color>
     <color name="colorAccentButton">#F16D41</color>
-    <color name="colorAccentBackground">#F17346</color>
+    <color name="colorAccentBackground">#FF8800</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#4A4949</color>
+    <color name="colorGreyIcon">#ACAAAA</color>
     <color name="white_alpha">#80FFFFFF</color>
 </resources>

@@ -39,4 +39,6 @@ object Constant {
         .resources.displayMetrics.density + densityPixelOffset).toInt()
     val itemDimensionTabletMax = (560 * PalcoApplication.instance
         .resources.displayMetrics.density + densityPixelOffset).toInt()
+    val temp = (48 * PalcoApplication.instance
+        .resources.displayMetrics.density + densityPixelOffset).toInt()
 }
