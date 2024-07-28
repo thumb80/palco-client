@@ -22,6 +22,9 @@ import it.antonino.palco.adapter.CityListAdapter
 import it.antonino.palco.adapter.CustomFilterAdapter
 import it.antonino.palco.databinding.FragmentFilterCityBinding
 import it.antonino.palco.ext.CustomDialog
+import it.antonino.palco.ext.setAccessibility
+import it.antonino.palco.ext.toDp
+import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -68,11 +71,19 @@ class FilterCityFragment : Fragment() {
         binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+                layoutParams.topMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                layoutParams.bottomMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                binding.filterCityList.layoutParams = layoutParams
                 cityAdapter?.filter?.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                val layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+                layoutParams.topMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                layoutParams.bottomMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                binding.filterCityList.layoutParams = layoutParams
                 cityAdapter?.filter?.filter(newText)
                 return true
             }
@@ -102,6 +113,8 @@ class FilterCityFragment : Fragment() {
                     false)
                 binding.filterCityList.layoutManager = layoutManager
                 binding.filterCityList.adapter = cityAdapter
+
+                binding.filterCityList.setAccessibility()
             }
             else -> {
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
@@ -140,6 +153,7 @@ class FilterCityFragment : Fragment() {
                 binding.filterConcertCityList.layoutManager = layoutManager
                 binding.filterConcertCityList.adapter = adapter
                 binding.filterConcertCityList.addItemDecoration(dividerItemDecoration)
+                binding.filterConcertCityList.setAccessibility()
 
                 binding.filterHeaderCity.setOnClickListener {
                     hideConcerti()

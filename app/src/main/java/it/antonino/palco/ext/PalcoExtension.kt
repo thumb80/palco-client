@@ -1,9 +1,14 @@
 package it.antonino.palco.ext
 
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.AccessibilityDelegate
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import it.antonino.palco.PalcoApplication
@@ -66,3 +71,22 @@ fun SharedPreferences?.getShared() : SharedPreferences {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 }
+
+fun RecyclerView.setAccessibility() {
+    this.accessibilityDelegate = object : AccessibilityDelegate() {
+        override fun onRequestSendAccessibilityEvent(
+            host: ViewGroup,
+            child: View,
+            event: AccessibilityEvent
+        ): Boolean {
+            if (event.eventType == AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED)
+                (this@setAccessibility.layoutManager as LinearLayoutManager).scrollToPosition(child.tag as Int)
+            return super.onRequestSendAccessibilityEvent(host, child, event)
+        }
+    }
+}
+
+fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+

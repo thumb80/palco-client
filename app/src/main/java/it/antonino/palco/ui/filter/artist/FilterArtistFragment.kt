@@ -3,7 +3,9 @@ package it.antonino.palco.ui.filter.artist
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.AccessibilityDelegate
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -11,16 +13,21 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.AccessibilityDelegateCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.MainActivity
 import it.antonino.palco.R
 import it.antonino.palco.adapter.ArtistListAdapter
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.databinding.FragmentFilterArtistBinding
 import it.antonino.palco.ext.CustomDialog
+import it.antonino.palco.ext.setAccessibility
+import it.antonino.palco.ext.toDp
+import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.android.ext.android.bind
@@ -71,11 +78,25 @@ class FilterArtistFragment : Fragment() {
         binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+                layoutParams.topMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                layoutParams.bottomMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                binding.filterArtistList.layoutParams = layoutParams
                 artistAdapter?.filter?.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
+                layoutParams.topMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                layoutParams.bottomMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
+                binding.filterArtistList.layoutParams = layoutParams
                 artistAdapter?.filter?.filter(newText)
                 return true
             }
@@ -104,6 +125,8 @@ class FilterArtistFragment : Fragment() {
                     false)
                 binding.filterArtistList.layoutManager = layoutManager
                 binding.filterArtistList.adapter = artistAdapter
+
+                binding.filterArtistList.setAccessibility()
             }
             else -> {
                 Toast.makeText(context, getString(R.string.server_error), Toast.LENGTH_LONG).show()
@@ -142,6 +165,7 @@ class FilterArtistFragment : Fragment() {
                 binding.filterConcertArtistList.layoutManager = layoutManager
                 binding.filterConcertArtistList.adapter = adapter
                 binding.filterConcertArtistList.addItemDecoration(dividerItemDecoration)
+                binding.filterConcertArtistList.setAccessibility()
 
                 binding.filterHeaderArtist.setOnClickListener {
                     hideConcerti()

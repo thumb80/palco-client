@@ -48,7 +48,7 @@ class CustomAdapter(
                 ConstraintLayout.LayoutParams.MATCH_PARENT
             )
 
-            layoutParams.width = when (isTablet(PalcoApplication.instance)) {
+            /*layoutParams.width = when (isTablet(PalcoApplication.instance)) {
                 0 -> {
                     itemDimensionTabletMax
                 }
@@ -58,7 +58,8 @@ class CustomAdapter(
                 else -> {
                     itemDimension
                 }
-            }
+            }*/
+            layoutParams.width = itemDimension
 
             binding.mainContainer.layoutParams = layoutParams
             binding.mainContainer.visibility = View.VISIBLE
@@ -81,7 +82,7 @@ class CustomAdapter(
                 artistInfo = null
             )
 
-            viewModel.getArtistThumb(artist).observeForever {
+            /*viewModel.getArtistThumb(artist).observeForever {
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                     artistThumb = it.get("results")
                         ?.asJsonArray
@@ -117,7 +118,16 @@ class CustomAdapter(
                         )
                     )
                 }
-            }
+            }*/
+
+            artistThumb = null
+            binding.artistImage.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    PalcoApplication.instance.resources,
+                    R.drawable.placeholder_scheda,
+                    null
+                )
+            )
 
             viewModel.getArtistInfos(artist).observeForever {
                 if (it?.isJsonNull == false) {

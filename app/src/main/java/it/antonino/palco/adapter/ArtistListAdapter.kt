@@ -4,8 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import it.antonino.palco.R
 import it.antonino.palco.databinding.ArtistListBinding
+import it.antonino.palco.ext.toPx
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -30,7 +33,6 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
 
 
         fun bind(artist: String) {
-
             binding.artistItem.text = artist
             binding.root.setOnClickListener {
                 listener.invoke(artist)
@@ -40,6 +42,12 @@ class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistListViewHolder {
         binding = ArtistListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.height = parent.context.resources.getDimension(R.dimen.dp_64).toInt().toPx()
+        binding.artistItem.layoutParams = layoutParams
         return ArtistListViewHolder(binding)
     }
 

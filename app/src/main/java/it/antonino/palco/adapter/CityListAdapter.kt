@@ -1,16 +1,15 @@
 package it.antonino.palco.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import it.antonino.palco.R
 import it.antonino.palco.databinding.CityListBinding
-import it.antonino.palco.ext.inflate
-import java.util.*
-import kotlin.collections.ArrayList
+import it.antonino.palco.ext.toPx
+import java.util.Locale
 
 
 class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> Unit)
@@ -39,6 +38,12 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityListViewHolder {
         binding = CityListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.height = parent.context.resources.getDimension(R.dimen.dp_64).toInt().toPx()
+        binding.cityItem.layoutParams = layoutParams
         return CityListViewHolder(binding)
     }
 

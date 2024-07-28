@@ -2,6 +2,7 @@ package it.antonino.palco.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,6 +12,7 @@ import it.antonino.palco.PalcoApplication
 import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoFilterViewBinding
 import it.antonino.palco.ext.getString
+import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.util.Constant.roundRadius
@@ -48,7 +50,7 @@ class CustomFilterArtistAdapter(
                 artistInfo = null
             )
 
-            viewModel.getArtistThumb(concerto.artist).observeForever {
+            /*viewModel.getArtistThumb(concerto.artist).observeForever {
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                     artistThumb = it.get("results")
                         ?.asJsonArray
@@ -84,7 +86,7 @@ class CustomFilterArtistAdapter(
                         )
                     )
                 }
-            }
+            }*/
 
             viewModel.getArtistInfos(concerto.artist).observeForever {
                 if (it?.isJsonNull == false) {
@@ -114,6 +116,12 @@ class CustomFilterArtistAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterArtistListViewHolder {
         binding = ConcertoFilterViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        layoutParams.height = parent.context.resources.getDimension(R.dimen.dp_64).toInt().toPx()
+        binding.mainFilterContainer.layoutParams = layoutParams
         return FilterArtistListViewHolder(binding)
     }
 

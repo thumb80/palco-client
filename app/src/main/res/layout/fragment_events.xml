@@ -26,7 +26,7 @@
             android:id="@+id/prevMonth"
             android:layout_width="@dimen/dp_48"
             android:layout_height="@dimen/dp_48"
-            android:text="@string/prev_month"
+            android:contentDescription="@string/prev_month"
             android:layout_alignParentStart="true"
             android:background="@color/colorWhite"
             android:drawableStart="@drawable/ic_icon_left">
@@ -48,7 +48,7 @@
             android:id="@+id/nextMonth"
             android:layout_width="@dimen/dp_48"
             android:layout_height="@dimen/dp_48"
-            android:text="@string/next_month"
+            android:contentDescription="@string/next_month"
             android:layout_alignParentEnd="true"
             android:background="@color/colorWhite"
             android:drawableEnd="@drawable/ic_icon_right">
@@ -109,8 +109,6 @@
                 android:layout_height="0dp"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/dp_12"
-                android:paddingRight="@dimen/dp_12"
-                android:paddingLeft="@dimen/dp_12"
                 android:layout_marginStart="@dimen/dp_48"
                 android:layout_marginEnd="@dimen/dp_48"
                 android:contentDescription="@string/concerti_recycler"

@@ -50,7 +50,7 @@ class CustomFilterAdapter(
                 artistInfo = null
             )
 
-            viewModel.getArtistThumb(concerto.artist).observeForever {
+            /*viewModel.getArtistThumb(concerto.artist).observeForever {
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                     artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                     concertRow.addArtistThumb(artistThumb)
@@ -79,7 +79,7 @@ class CustomFilterAdapter(
                         )
                     )
                 }
-            }
+            }*/
 
             viewModel.getArtistInfos(concerto.artist).observeForever {
                 if (it?.isJsonNull == false) {
