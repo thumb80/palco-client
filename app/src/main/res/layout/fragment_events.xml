@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/dp_8"
-    tools:context=".ui.events.EventsFragment">
+    tools:context=".ui.EventsFragment">
 
     <RelativeLayout
         android:id="@+id/monthLayout"
@@ -93,6 +93,7 @@
         style="@style/horizontalScrollBarStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true"
         android:scrollbars="horizontal"
         android:layout_marginTop="@dimen/dp_16"
@@ -106,24 +107,25 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/concerti_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/dp_12"
-                android:layout_marginStart="@dimen/dp_48"
-                android:layout_marginEnd="@dimen/dp_48"
+                android:paddingBottom="@dimen/dp_12"
                 android:contentDescription="@string/concerti_recycler"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_centerVertical="true"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                tools:itemCount="4"
+                tools:itemCount="3"
                 tools:listitem="@layout/concerto_card_view"/>
 
             <TextView
                 android:id="@+id/no_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:textAlignment="center"
                 android:fontFamily="@font/gotham_bold"
                 android:textSize="@dimen/sp_14"

@@ -1,38 +1,15 @@
 package it.antonino.palco.model
 
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
-import java.sql.Date
 
-data class Concerto(
+class Concerto (
     @SerializedName("artist")
-    private val artist: String = "",
-    @SerializedName("time")
-    private val time: Date,
-    @SerializedName("place")
-    private val place: String = "",
+    var artist: String,
     @SerializedName("city")
-    private val city: String = ""
-): Serializable {
+    var city: String,
+    @SerializedName("place")
+    var place: String,
+    @SerializedName("time")
+    var time: String
+)
 
-    companion object {
-        private const val serialVersionUID = 20180617104400L
-    }
-
-    fun getArtist(): String {
-        return artist
-    }
-
-    fun getTime(): Date {
-        return time
-    }
-
-    fun getPlace(): String {
-        return place
-    }
-
-    fun getCity(): String {
-        return city
-    }
-
-}

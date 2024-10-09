@@ -102,3 +102,6 @@ gradle/wrapper/gradle-wrapper.properties
 *.txt
 *.json
 *.jks
+
+# batch
++.py

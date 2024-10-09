@@ -13,19 +13,14 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.Gravity
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import it.antonino.palco.R
 import it.antonino.palco.databinding.CustomDialogBinding
 import it.antonino.palco.model.ConcertRow
-import it.antonino.palco.ui.maps.MapsActivity
 import it.antonino.palco.util.Constant.bitMapQuality
 import java.io.File
 import java.io.FileOutputStream
@@ -43,14 +38,6 @@ class CustomDialog(
         binding = CustomDialogBinding.inflate(layoutInflater)
 
         builder = Builder(activity)
-
-        /*binding.mapsButton.setOnClickListener {
-            val intent = Intent(context, MapsActivity::class.java)
-            intent.putExtra("place", concertRow.place)
-            intent.putExtra("artist", concertRow.artist)
-            intent.putExtra("city", concertRow.city)
-            startActivity(intent)
-        }*/
 
         binding.listenButton.setOnClickListener {
             val intent = Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH).apply {
@@ -99,76 +86,23 @@ class CustomDialog(
         val isInstalled: Boolean = isPackageInstalled("com.whatsapp", pm)
 
         if (isInstalled) {
-            if (concertRow.artistThumb != null)
-                Glide.with(requireContext()).asBitmap().load(concertRow.artistThumb)
-                    .into(object: CustomTarget<Bitmap>() {
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-
-                        }
-
-                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-
-                            val cachePath = File(requireContext().cacheDir, "images")
-                            cachePath.mkdirs()
-                            val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
-                            resource.compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
-                            stream.close()
-
-                            val imagePath = File(requireContext().cacheDir, "images")
-                            val newFile = File(imagePath, "image.png")
-                            val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
-
-                            val intent = Intent(Intent.ACTION_SEND)
-                            intent.type = "text/*"
-                            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
-                            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-                            intent.putExtra(
-                                Intent.EXTRA_TEXT, getString(
-                                    R.string.share_concert_string,
-                                    concertRow.artist,
-                                    concertRow.city,
-                                    concertRow.time?.getString(),
-                                    concertRow.place
-                                )
-                            )
-                            intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                            intent.setPackage("com.whatsapp")
-                            context?.startActivity(intent)
-                            dismiss()
-                        }
-                    })
-            else {
-                val cachePath = File(requireContext().cacheDir, "images")
-                cachePath.mkdirs()
-                val stream = FileOutputStream("$cachePath/image.png") // overwrites this image every time
-                BitmapFactory.decodeResource(context?.resources, R.drawable.placeholder_scheda).compress(Bitmap.CompressFormat.PNG, bitMapQuality, stream)
-                stream.close()
-
-                val imagePath = File(requireContext().cacheDir, "images")
-                val newFile = File(imagePath, "image.png")
-                val contentUri: Uri = FileProvider.getUriForFile(requireContext(), "it.antonino.palco.provider", newFile)
-
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-                intent.putExtra(
-                    Intent.EXTRA_TEXT, getString(
-                        R.string.share_concert_string,
-                        concertRow.artist,
-                        concertRow.city,
-                        concertRow.time?.getString(),
-                        concertRow.place
-                    )
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/*"
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.app_name))
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+            intent.putExtra(
+                Intent.EXTRA_TEXT, getString(
+                    R.string.share_concert_string,
+                    concertRow.artist,
+                    concertRow.city,
+                    concertRow.time?.getString(),
+                    concertRow.place
                 )
-                intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                intent.setPackage("com.whatsapp")
-                context?.startActivity(intent)
-                dismiss()
-            }
+            )
+            intent.setPackage("com.whatsapp")
+            context?.startActivity(intent)
+            dismiss()
         } else {
             Toast.makeText(context, R.string.no_share_string, Toast.LENGTH_LONG).show()
         }

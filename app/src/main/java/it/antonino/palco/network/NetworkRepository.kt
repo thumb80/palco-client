@@ -1,126 +1,22 @@
 package it.antonino.palco.network
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
-import it.antonino.palco.common.SingletonHolder
-import it.antonino.palco.model.Concerto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class NetworkRepository(
-    private val networkAPI: NetworkAPI,
     private val discogsAPI: DiscogsAPI,
     private val wikipediaAPI: WikiPediaAPI
 ) {
 
     companion object : SingletonHolder<
             NetworkRepository,
-            NetworkAPI,
             DiscogsAPI,
             WikiPediaAPI
             >(::NetworkRepository)
 
-    fun getConcertiNazionali(): MutableLiveData<ArrayList<Concerto?>?> {
-        val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        networkAPI.getConcertiNazionali().enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        return responseObject
-    }
-
-    fun getConcertiNazionaliByCity(city: String): MutableLiveData<ArrayList<Concerto?>?> {
-        val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        networkAPI.getConcertiNazionaliByCity(city).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        return responseObject
-    }
-
-    fun getConcertiNazionaliByArtist(artist: String): MutableLiveData<ArrayList<Concerto?>?> {
-        val responseObject = MutableLiveData<ArrayList<Concerto?>?>()
-        networkAPI.getConcertiNazionaliByArtist(artist).enqueue(
-            object : Callback<ArrayList<Concerto?>?> {
-                override fun onFailure(call: Call<ArrayList<Concerto?>?>, t: Throwable) {
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<Concerto?>?>,
-                    response: Response<ArrayList<Concerto?>?>
-                ) {
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        return responseObject
-    }
-
-    fun getCities(): MutableLiveData<ArrayList<String?>?> {
-        val responseObject = MutableLiveData<ArrayList<String?>?>()
-        networkAPI.getCities().enqueue(
-            object : Callback<ArrayList<String?>?> {
-                override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<String?>?>,
-                    response: Response<ArrayList<String?>?>
-                ) {
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        return responseObject
-    }
-
-    fun getNationalArtists(): MutableLiveData<ArrayList<String?>?> {
-        val responseObject = MutableLiveData<ArrayList<String?>?>()
-        networkAPI.getNationalArtists().enqueue(
-            object : Callback<ArrayList<String?>?> {
-                override fun onFailure(call: Call<ArrayList<String?>?>, t: Throwable) {
-                    responseObject.postValue(arrayListOf())
-                }
-
-                override fun onResponse(
-                    call: Call<ArrayList<String?>?>,
-                    response: Response<ArrayList<String?>?>
-                ) {
-                    responseObject.postValue(response.body())
-                }
-
-            }
-        )
-        return responseObject
-    }
 
     fun getArtistThumb(artist: String?): MutableLiveData<JsonObject?> {
         val responseObject = MutableLiveData<JsonObject?>()
@@ -158,4 +54,31 @@ class NetworkRepository(
         )
         return responseObject
     }
+}
+
+open class SingletonHolder<out T, in A,B>(creator: (A, B) -> T) {
+
+    private var creator: ((A,B) -> T)? = creator
+    @Volatile
+    private var instance: T? = null
+
+    fun getInstance(arg: A, arg2: B): T {
+        val i = instance
+        if (i != null) {
+            return i
+        }
+
+        return synchronized(this) {
+            val i2 = instance
+            if (i2 != null) {
+                i2
+            } else {
+                val created = creator!!(arg,arg2)
+                instance = created
+                creator = null
+                created
+            }
+        }
+    }
+
 }

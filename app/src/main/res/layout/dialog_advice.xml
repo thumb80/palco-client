@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:text="@string/disclaimer_title"
         android:gravity="center"
-        android:fontFamily="@font/gotham_bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/message"/>
 
@@ -22,7 +21,6 @@
         android:layout_marginTop="@dimen/dp_16"
         android:text="@string/disclaimer"
         android:gravity="center"
-        android:fontFamily="@font/gotham_book"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

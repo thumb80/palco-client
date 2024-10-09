@@ -14,8 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="@dimen/dp_8"
-        app:tabIndicatorColor="@color/colorPrimary"
-        app:tabTextAppearance="@style/customTabText"/>
+        app:tabIndicatorColor="@color/colorPrimary"/>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"

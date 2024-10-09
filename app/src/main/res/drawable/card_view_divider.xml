@@ -2,6 +2,6 @@
     android:shape="rectangle">
     <size
         android:width="@dimen/dp_24"
-        android:height="@dimen/dp_12" />
+        android:height="@dimen/dp_42" />
     <solid android:color="@color/colorPrimary" />
 </shape>

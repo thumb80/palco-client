@@ -1,13 +1,12 @@
 package it.antonino.palco
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
-import androidx.multidex.MultiDex
 import it.antonino.palco.di.appModule
 import it.antonino.palco.ext.getShared
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+
 
 class PalcoApplication: Application() {
 
@@ -20,11 +19,6 @@ class PalcoApplication: Application() {
         instance = this
     }
 
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
-    }
-
     override fun onCreate() {
         super.onCreate()
 
@@ -35,4 +29,5 @@ class PalcoApplication: Application() {
 
         sharedPreferences = sharedPreferences.getShared()
     }
+
 }

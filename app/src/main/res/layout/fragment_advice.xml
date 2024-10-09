@@ -2,85 +2,22 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/colorPrimary"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/second_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity" />
+    <ProgressBar
+        android:id="@+id/batch_progress"
+        style="@style/CircularDeterminateProgressBar"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_200"
+        android:indeterminate="true"
+        tools:progress="20"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/advise_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/main_guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="@dimen/dp_2"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.05"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <WebView
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="@dimen/dp_24"
-            android:layout_marginRight="@dimen/dp_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_guideline"
-            app:layout_constraintBottom_toTopOf="@+id/advise_guideline"
-            />
-
-        <ProgressBar
-            android:id="@+id/privacyProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/advise_guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="@dimen/dp_2"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            style="@style/LetterineCalendario"
-            android:id="@+id/no_consent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_consent"
-            android:textSize="@dimen/sp_44"
-            android:textColor="@color/colorGreyIcon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ok_consent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/advise_guideline"/>
-
-        <TextView
-            style="@style/LetterineCalendario"
-            android:id="@+id/ok_consent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok_consent"
-            android:textColor="@color/colorGreyIcon"
-            android:textSize="@dimen/sp_44"
-            app:layout_constraintStart_toEndOf="@+id/no_consent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/advise_guideline"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

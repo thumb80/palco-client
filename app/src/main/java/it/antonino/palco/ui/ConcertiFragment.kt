@@ -10,20 +10,14 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import it.antonino.palco.R
-import it.antonino.palco.adapter.ConcertiAdapter
 import it.antonino.palco.databinding.FragmentConcertiBinding
+import it.antonino.palco.model.ConcertiAdapter
 import it.antonino.palco.util.Constant.offscreenPageLimit
 
-
-class ConcertiFragment: Fragment()  {
+class ConcertiFragment: Fragment() {
 
     private lateinit var binding: FragmentConcertiBinding
-
-    companion object {
-        fun newInstance() = ConcertiFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +34,7 @@ class ConcertiFragment: Fragment()  {
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val concertiViewPagerAdapter = ConcertiAdapter(childFragmentManager)
 
-        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 setTabTypeface(tab, ResourcesCompat.getFont(requireContext(), R.font.gotham_bold))
             }
@@ -55,7 +49,7 @@ class ConcertiFragment: Fragment()  {
         })
 
         viewPager.adapter = concertiViewPagerAdapter
-        viewPager.setCurrentItem(0,true)
+        viewPager.setCurrentItem(0, true)
         viewPager.offscreenPageLimit = offscreenPageLimit
         tabLayout.setupWithViewPager(viewPager, true)
 
