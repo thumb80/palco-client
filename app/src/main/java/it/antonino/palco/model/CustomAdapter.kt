@@ -45,8 +45,8 @@ class CustomAdapter(
 
             val concertRow = ConcertRow(
                 artist = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist),
-                place = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place),
                 city = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city),
+                place = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place),
                 time = time,
                 artistThumb = null,
                 artistInfo = null

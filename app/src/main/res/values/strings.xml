@@ -21,9 +21,11 @@
     <string name="filter_city">Città</string>
     <string name="filter_artist">Artisti</string>
     <string name="search_artist">Cerca artista</string>
-    <string name="filter_artist_selected">Artista selezionato : %1$s\nFai tap qui per cambiare artista</string>
+    <string name="filter_artist_selected">Artista selezionato : %1$s\n</string>
+    <string name="filter_artist_reset">Fai tap qui per cambiare artista</string>
     <string name="search_city">Cerca città</string>
-    <string name="filter_city_selected">Città selezionata : %1$s\nFai tap qui per cambiare città</string>
+    <string name="filter_city_selected">Città selezionata : %1$s\n</string>
+    <string name="filter_city_reset">Fai tap qui per cambiare città</string>
     <string name="server_error">Ops… c\'è stato un problema</string>
     <string name="filter_city_list">Lista delle città</string>
     <string name="filter_artist_list">Lista degli artisti</string>
@@ -31,4 +33,6 @@
     <string name="no_connection_string">Non sei connesso alla rete</string>
     <string name="no_connection_hint">Controlla le impostazioni e riprova</string>
     <string name="no_connection">Non sei connesso alla rete, controlla le impostazioni</string>
+    <string name="batch_error_string">C\'è stato un problema nel recupero dei concerti</string>
+    <string name="batch_error_hint">Riprova</string>
 </resources>

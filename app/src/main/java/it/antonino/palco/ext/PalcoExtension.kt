@@ -94,12 +94,12 @@ fun RecyclerView.setAccessibility() {
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 fun ArrayList<Concerto>.toConcertoFilter(): ArrayList<it.antonino.palco.model.Concerto> {
-    var ret : ArrayList<it.antonino.palco.model.Concerto> = arrayListOf()
+    val ret : ArrayList<it.antonino.palco.model.Concerto> = arrayListOf()
     this.forEach { concerto ->
         ret.add(it.antonino.palco.model.Concerto(
             concerto.artist!!,
-            concerto.place!!,
             concerto.city!!,
+            concerto.place!!,
             concerto.time!!
         ))
     }

@@ -23,6 +23,8 @@ import androidx.work.WorkRequest
 import androidx.work.WorkerParameters
 import it.antonino.palco.PalcoActivity
 import it.antonino.palco.PalcoApplication
+import it.antonino.palco.PalcoApplication.Companion.isBatchError
+import it.antonino.palco.PalcoApplication.Companion.networkMonitor
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentAdviceBinding
 import it.antonino.palco.viewmodel.SharedViewModel
@@ -52,8 +54,7 @@ class AdviceFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (PalcoApplication.sharedPreferences?.getBoolean("ok_consent", false) == true) {
-            Toast.makeText(requireContext(), getString(R.string.db_init), Toast.LENGTH_LONG).show()
-            setScrapeBatch()
+            checkIfBatchCanRun()
         } else {
             val dialog = AlertDialog.Builder(ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom))
             dialog.setView(R.layout.dialog_advice)
@@ -61,8 +62,7 @@ class AdviceFragment: Fragment() {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
                     PalcoApplication.sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
                     p0?.cancel()
-                    Toast.makeText(requireContext(), getString(R.string.db_init), Toast.LENGTH_LONG).show()
-                    setScrapeBatch()
+                    checkIfBatchCanRun()
                 }
 
             })
@@ -115,7 +115,7 @@ class AdviceFragment: Fragment() {
                         Log.d(tag, "checkWorker running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        // Periodic Work Request will never enter this state
+                        isBatchError = false
                         binding.batchProgress.visibility = View.INVISIBLE
                         Toast.makeText(requireContext(), getString(R.string.db_initialized), Toast.LENGTH_LONG).show()
                         (activity as PalcoActivity).supportFragmentManager.beginTransaction()
@@ -123,15 +123,37 @@ class AdviceFragment: Fragment() {
                             .commit()
                         Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
                     }
-                    WorkInfo.State.BLOCKED -> Log.d(tag, "checkWorker blocked in ${workInfo.runAttemptCount}")
-                    WorkInfo.State.FAILED -> {
+                    WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
+                        isBatchError = true
                         binding.batchProgress.visibility = View.INVISIBLE
                         Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        Log.d(tag, "checkWorker failed in ${workInfo.runAttemptCount}")
+                        (activity as PalcoActivity).supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, NoConnectionFragment())
+                            .commit()
+                        Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
                     else -> Log.d(tag, "checkWorker canceled in ${workInfo.runAttemptCount}")
                 }
             })
+    }
+
+    private fun checkIfBatchCanRun() {
+        if (isBatchError == true) {
+            Toast.makeText(requireContext(), getString(R.string.batch_error_string), Toast.LENGTH_LONG).show()
+            (activity as PalcoActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.container, NoConnectionFragment())
+                .commit()
+        }
+        else if (networkMonitor?.isNetworkAvailable() == false) {
+            Toast.makeText(requireContext(), getString(R.string.no_connection_hint), Toast.LENGTH_LONG).show()
+            (activity as PalcoActivity).supportFragmentManager.beginTransaction()
+                .replace(R.id.container, NoConnectionFragment())
+                .commit()
+        }
+        else {
+            Toast.makeText(requireContext(), getString(R.string.db_init), Toast.LENGTH_LONG).show()
+            setScrapeBatch()
+        }
     }
 
 }

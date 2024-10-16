@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/filter_header_artist"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_96"
+        android:layout_height="wrap_content"
         android:textAlignment="gravity"
         android:fontFamily="@font/gotham_bold"
         android:background="@color/colorPrimary"
@@ -23,6 +23,23 @@
         android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/filter_header_artist_reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="gravity"
+        android:fontFamily="@font/gotham_bold"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorGreyIcon"
+        android:textSize="@dimen/sp_22"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filter_header_artist"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/filter_header_artist_container"
@@ -74,19 +91,20 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/filter_header_artist"
+        android:paddingTop="@dimen/dp_64"
+        app:layout_constraintTop_toBottomOf="@+id/filter_header_artist_container"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/filter_concert_artist_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:padding="@dimen/dp_12"
             android:orientation="vertical"
             android:visibility="gone"
             android:importantForAccessibility="yes"
             tools:visibility="gone"
-            tools:listitem="@layout/concerto_filter_view"
+            tools:listitem="@layout/concerto_filter_artist_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

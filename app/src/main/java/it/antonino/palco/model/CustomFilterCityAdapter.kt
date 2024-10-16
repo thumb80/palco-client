@@ -4,9 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
-import it.antonino.palco.PalcoApplication
-import it.antonino.palco.databinding.ConcertoFilterViewBinding
-import it.antonino.palco.ext.getString
+import it.antonino.palco.databinding.ConcertoFilterCityViewBinding
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent
 import java.text.SimpleDateFormat
@@ -21,33 +19,30 @@ class CustomFilterCityAdapter(
 
     private var artistThumb: String? = null
     private var artistInfo: String? = null
-    private lateinit var binding: ConcertoFilterViewBinding
+    private lateinit var binding: ConcertoFilterCityViewBinding
 
     inner class FilterCityListViewHolder(
-        val binding: ConcertoFilterViewBinding
+        val binding: ConcertoFilterCityViewBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(concerto: ConcertRow) {
 
             val artist = concerto.artist
             val place = concerto.place
-            val city = concerto.city
             val time = concerto.time
 
             val mArtist = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)
             val mPlace = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place)
-            val mCity = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city)
-            val mTime = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(SimpleDateFormat("yyyy-MM-dd", Locale.ITALY).format(time))
+            val mTime = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(time))
 
             binding.artist.text = mArtist
             binding.place.text = mPlace
-            binding.city.text = mCity
             binding.time.text = mTime
 
             val concertRow = ConcertRow(
                 artist = mArtist,
+                city = null,
                 place = mPlace,
-                city = mCity,
                 time = concerto.time,
                 artistThumb = null,
                 artistInfo = null
@@ -109,15 +104,15 @@ class CustomFilterCityAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterCityListViewHolder {
-        binding = ConcertoFilterViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding = ConcertoFilterCityViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FilterCityListViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FilterCityListViewHolder, position: Int) {
         holder.bind(ConcertRow(
             concerti[position]?.artist,
+            null,
             concerti[position]?.place,
-            concerti[position]?.city,
             concerti[position]?.time?.let { time ->
                 SimpleDateFormat("yyyy-MM-dd", Locale.ITALY).parse(time)
                     ?.let { date ->

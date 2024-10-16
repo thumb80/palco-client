@@ -12,9 +12,9 @@ android {
 
     defaultConfig {
         applicationId = "it.antonino.palco"
-        minSdk = 29
+        minSdk = 24
         targetSdk = 34
-        versionCode = 39
+        versionCode = 40
         versionName = "2.0"
 
         ndk {

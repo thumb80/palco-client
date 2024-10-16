@@ -17,7 +17,6 @@
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/sp_36"
         android:paddingTop="@dimen/dp_24"
-        android:paddingBottom="@dimen/dp_24"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

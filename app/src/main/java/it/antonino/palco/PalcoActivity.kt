@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
+import it.antonino.palco.PalcoApplication.Companion.networkMonitor
 import it.antonino.palco.databinding.ActivityMainBinding
 import it.antonino.palco.network.monitor.NetworkMonitor
 import it.antonino.palco.ui.AdviceFragment
@@ -15,7 +16,6 @@ import it.antonino.palco.ui.NoConnectionFragment
 class PalcoActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var networkMonitor: NetworkMonitor? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

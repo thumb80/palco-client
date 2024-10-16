@@ -31,48 +31,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintGuide_percent="1"/>
 
-    <!--<androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingTop="@dimen/dp_8"
-        android:paddingLeft="@dimen/dp_8"
-        android:paddingRight="@dimen/dp_8"
-        android:paddingBottom="@dimen/dp_8"
-        android:background="@drawable/card_view_background_primary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/filter_guideline">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/artist_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/placeholder_scheda"
-            android:scaleType="fitXY"
-            app:shapeAppearanceOverlay="@style/CornerRound"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="@drawable/card_view_background_accent"
-        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
         android:paddingRight="@dimen/dp_8"
         android:paddingLeft="@dimen/dp_8"
         android:paddingTop="@dimen/dp_12"
         android:paddingBottom="@dimen/dp_12"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/filter_end_guideline">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            tools:text="Artista con nome lungo che va su due righe"
+            tools:text="Artista"
             android:id="@+id/artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -88,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            tools:text="Locale col nome luungo che va su due righe"
+            tools:text="Place"
             android:id="@+id/place"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -100,23 +73,6 @@
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
             app:layout_constraintTop_toBottomOf="@+id/artist"
-            app:layout_constraintBottom_toTopOf="@+id/city"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            tools:text="Città con lil nome lunghio che va su due rjfd"
-            android:id="@+id/city"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_4"
-            android:textStyle="bold"
-            android:textSize="@dimen/sp_14"
-            android:textAlignment="center"
-            android:fontFamily="@font/gotham_medium"
-            android:layout_gravity="center_horizontal"
-            android:maxLines="2"
-            app:layout_constraintTop_toBottomOf="@+id/place"
             app:layout_constraintBottom_toTopOf="@+id/time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -133,7 +89,7 @@
             android:fontFamily="@font/gotham_medium"
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
-            app:layout_constraintTop_toBottomOf="@+id/city"
+            app:layout_constraintTop_toBottomOf="@+id/place"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

@@ -66,20 +66,8 @@ class CustomDialog(
         builder.setView(binding.root)
         val popupDialog = builder.create()
         popupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        /*val wlp = popupDialog.window?.attributes
-        wlp?.gravity = Gravity.TOP
-        popupDialog.window?.attributes = wlp*/
         return popupDialog
     }
-
-    /*override fun getDialog(): Dialog? {
-        val dialog = super.getDialog()
-        val window = dialog?.window
-        val wlp = window?.attributes
-        wlp?.gravity = Gravity.CENTER_VERTICAL
-        window?.attributes = wlp
-        return dialog
-    }*/
 
     private fun shareConcert() {
         val pm = requireContext().packageManager

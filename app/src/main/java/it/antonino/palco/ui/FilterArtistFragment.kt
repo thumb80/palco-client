@@ -108,11 +108,13 @@ class FilterArtistFragment : Fragment() {
 
                 artistAdapter = ArtistListAdapter(it as kotlin.collections.ArrayList) { artist ->
                     binding.filterHeaderArtist.visibility = View.VISIBLE
+                    binding.filterHeaderArtistReset.visibility = View.VISIBLE
                     binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist))
+                    binding.filterHeaderArtistReset.text = getString(R.string.filter_artist_reset)
                     GlobalScope.launch(Dispatchers.Main) {
                         viewModel.getAllByArtist(artist)
                     }
-                    viewModel.concertiFilter.observe(viewLifecycleOwner, concertsObserver)
+                    viewModel.concertiFilterArtist.observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
                     context,
@@ -164,6 +166,7 @@ class FilterArtistFragment : Fragment() {
                 binding.filterHeaderArtist.setOnClickListener {
                     hideConcerti()
                     binding.filterHeaderArtist.visibility = View.GONE
+                    binding.filterHeaderArtistReset.visibility = View.GONE
                 }
 
             }

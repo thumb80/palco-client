@@ -6,8 +6,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
 import it.antonino.palco.R
-import it.antonino.palco.databinding.ConcertoFilterViewBinding
-import it.antonino.palco.ext.getString
+import it.antonino.palco.databinding.ConcertoFilterArtistViewBinding
 import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.model.Concerto
@@ -27,7 +26,7 @@ class CustomFilterArtistAdapter(
     private var artistInfo: String? = null
 
     inner class FilterArtistListViewHolder(
-        val binding: ConcertoFilterViewBinding
+        val binding: ConcertoFilterArtistViewBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(concerto: ConcertRow) {
@@ -40,15 +39,16 @@ class CustomFilterArtistAdapter(
             val mArtist = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)
             val mPlace = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place)
             val mCity = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city)
+            val mTime = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(time))
 
-            binding.artist.text = mArtist
             binding.place.text = mPlace
             binding.city.text = mCity
+            binding.time.text = mTime
 
             val concertRow = ConcertRow(
                 artist = mArtist,
-                place = mPlace,
                 city = mCity,
+                place = mPlace,
                 time = concerto.time,
                 artistThumb = null,
                 artistInfo = null
@@ -116,24 +116,18 @@ class CustomFilterArtistAdapter(
         }
     }
 
-    private lateinit var binding: ConcertoFilterViewBinding
+    private lateinit var binding: ConcertoFilterArtistViewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterArtistListViewHolder {
-        binding = ConcertoFilterViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
-        layoutParams.height = parent.context.resources.getDimension(R.dimen.dp_64).toInt().toPx()
-        binding.mainFilterContainer.layoutParams = layoutParams
+        binding = ConcertoFilterArtistViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FilterArtistListViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: FilterArtistListViewHolder, position: Int) {
         holder.bind(ConcertRow(
             concerti[position]?.artist,
-            concerti[position]?.place,
             concerti[position]?.city,
+            concerti[position]?.place,
             concerti[position]?.time?.let { time ->
                 SimpleDateFormat("yyyy-MM-dd", Locale.ITALY).parse(time)
             },

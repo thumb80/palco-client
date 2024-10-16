@@ -107,11 +107,13 @@ class FilterCityFragment : Fragment() {
                 cityList.sortBy { it }
                 cityAdapter = CityListAdapter(cityList) {
                     binding.filterHeaderCity.visibility = View.VISIBLE
+                    binding.filterHeaderCityReset.visibility = View.VISIBLE
                     binding.filterHeaderCity.text = getString(R.string.filter_city_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(it))
+                    binding.filterHeaderCityReset.text = getString(R.string.filter_city_reset)
                     GlobalScope.launch(Dispatchers.Main) {
                         viewModel.getAllByCity(it)
                     }
-                    viewModel.concertiFilter.observe(viewLifecycleOwner, concertsObserver)
+                    viewModel.concertiFilterCity.observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
                     context,
@@ -163,6 +165,7 @@ class FilterCityFragment : Fragment() {
                 binding.filterHeaderCity.setOnClickListener {
                     hideConcerti()
                     binding.filterHeaderCity.visibility = View.GONE
+                    binding.filterHeaderCityReset.visibility = View.GONE
                 }
 
             }

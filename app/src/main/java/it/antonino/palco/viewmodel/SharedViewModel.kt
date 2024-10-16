@@ -37,8 +37,11 @@ class SharedViewModel(
     private var _artists: MutableLiveData<ArrayList<String>> = MutableLiveData()
     val artists: LiveData<ArrayList<String>> = _artists
 
-    private var _concertiFilter: MutableLiveData<ArrayList<it.antonino.palco.model.Concerto>> = MutableLiveData()
-    val concertiFilter: LiveData<ArrayList<it.antonino.palco.model.Concerto>> = _concertiFilter
+    private var _concertiFilterCity: MutableLiveData<ArrayList<it.antonino.palco.model.Concerto>> = MutableLiveData()
+    val concertiFilterCity: LiveData<ArrayList<it.antonino.palco.model.Concerto>> = _concertiFilterCity
+
+    private var _concertiFilterArtist: MutableLiveData<ArrayList<it.antonino.palco.model.Concerto>> = MutableLiveData()
+    val concertiFilterArtist: LiveData<ArrayList<it.antonino.palco.model.Concerto>> = _concertiFilterArtist
 
     fun setInit(value: Boolean) {
         _isInit.postValue(value)
@@ -82,7 +85,7 @@ class SharedViewModel(
         withContext(Dispatchers.IO) {
             ret = concerti.concertiDao().getAllByCity(city) as ArrayList<Concerto>
         }
-        _concertiFilter.postValue(ret.toConcertoFilter())
+        _concertiFilterCity.postValue(ret.toConcertoFilter())
         return ret
     }
 
@@ -91,7 +94,7 @@ class SharedViewModel(
         withContext(Dispatchers.IO) {
             ret = concerti.concertiDao().getAllByArtist(artist) as ArrayList<Concerto>
         }
-        _concertiFilter.postValue(ret.toConcertoFilter())
+        _concertiFilterArtist.postValue(ret.toConcertoFilter())
         return ret
     }
 
