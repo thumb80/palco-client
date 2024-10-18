@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Palco</string>
+    <string name="welcome_string">Benvenuti su Palco</string>
     <string name="ok_consent">Accetta</string>
     <string name="no_consent">Rifiuta</string>
     <string name="disclaimer_title">Attenzione</string>

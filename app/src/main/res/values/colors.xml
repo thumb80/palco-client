@@ -15,4 +15,5 @@
     <color name="colorGrey">#4A4949</color>
     <color name="colorGreyIcon">#ACAAAA</color>
     <color name="white_alpha">#80FFFFFF</color>
+    <color name="accent_alpha">#F3955C</color>
 </resources>

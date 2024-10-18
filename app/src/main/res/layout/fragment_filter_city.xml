@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/filter_header_city"
@@ -17,8 +17,7 @@
         android:textColor="@color/colorGreyIcon"
         android:textSize="@dimen/sp_22"
         android:layout_gravity="center_horizontal"
-        android:paddingTop="@dimen/dp_8"
-        android:paddingBottom="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_16"
         android:visibility="gone"
         android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +33,6 @@
         android:textColor="@color/colorGreyIcon"
         android:textSize="@dimen/sp_22"
         android:layout_gravity="center_horizontal"
-        android:paddingTop="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_8"
         android:visibility="gone"
         android:gravity="center_horizontal"
@@ -102,6 +100,10 @@
             android:padding="@dimen/dp_12"
             android:orientation="vertical"
             android:visibility="gone"
+            android:scrollbarTrackVertical="@color/colorPrimary"
+            android:scrollbarThumbVertical="@drawable/scrollbar_track"
+            android:scrollbars="vertical"
+            android:overScrollMode="always"
             android:importantForAccessibility="yes"
             tools:listitem="@layout/concerto_filter_city_view"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +121,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="bottom|center_horizontal"
         android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/colorWhite">
+        android:background="@color/colorPrimary">
 
         <ImageView
             android:id="@+id/arrow"

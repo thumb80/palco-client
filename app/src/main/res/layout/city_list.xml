@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:importantForAccessibility="yes"
-    android:background="@color/colorWhite">
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/city_item"
@@ -14,7 +14,7 @@
         android:textAlignment="center"
         android:fontFamily="@font/gotham_bold"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
         android:textSize="@dimen/sp_36"
         android:paddingTop="@dimen/dp_24"
         app:layout_constraintTop_toTopOf="parent"

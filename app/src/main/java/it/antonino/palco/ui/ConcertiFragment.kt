@@ -34,6 +34,7 @@ class ConcertiFragment: Fragment() {
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val concertiViewPagerAdapter = ConcertiAdapter(childFragmentManager)
 
+        tabLayout.setTabTextColors(requireContext().getColor(R.color.colorPrimary), requireContext().getColor(R.color.colorWhite))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 setTabTypeface(tab, ResourcesCompat.getFont(requireContext(), R.font.gotham_bold))

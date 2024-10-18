@@ -11,9 +11,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/ic_palco_icon"
+        android:icon="@drawable/palco_launcher_icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_palco_icon"
+        android:roundIcon="@drawable/palco_launcher_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Palco"
         tools:targetApi="34" >
@@ -21,6 +21,7 @@
 
         <activity
             android:name=".PalcoActivity"
+            android:theme="@style/SplashScreenTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

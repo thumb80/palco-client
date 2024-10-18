@@ -1,6 +1,7 @@
 package it.antonino.palco.ui
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -69,30 +71,19 @@ class FilterArtistFragment : Fragment() {
         layoutParams.weight = 16f
 
         editText.layoutParams = layoutParams
+        editText.gravity = Gravity.CENTER
+        editText.setHintTextColor(requireContext().getColor(R.color.colorWhite))
+        editText.setTextColor(requireContext().getColor(R.color.colorWhite))
 
         binding.searchBar.queryHint = getString(R.string.search_artist)
         binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-                layoutParams.topMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
-                layoutParams.bottomMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
-                binding.filterArtistList.layoutParams = layoutParams
                 artistAdapter?.filter?.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-                layoutParams.topMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
-                layoutParams.bottomMargin = resources.getDimension(R.dimen.dp_48).toInt().toPx()
-                binding.filterArtistList.layoutParams = layoutParams
                 artistAdapter?.filter?.filter(newText)
                 return true
             }

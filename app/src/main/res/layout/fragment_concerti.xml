@@ -7,8 +7,8 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
-        android:background="@color/colorWhite"
         android:layout_width="match_parent"
+        android:background="@drawable/tab_layout_background"
         android:layout_height="@dimen/dp_48"
         android:layout_gravity="top"
         app:layout_constraintTop_toTopOf="parent"

@@ -41,9 +41,6 @@ class PalcoActivity: AppCompatActivity() {
     val networkCallback = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            if (!Python.isStarted())
-                Python.start(AndroidPlatform(this@PalcoActivity))
-
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, AdviceFragment())
                 .commit()

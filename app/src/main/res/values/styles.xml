@@ -137,6 +137,11 @@
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="searchIcon">@drawable/search_icon</item>
         <item name="closeIcon">@drawable/ic_clear_black</item>
-        <item name="android:background">@color/colorWhite</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Set the image as the window background -->
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
     </style>
 </resources>

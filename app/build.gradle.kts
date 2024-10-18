@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId = "it.antonino.palco"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 34
-        versionCode = 40
-        versionName = "2.0"
+        versionCode = 41
+        versionName = "3.0"
 
         ndk {
             // On Apple silicon, you can omit x86_64.
@@ -79,6 +79,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.eftimoff:android-pathview:1.0.8@aar")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")

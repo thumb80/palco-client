@@ -1,11 +1,13 @@
 package it.antonino.palco.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chaquo.python.PyObject
 import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
@@ -15,6 +17,7 @@ import it.antonino.palco.ext.toConcertoFilter
 import it.antonino.palco.network.NetworkRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 import java.nio.charset.Charset
@@ -104,8 +107,10 @@ class SharedViewModel(
         }
     }
 
-    fun scrape() {
-        viewModelScope.launch {
+    fun scrape(context: Context) {
+        runBlocking(Dispatchers.IO) {
+            if (!Python.isStarted())
+                Python.start(AndroidPlatform(context))
             val py = Python.getInstance()
             val pyObj = py.getModule("batch")
             val message = pyObj.callAttr("scrape")

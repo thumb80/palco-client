@@ -28,21 +28,21 @@
             android:layout_height="@dimen/dp_48"
             android:contentDescription="@string/prev_month"
             android:layout_alignParentStart="true"
-            android:background="@color/colorWhite"
-            android:drawableStart="@drawable/ic_icon_left">
+            android:background="@drawable/circular_button_background"
+            android:drawableEnd="@drawable/ic_icon_left">
 
         </Button>
 
         <TextView
-            style="@style/MeseCalendario"
             android:id="@+id/monthView"
+            style="@style/MeseCalendario"
+            android:fontFamily="@font/notable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
             android:textAlignment="center"
-            tools:text="@string/app_name"
-            android:gravity="center_horizontal"/>
+            tools:text="@string/app_name" />
 
         <Button
             android:id="@+id/nextMonth"
@@ -50,8 +50,8 @@
             android:layout_height="@dimen/dp_48"
             android:contentDescription="@string/next_month"
             android:layout_alignParentEnd="true"
-            android:background="@color/colorWhite"
-            android:drawableEnd="@drawable/ic_icon_right">
+            android:background="@drawable/circular_button_background"
+            android:drawableStart="@drawable/ic_icon_right">
 
         </Button>
 

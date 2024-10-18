@@ -34,6 +34,7 @@ class FilterFragment : Fragment()  {
         val tabLayout = view.findViewById<TabLayout>(R.id.filter_tab_layout)
         val filterConcertiViewPagerAdapter = FilterConcertiAdapter(childFragmentManager)
 
+        tabLayout.setTabTextColors(requireContext().getColor(R.color.colorPrimary), requireContext().getColor(R.color.colorWhite))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 setTabTypeface(tab, ResourcesCompat.getFont(requireContext(), R.font.gotham_bold))
