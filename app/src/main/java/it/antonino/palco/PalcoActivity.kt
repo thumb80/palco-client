@@ -46,9 +46,6 @@ class PalcoActivity: AppCompatActivity() {
                 .commit()
         }
 
-        override fun onLost(network: Network) {
-            Toast.makeText(this@PalcoActivity, getString(R.string.no_connection), Toast.LENGTH_LONG).show()
-        }
     }
 
 

@@ -1,7 +1,5 @@
 package it.antonino.palco.di
 
-import androidx.room.Room
-import it.antonino.palco.database.Concerti
 import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.network.WikiPediaAPI
@@ -59,19 +57,6 @@ val appModule = module {
     }
 
     // ViewModel Dependency
-    viewModel { SharedViewModel(get(),get()) }
-
-    // Database dependency
-    single {
-        Room.databaseBuilder(
-            androidContext(),
-            Concerti::class.java, "concerti"
-        ).build()
-    }
-
-    // DAO dependency
-    single {
-        get<Concerti>().concertiDao()
-    }
+    viewModel { SharedViewModel(get()) }
 
 }

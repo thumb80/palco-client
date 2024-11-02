@@ -1,19 +1,13 @@
 package it.antonino.palco.model
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import it.antonino.palco.PalcoApplication
-import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoCardViewBinding
 import it.antonino.palco.ext.getDate
-import it.antonino.palco.util.Constant.itemDimension
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent
 

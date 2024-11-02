@@ -114,6 +114,18 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.eftimoff.androipathview.PathView
+        android:id="@+id/animation"
+        android:layout_width="320dp"
+        android:layout_height="180dp"
+        app:pathColor="@color/colorWhite"
+        app:pathWidth="@dimen/dp_6"
+        app:svg="@raw/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <LinearLayout
         android:id="@+id/artist_arrow_container"
         android:layout_width="match_parent"

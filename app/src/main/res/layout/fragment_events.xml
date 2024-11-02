@@ -109,6 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:visibility="invisible"
                 android:paddingTop="@dimen/dp_12"
                 android:paddingBottom="@dimen/dp_12"
                 android:contentDescription="@string/concerti_recycler"
@@ -133,6 +134,18 @@
                 android:text="@string/no_data"
                 android:layout_gravity="center_horizontal"
                 tools:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <com.eftimoff.androipathview.PathView
+                android:id="@+id/animation"
+                android:layout_width="320dp"
+                android:layout_height="180dp"
+                app:pathColor="@color/colorWhite"
+                app:pathWidth="@dimen/dp_6"
+                app:svg="@raw/logo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

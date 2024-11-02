@@ -6,20 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.eftimoff.androipathview.PathView
-        android:id="@+id/animation"
-        android:layout_width="320dp"
-        android:layout_height="240dp"
-        android:visibility="invisible"
-        tools:visibility="visible"
-        app:pathColor="@color/colorWhite"
-        app:pathWidth="@dimen/dp_6"
-        app:svg="@raw/logo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/batch_progress"/>
-
     <ProgressBar
         android:id="@+id/batch_progress"
         style="@style/CircularDeterminateProgressBar"

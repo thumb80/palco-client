@@ -7,6 +7,7 @@ import it.antonino.palco.ext.getShared
 import it.antonino.palco.network.monitor.NetworkMonitor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import java.io.File
 
 
 class PalcoApplication: Application() {
@@ -14,8 +15,8 @@ class PalcoApplication: Application() {
     companion object {
         lateinit var instance: PalcoApplication
         var sharedPreferences: SharedPreferences? = null
-        var isBatchError: Boolean? = null
         var networkMonitor: NetworkMonitor? = null
+        var file: File? = null
     }
 
     init {
@@ -31,6 +32,7 @@ class PalcoApplication: Application() {
         }
 
         sharedPreferences = sharedPreferences.getShared()
+        file = File(cacheDir, "concerti.json")
     }
 
 }

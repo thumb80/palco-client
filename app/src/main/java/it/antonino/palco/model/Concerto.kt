@@ -2,7 +2,7 @@ package it.antonino.palco.model
 
 import com.google.gson.annotations.SerializedName
 
-class Concerto (
+data class Concerto (
     @SerializedName("artist")
     var artist: String,
     @SerializedName("city")

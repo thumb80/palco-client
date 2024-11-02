@@ -14,8 +14,8 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 21
         targetSdk = 34
-        versionCode = 41
-        versionName = "3.0"
+        versionCode = 43
+        versionName = "3.1"
 
         ndk {
             // On Apple silicon, you can omit x86_64.
@@ -66,10 +66,6 @@ dependencies {
     implementation("io.insert-koin:koin-android:${rootProject.extra["koin_version"]}")
     implementation("io.insert-koin:koin-core-viewmodel:${rootProject.extra["koin_version"]}")
     implementation("androidx.security:security-crypto-ktx:${rootProject.extra["crypto_version"]}")
-    implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-    annotationProcessor("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
-    implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
-    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.work:work-runtime:${rootProject.extra["work_version"]}")
     implementation("androidx.work:work-runtime-ktx:${rootProject.extra["work_version"]}")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))

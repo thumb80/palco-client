@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.eftimoff.androipathview.PathView
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.databinding.FragmentFilterArtistBinding
@@ -36,6 +37,7 @@ class FilterArtistFragment : Fragment() {
     private var artistAdapter: ArtistListAdapter? = null
     private var adapter: CustomFilterArtistAdapter? = null
     private lateinit var binding: FragmentFilterArtistBinding
+    private lateinit var richPath: PathView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,9 +45,13 @@ class FilterArtistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterArtistBinding.inflate(layoutInflater)
-        GlobalScope.launch(Dispatchers.Main) {
-            viewModel.getAllArtist()
+        viewModel.batchEnded.observe(viewLifecycleOwner) {
+            if (it) {
+                viewModel.getAllArtist()
+                binding.animation.visibility = View.INVISIBLE
+            }
         }
+        richPath = binding.animation
         return binding.root
     }
 
@@ -55,6 +61,7 @@ class FilterArtistFragment : Fragment() {
         viewModel.artists.observe(viewLifecycleOwner, artistObserver)
 
         hideConcerti()
+        startAnimation()
 
         val linearLayout = binding.searchBar.getChildAt(0) as LinearLayout
         val linearLayout2 = linearLayout.getChildAt(2) as LinearLayout
@@ -72,22 +79,25 @@ class FilterArtistFragment : Fragment() {
 
         editText.layoutParams = layoutParams
         editText.gravity = Gravity.CENTER
-        editText.setHintTextColor(requireContext().getColor(R.color.colorWhite))
-        editText.setTextColor(requireContext().getColor(R.color.colorWhite))
+        editText.setHintTextColor(requireContext().resources.getColor(R.color.colorWhite))
+        editText.setTextColor(requireContext().resources.getColor(R.color.colorWhite))
 
         binding.searchBar.queryHint = getString(R.string.search_artist)
         binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                artistAdapter?.filter?.filter(query)
+                if (binding.animation.visibility == View.INVISIBLE)
+                    artistAdapter?.filter?.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                artistAdapter?.filter?.filter(newText)
+                if (binding.animation.visibility == View.INVISIBLE)
+                    artistAdapter?.filter?.filter(newText)
                 return true
             }
         })
+
     }
 
     private val artistObserver = Observer<ArrayList<String>> {
@@ -97,7 +107,7 @@ class FilterArtistFragment : Fragment() {
 
                 it.sortBy { element-> element }
 
-                artistAdapter = ArtistListAdapter(it as kotlin.collections.ArrayList) { artist ->
+                artistAdapter = ArtistListAdapter(it) { artist ->
                     binding.filterHeaderArtist.visibility = View.VISIBLE
                     binding.filterHeaderArtistReset.visibility = View.VISIBLE
                     binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist))
@@ -179,6 +189,20 @@ class FilterArtistFragment : Fragment() {
         binding.filterArtistList.visibility = View.VISIBLE
         binding.filterHeaderArtistContainer.visibility = View.VISIBLE
         binding.filterConcertArtistList.visibility = View.GONE
+    }
+
+    private fun startAnimation() {
+        richPath
+            .pathAnimator
+            .interpolator { input ->
+                input.plus(1f).mod(1f)
+            }
+            .listenerEnd {
+                startAnimation()
+            }
+            .delay(0)
+            .duration(3000)
+            .start()
     }
 
 }

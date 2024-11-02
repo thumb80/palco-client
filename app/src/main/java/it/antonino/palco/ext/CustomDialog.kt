@@ -14,16 +14,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.fragment.app.DialogFragment
 import it.antonino.palco.R
 import it.antonino.palco.databinding.CustomDialogBinding
 import it.antonino.palco.model.ConcertRow
-import it.antonino.palco.util.Constant.bitMapQuality
-import java.io.File
-import java.io.FileOutputStream
 
 
 class CustomDialog(

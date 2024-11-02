@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import it.antonino.palco.PalcoApplication
-import it.antonino.palco.database.model.Concerto
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import java.time.Instant
@@ -39,20 +38,12 @@ fun String?.getDate(): Date? {
     }
 }
 
-fun ArrayList<it.antonino.palco.database.model.Concerto>.toConcerto(): ArrayList<it.antonino.palco.model.Concerto?>? {
-    val ret: ArrayList<it.antonino.palco.model.Concerto?>? = arrayListOf()
-    this.forEach {concerto ->
-        ret?.add(it.antonino.palco.model.Concerto(concerto.artist!!, concerto.city!!, concerto.place!!, concerto.time!!))
-    }
-    return ret
-}
-
 fun Date.compareDate(): Boolean {
     return this.before(Date(System.currentTimeMillis().minus(Constant.offsetDayMillis)))
 }
 
 fun Date?.isActualMonth(): Boolean? {
-    val currentDate = Constant.actualDateFormat.format(Date.from(Instant.now()))
+    val currentDate = Constant.actualDateFormat.format(Date(System.currentTimeMillis()))
     return try {
         this?.let { Constant.actualDateFormat.format(it).equals(currentDate, true) }
     } catch (e: Exception) {
@@ -92,16 +83,3 @@ fun RecyclerView.setAccessibility() {
 }
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
-
-fun ArrayList<Concerto>.toConcertoFilter(): ArrayList<it.antonino.palco.model.Concerto> {
-    val ret : ArrayList<it.antonino.palco.model.Concerto> = arrayListOf()
-    this.forEach { concerto ->
-        ret.add(it.antonino.palco.model.Concerto(
-            concerto.artist!!,
-            concerto.city!!,
-            concerto.place!!,
-            concerto.time!!
-        ))
-    }
-    return ret
-}

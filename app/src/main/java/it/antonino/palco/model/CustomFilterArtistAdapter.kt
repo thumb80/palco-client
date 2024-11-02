@@ -39,7 +39,15 @@ class CustomFilterArtistAdapter(
             val mArtist = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)
             val mPlace = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place)
             val mCity = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city)
-            val mTime = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(time))
+            val mTime = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(time?.let {
+                SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(
+                    it
+                )
+            }).substring(0,1).toUpperCase() + org.apache.commons.lang3.StringEscapeUtils.unescapeJava(time?.let {
+                SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(
+                    it
+                )
+            }).substring(1)
 
             binding.place.text = mPlace
             binding.city.text = mCity

@@ -11,7 +11,6 @@ buildscript {
     extra.apply {
         set("koin_version","4.0.0")
         set("crypto_version", "1.1.0-alpha06")
-        set("room_version", "2.6.1")
         set("work_version", "2.9.1")
     }
 }

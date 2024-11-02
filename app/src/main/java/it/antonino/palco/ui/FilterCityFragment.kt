@@ -11,12 +11,12 @@ import android.widget.LinearLayout
 import android.widget.LinearLayout.LayoutParams
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.eftimoff.androipathview.PathView
 import it.antonino.palco.R
 import it.antonino.palco.model.CustomFilterCityAdapter
 import it.antonino.palco.databinding.FragmentFilterCityBinding
@@ -31,7 +31,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-
 class FilterCityFragment : Fragment() {
 
 
@@ -40,6 +39,7 @@ class FilterCityFragment : Fragment() {
     private var cityAdapter: CityListAdapter? = null
     private var adapter: CustomFilterCityAdapter? = null
     private lateinit var binding: FragmentFilterCityBinding
+    private lateinit var richPath: PathView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,9 +47,13 @@ class FilterCityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterCityBinding.inflate(layoutInflater)
-        GlobalScope.launch(Dispatchers.Main) {
-            viewModel.getAllCities()
+        viewModel.batchEnded.observe(viewLifecycleOwner) {
+            if (it) {
+                viewModel.getAllCities()
+                binding.animation.visibility = View.INVISIBLE
+            }
         }
+        richPath = binding.animation
         return binding.root
     }
 
@@ -59,6 +63,7 @@ class FilterCityFragment : Fragment() {
         viewModel.cities.observe(viewLifecycleOwner, cityObserver)
 
         hideConcerti()
+        startAnimation()
 
         val linearLayout = binding.searchBar.getChildAt(0) as LinearLayout
         val linearLayout2 = linearLayout.getChildAt(2) as LinearLayout
@@ -73,19 +78,21 @@ class FilterCityFragment : Fragment() {
 
         editText.layoutParams = layoutParams
         editText.gravity = Gravity.CENTER
-        editText.setHintTextColor(requireContext().getColor(R.color.colorWhite))
-        editText.setTextColor(requireContext().getColor(R.color.colorWhite))
+        editText.setHintTextColor(requireContext().resources.getColor(R.color.colorWhite))
+        editText.setTextColor(requireContext().resources.getColor(R.color.colorWhite))
 
         binding.searchBar.queryHint = getString(R.string.search_city)
         binding.searchBar.setIconifiedByDefault(false)
         binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                cityAdapter?.filter?.filter(query)
+                if (binding.animation.visibility == View.INVISIBLE)
+                    cityAdapter?.filter?.filter(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                cityAdapter?.filter?.filter(newText)
+                if (binding.animation.visibility == View.INVISIBLE)
+                    cityAdapter?.filter?.filter(newText)
                 return true
             }
 
@@ -183,5 +190,19 @@ class FilterCityFragment : Fragment() {
         binding.filterCityList.visibility = View.VISIBLE
         binding.filterHeaderCityContainer.visibility = View.VISIBLE
         binding.filterConcertCityList.visibility = View.GONE
+    }
+
+    private fun startAnimation() {
+        richPath
+            .pathAnimator
+            .interpolator { input ->
+                input.plus(1f).mod(1f)
+            }
+            .listenerEnd {
+                startAnimation()
+            }
+            .delay(0)
+            .duration(3000)
+            .start()
     }
 }
