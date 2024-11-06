@@ -37,7 +37,9 @@ import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.CustomAdapter
 import it.antonino.palco.model.CustomSnapHelper
-import it.antonino.palco.model.ScrapeWorker
+import it.antonino.palco.model.workers.ScrapeCanzoniWorker
+import it.antonino.palco.model.workers.ScrapeGothWorker
+import it.antonino.palco.model.workers.ScrapeRockolWorker
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import it.antonino.palco.viewmodel.SharedViewModel
@@ -55,7 +57,9 @@ class EventsFragment: Fragment() {
     private var layoutManager: LinearLayoutManager? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
     private lateinit var binding: FragmentEventsBinding
-    private lateinit var workRequestId: UUID
+    private lateinit var workCanzoniRequestId: UUID
+    private lateinit var workGothRequestId: UUID
+    private lateinit var workRockolRequestId: UUID
     private lateinit var richPath: PathView
 
     companion object {
@@ -150,11 +154,8 @@ class EventsFragment: Fragment() {
             binding.calendarView.scrollLeft()
         }
 
-        viewModel.batchEnded.observe(viewLifecycleOwner) {
-            if (it) {
-                val concerti = viewModel.getAllConcerti()
-                collectConcerti(concerti)
-            }
+        viewModel.concerti.observe(viewLifecycleOwner) {
+            collectConcerti(it)
         }
 
         startAnimation()
@@ -187,6 +188,7 @@ class EventsFragment: Fragment() {
     }
 
     private fun collectConcerti(concerti: ArrayList<Concerto>) {
+        binding.calendarView.removeAllEvents()
         for (concerto in concerti) {
             val time: Long = concertoDateFormat.parse(concerto.time)?.time ?: 0L
             val event = Event(
@@ -222,29 +224,115 @@ class EventsFragment: Fragment() {
         }
         else {
             Toast.makeText(requireContext(), getString(R.string.db_init), Toast.LENGTH_LONG).show()
-            setScrapeBatch()
+            setScrapeCanzoniBatch()
         }
     }
 
-    private fun setScrapeBatch() {
+    private fun setScrapeCanzoniBatch() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeWorker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeCanzoniWorker>()
             .setConstraints(constraints)
             .build()
-        workRequestId = scrapeWork.id
+        workCanzoniRequestId = scrapeWork.id
         WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-            "it-antonino-scrape",
+            "it-antonino-scrape-canzoni",
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
-        checkWorker()
+        checkCanzoniWorker()
     }
 
-    private fun checkWorker() {
+    private fun setScrapeGothBatch() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeGothWorker>()
+            .setConstraints(constraints)
+            .build()
+        workGothRequestId = scrapeWork.id
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            "it-antonino-scrape-goth",
+            ExistingWorkPolicy.REPLACE,
+            scrapeWork
+        )
+        checkGothWorker()
+    }
 
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workRequestId)
+    private fun setScrapeRockShockBatch() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeRockolWorker>()
+            .setConstraints(constraints)
+            .build()
+        workRockolRequestId = scrapeWork.id
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            "it-antonino-scrape-rockol",
+            ExistingWorkPolicy.REPLACE,
+            scrapeWork
+        )
+        checkRockShockWorker()
+    }
+
+    private fun checkCanzoniWorker() {
+
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workCanzoniRequestId)
+            .observe(requireActivity(), Observer { workInfo ->
+                when (workInfo?.state) {
+                    WorkInfo.State.ENQUEUED -> {
+                        Log.d(tag, "checkWorker enqueued in ${workInfo.runAttemptCount}")
+                    }
+                    WorkInfo.State.RUNNING -> {
+                        Log.d(tag, "checkWorker running in ${workInfo.runAttemptCount}")
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        setScrapeGothBatch()
+                        Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
+                    }
+                    WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
+                        viewModel.setBatchEnded(false)
+                        binding.animation.visibility = View.INVISIBLE
+                        Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
+                        (activity as PalcoActivity).supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, NoConnectionFragment())
+                            .commit()
+                        Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
+                    }
+                    else -> Log.d(tag, "checkWorker canceled in ${workInfo?.runAttemptCount}")
+                }
+            })
+    }
+
+    private fun checkGothWorker() {
+
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workGothRequestId)
+            .observe(requireActivity(), Observer { workInfo ->
+                when (workInfo?.state) {
+                    WorkInfo.State.ENQUEUED -> {
+                        Log.d(tag, "checkWorker enqueued in ${workInfo.runAttemptCount}")
+                    }
+                    WorkInfo.State.RUNNING -> {
+                        Log.d(tag, "checkWorker running in ${workInfo.runAttemptCount}")
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        setScrapeRockShockBatch()
+                        Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
+                    }
+                    WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
+                        viewModel.setBatchEnded(false)
+                        Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
+                        Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
+                    }
+                    else -> Log.d(tag, "checkWorker canceled in ${workInfo?.runAttemptCount}")
+                }
+            })
+    }
+
+    private fun checkRockShockWorker() {
+
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workRockolRequestId)
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
@@ -255,17 +343,15 @@ class EventsFragment: Fragment() {
                     }
                     WorkInfo.State.SUCCEEDED -> {
                         viewModel.setBatchEnded(true)
+                        viewModel.setConcerti(
+                            viewModel.getAllConcerti()
+                        )
                         binding.animation.visibility = View.INVISIBLE
                         Toast.makeText(requireContext(), getString(R.string.db_initialized), Toast.LENGTH_LONG).show()
                         Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        viewModel.setBatchEnded(false)
-                        binding.animation.visibility = View.INVISIBLE
                         Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, NoConnectionFragment())
-                            .commit()
                         Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
                     else -> Log.d(tag, "checkWorker canceled in ${workInfo?.runAttemptCount}")

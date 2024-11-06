@@ -14,8 +14,8 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 21
         targetSdk = 34
-        versionCode = 43
-        versionName = "3.1"
+        versionCode = 44
+        versionName = "3.2"
 
         ndk {
             // On Apple silicon, you can omit x86_64.
@@ -55,6 +55,7 @@ chaquopy {
         pip {
             install("bs4")
             install("numpy")
+            install("pandas")
         }
     }
 }

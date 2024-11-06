@@ -47,13 +47,14 @@ class FilterCityFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterCityBinding.inflate(layoutInflater)
-        viewModel.batchEnded.observe(viewLifecycleOwner) {
-            if (it) {
-                viewModel.getAllCities()
-                binding.animation.visibility = View.INVISIBLE
-            }
+
+        viewModel.concerti.observe(viewLifecycleOwner) {
+            viewModel.getAllCities()
+            binding.animation.visibility = View.INVISIBLE
         }
+
         richPath = binding.animation
+
         return binding.root
     }
 
@@ -114,9 +115,7 @@ class FilterCityFragment : Fragment() {
                     binding.filterHeaderCityReset.visibility = View.VISIBLE
                     binding.filterHeaderCity.text = getString(R.string.filter_city_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(it))
                     binding.filterHeaderCityReset.text = getString(R.string.filter_city_reset)
-                    GlobalScope.launch(Dispatchers.Main) {
-                        viewModel.getAllByCity(it)
-                    }
+                    viewModel.getAllByCity(it)
                     viewModel.concertiFilterCity.observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(

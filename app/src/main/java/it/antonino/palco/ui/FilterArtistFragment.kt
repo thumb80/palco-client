@@ -45,13 +45,14 @@ class FilterArtistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterArtistBinding.inflate(layoutInflater)
-        viewModel.batchEnded.observe(viewLifecycleOwner) {
-            if (it) {
-                viewModel.getAllArtist()
-                binding.animation.visibility = View.INVISIBLE
-            }
+
+        viewModel.concerti.observe(viewLifecycleOwner) {
+            viewModel.getAllArtist()
+            binding.animation.visibility = View.INVISIBLE
         }
+
         richPath = binding.animation
+
         return binding.root
     }
 
@@ -112,9 +113,7 @@ class FilterArtistFragment : Fragment() {
                     binding.filterHeaderArtistReset.visibility = View.VISIBLE
                     binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist))
                     binding.filterHeaderArtistReset.text = getString(R.string.filter_artist_reset)
-                    GlobalScope.launch(Dispatchers.Main) {
-                        viewModel.getAllByArtist(artist)
-                    }
+                    viewModel.getAllByArtist(artist)
                     viewModel.concertiFilterArtist.observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(

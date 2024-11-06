@@ -19,7 +19,7 @@ object Constant {
     const val cacheSize = (5 * 1024 * 1024).toLong()
     val monthDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     val shareDateFormat = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-    val dateTimeDateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ITALY)
+    val dateTimeDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALY)
     val actualDateFormat = SimpleDateFormat("yyyy-MM", Locale.ITALY)
     val concertoDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ITALY)
     val gson: Gson = Gson()

@@ -9,13 +9,16 @@ import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
+import it.antonino.palco.PalcoApplication
 import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.network.NetworkRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
 import java.lang.reflect.Type
 import java.nio.charset.Charset
 import kotlin.collections.ArrayList
@@ -25,20 +28,27 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
     private var _batchEnded: MutableLiveData<Boolean> = MutableLiveData()
     val batchEnded: LiveData<Boolean> = _batchEnded
 
+    private var _concerti: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
+    val concerti: LiveData<ArrayList<Concerto>> = _concerti
+
     private var _cities: MutableLiveData<ArrayList<String>> = MutableLiveData()
     val cities: LiveData<ArrayList<String>> = _cities
 
     private var _artists: MutableLiveData<ArrayList<String>> = MutableLiveData()
     val artists: LiveData<ArrayList<String>> = _artists
 
-    private var _concertiFilterCity: MutableLiveData<ArrayList<it.antonino.palco.model.Concerto>> = MutableLiveData()
-    val concertiFilterCity: LiveData<ArrayList<it.antonino.palco.model.Concerto>> = _concertiFilterCity
+    private var _concertiFilterCity: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
+    val concertiFilterCity: LiveData<ArrayList<Concerto>> = _concertiFilterCity
 
-    private var _concertiFilterArtist: MutableLiveData<ArrayList<it.antonino.palco.model.Concerto>> = MutableLiveData()
-    val concertiFilterArtist: LiveData<ArrayList<it.antonino.palco.model.Concerto>> = _concertiFilterArtist
+    private var _concertiFilterArtist: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
+    val concertiFilterArtist: LiveData<ArrayList<Concerto>> = _concertiFilterArtist
 
     fun setBatchEnded(value: Boolean) {
         _batchEnded.postValue(value)
+    }
+
+    fun setConcerti(value: ArrayList<Concerto>) {
+        _concerti.postValue(value)
     }
 
     fun getAllConcerti(): ArrayList<Concerto> {
@@ -94,23 +104,90 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
         return ret
     }
 
-    fun scrape(context: Context) {
+    fun scrapeCanzoni(context: Context) {
         runBlocking(Dispatchers.IO) {
             if (!Python.isStarted())
                 Python.start(AndroidPlatform(context))
             val py = Python.getInstance()
             val pyObj = py.getModule("batch")
-            val message = pyObj.callAttr("scrape")
+            val message = pyObj.callAttr("scrapeCanzoni")
             println(message)
             val gson: Gson = Gson().newBuilder().create()
             val collectionType: Type =
-                object : TypeToken<ArrayList<it.antonino.palco.model.Concerto?>?>() {}.type
-            val concerti: Collection<it.antonino.palco.model.Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
+                object : TypeToken<ArrayList<Concerto?>?>() {}.type
+            val concerti: Collection<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
                 Charset.forName("UTF-8"))), collectionType)
             println(concerti)
+            PalcoApplication.concerti = concerti as ArrayList<Concerto>
             if (file?.exists() == true)
                 file?.writeText("")
             file?.writeText(Gson().toJson(concerti))
+        }
+    }
+
+    fun scrapeGoth(context: Context) {
+        runBlocking(Dispatchers.IO) {
+            if (!Python.isStarted())
+                Python.start(AndroidPlatform(context))
+            val py = Python.getInstance()
+            val pyObj = py.getModule("batch")
+            val message = pyObj.callAttr("scrapeGoth")
+            println(message)
+            val gson: Gson = Gson().newBuilder().create()
+            val collectionType: Type =
+                object : TypeToken<ArrayList<Concerto?>?>() {}.type
+            val concerti: ArrayList<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
+                Charset.forName("UTF-8"))), collectionType)
+            println(concerti)
+            val temp : MutableList<Concerto> = mutableListOf()
+            concerti.forEach {
+                if (containsSpecificJsonValues(file, it))
+                    temp.add(it)
+            }
+            PalcoApplication.concerti.addAll(temp)
+            file?.writeText(Gson().toJson(PalcoApplication.concerti))
+        }
+    }
+
+    fun scrapeRockShock(context: Context) {
+        runBlocking(Dispatchers.IO) {
+            if (!Python.isStarted())
+                Python.start(AndroidPlatform(context))
+            val py = Python.getInstance()
+            val pyObj = py.getModule("batch")
+            val message = pyObj.callAttr("scrapeRockShock")
+            println(message)
+            val gson: Gson = Gson().newBuilder().create()
+            val collectionType: Type =
+                object : TypeToken<ArrayList<Concerto?>?>() {}.type
+            val concerti: ArrayList<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
+                Charset.forName("UTF-8"))), collectionType)
+            println(concerti)
+            val temp : MutableList<Concerto> = mutableListOf()
+            concerti.forEach {
+                if (containsSpecificJsonValues(file, it))
+                    temp.add(it)
+            }
+            PalcoApplication.concerti.addAll(temp)
+            file?.writeText(Gson().toJson(PalcoApplication.concerti))
+        }
+    }
+
+    fun containsSpecificJsonValues(file: File?, requiredValues: Concerto): Boolean {
+        return try {
+            val content = file?.readText() // Read file content as a string
+            val gson = Gson()
+            val itemType = object : TypeToken<List<Concerto>>() {}.type
+            val jsonMap: ArrayList<Concerto> = gson.fromJson(content, itemType) // Parse JSON as a map
+
+            jsonMap.forEach {
+                if (it.artist.contains(requiredValues.artist, true) || (it.artist.split(" ")[0].contains(requiredValues.artist.split(" ")[0], true)))
+                    return false
+            }
+
+            return true
+        } catch (e: JsonSyntaxException) {
+            false // Return false if parsing fails or keys don't match
         }
     }
 

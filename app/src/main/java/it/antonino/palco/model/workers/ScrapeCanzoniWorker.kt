@@ -1,4 +1,4 @@
-package it.antonino.palco.model
+package it.antonino.palco.model.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -7,14 +7,14 @@ import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
-class ScrapeWorker(
+class ScrapeCanzoniWorker(
     appContext: Context,
     workerParams: WorkerParameters
 ): CoroutineWorker(appContext, workerParams)
 {
     val context = appContext
     override suspend fun doWork(): Result {
-        viewModel.scrape(context)
+        viewModel.scrapeCanzoni(context)
         return Result.success()
     }
 
