@@ -21,9 +21,11 @@ import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.lang.reflect.Type
 import java.nio.charset.Charset
-import kotlin.collections.ArrayList
 
 class SharedViewModel(private val networkRepository: NetworkRepository): ViewModel() {
+
+    private var _isNewDay: MutableLiveData<Boolean> = MutableLiveData()
+    val isNewDay: LiveData<Boolean> = _isNewDay
 
     private var _batchEnded: MutableLiveData<Boolean> = MutableLiveData()
     val batchEnded: LiveData<Boolean> = _batchEnded
@@ -42,6 +44,10 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
     private var _concertiFilterArtist: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
     val concertiFilterArtist: LiveData<ArrayList<Concerto>> = _concertiFilterArtist
+
+    fun setIsNewDay(value: Boolean) {
+        _isNewDay.postValue(value)
+    }
 
     fun setBatchEnded(value: Boolean) {
         _batchEnded.postValue(value)
@@ -140,11 +146,15 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 Charset.forName("UTF-8"))), collectionType)
             println(concerti)
             val temp : MutableList<Concerto> = mutableListOf()
-            concerti.forEach {
-                if (containsSpecificJsonValues(file, it))
-                    temp.add(it)
+            try {
+                concerti.forEach {
+                    if (containsSpecificJsonValues(file, it))
+                        temp.add(it)
+                }
+                PalcoApplication.concerti.addAll(temp)
+            } catch (e: Exception) {
+                PalcoApplication.concerti.addAll(concerti)
             }
-            PalcoApplication.concerti.addAll(temp)
             file?.writeText(Gson().toJson(PalcoApplication.concerti))
         }
     }
@@ -164,11 +174,15 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 Charset.forName("UTF-8"))), collectionType)
             println(concerti)
             val temp : MutableList<Concerto> = mutableListOf()
-            concerti.forEach {
-                if (containsSpecificJsonValues(file, it))
-                    temp.add(it)
+            try {
+                concerti.forEach {
+                    if (containsSpecificJsonValues(file, it))
+                        temp.add(it)
+                }
+                PalcoApplication.concerti.addAll(temp)
+            } catch (e: Exception) {
+                PalcoApplication.concerti.addAll(concerti)
             }
-            PalcoApplication.concerti.addAll(temp)
             file?.writeText(Gson().toJson(PalcoApplication.concerti))
         }
     }

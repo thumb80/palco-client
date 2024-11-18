@@ -3,10 +3,7 @@ package it.antonino.palco
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.chaquo.python.Python
-import com.chaquo.python.android.AndroidPlatform
 import it.antonino.palco.PalcoApplication.Companion.networkMonitor
 import it.antonino.palco.databinding.ActivityMainBinding
 import it.antonino.palco.network.monitor.NetworkMonitor
@@ -47,7 +44,5 @@ class PalcoActivity: AppCompatActivity() {
         }
 
     }
-
-
 
 }

@@ -1,8 +1,10 @@
 package it.antonino.palco.util
 
+import android.content.Context
 import com.google.gson.Gson
 import it.antonino.palco.PalcoApplication
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 object Constant {
@@ -26,4 +28,22 @@ object Constant {
         .newBuilder()
         .setDateFormat(dateTimeFormat)
         .create()
+
+    fun checkNewDay(context: Context) {
+        val prefs = context.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
+        val lastExecutionDate = prefs.getLong("lastExecutionDate", 0L)
+        val now = Calendar.getInstance().timeInMillis
+        val threshold = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 4)
+            set(Calendar.MINUTE, 20)
+        }.timeInMillis
+
+        if (lastExecutionDate < threshold && !prefs.getBoolean("isNewDay", false)) {
+            // Update last execution date
+            prefs.edit().putLong("lastExecutionDate", now).apply()
+            prefs.edit().putBoolean("isNewDay", true).apply()
+        } else {
+            prefs.edit().putBoolean("isNewDay", false).apply()
+        }
+    }
 }

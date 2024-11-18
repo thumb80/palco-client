@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/dp_24"
     android:importantForAccessibility="yes"
     android:background="@color/colorPrimary">
 
@@ -16,7 +17,6 @@
         android:layout_gravity="center_horizontal"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/sp_36"
-        android:paddingTop="@dimen/dp_24"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

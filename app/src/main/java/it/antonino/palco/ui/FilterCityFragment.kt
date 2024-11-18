@@ -1,5 +1,6 @@
 package it.antonino.palco.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eftimoff.androipathview.PathView
+import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.R
 import it.antonino.palco.model.CustomFilterCityAdapter
 import it.antonino.palco.databinding.FragmentFilterCityBinding
@@ -53,7 +55,21 @@ class FilterCityFragment : Fragment() {
             binding.animation.visibility = View.INVISIBLE
         }
 
+        viewModel.isNewDay.observe(viewLifecycleOwner) {
+            if (it) {
+                hideConcerti()
+                startAnimation()
+            }
+        }
+
         richPath = binding.animation
+
+        val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
+
+        if (file?.exists() == true && prefs?.getBoolean("isNewDay", false) == false) {
+            viewModel.getAllCities()
+            binding.animation.visibility = View.INVISIBLE
+        }
 
         return binding.root
     }

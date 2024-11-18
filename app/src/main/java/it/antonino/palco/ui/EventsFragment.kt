@@ -1,11 +1,13 @@
 package it.antonino.palco.ui
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -26,6 +28,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import it.antonino.palco.PalcoActivity
+import it.antonino.palco.PalcoApplication
+import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.PalcoApplication.Companion.networkMonitor
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentEventsBinding
@@ -61,6 +65,7 @@ class EventsFragment: Fragment() {
     private lateinit var workGothRequestId: UUID
     private lateinit var workRockolRequestId: UUID
     private lateinit var richPath: PathView
+    private lateinit var threeDotPath: PathView
 
     companion object {
         private var currentDayInstance: Calendar? = null
@@ -83,6 +88,12 @@ class EventsFragment: Fragment() {
         )
 
         layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+
+        val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
+
+        if (prefs?.getBoolean("isNewDay", false) == true) {
+            viewModel.setIsNewDay(true)
+        }
     }
 
     override fun onCreateView(
@@ -91,6 +102,7 @@ class EventsFragment: Fragment() {
     ): View {
         binding = FragmentEventsBinding.inflate(layoutInflater)
         richPath = binding.animation
+        threeDotPath = binding.threeDots
         return binding.root
     }
 
@@ -158,11 +170,27 @@ class EventsFragment: Fragment() {
             collectConcerti(it)
         }
 
-        startAnimation()
-        checkIfBatchCanRun()
+        viewModel.isNewDay.observe(viewLifecycleOwner) {
+            if (it) {
+                hideAll()
+                startAnimation()
+                startThreeDots()
+                checkIfBatchCanRun()
+            }
+        }
+
+        val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
+
+        if (file?.exists() == true && prefs?.getBoolean("isNewDay", false) == false)
+            viewModel.setConcerti(
+                viewModel.getAllConcerti()
+            )
+
     }
 
-    private fun displayCurrentEvents(currentDate: Date?) {
+    private fun displayCurrentEvents(
+        currentDate: Date?
+    ) {
 
         val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
 
@@ -187,7 +215,9 @@ class EventsFragment: Fragment() {
 
     }
 
-    private fun collectConcerti(concerti: ArrayList<Concerto>) {
+    private fun collectConcerti(
+        concerti: ArrayList<Concerto>
+    ) {
         binding.calendarView.removeAllEvents()
         for (concerto in concerti) {
             val time: Long = concertoDateFormat.parse(concerto.time)?.time ?: 0L
@@ -196,7 +226,8 @@ class EventsFragment: Fragment() {
                 time,
                 concerto
             )
-            binding.calendarView.addEvent(event)
+            if (concertoDateFormat.parse(concerto.time)?.compareDate() == false)
+                binding.calendarView.addEvent(event)
         }
         if (selectedDayInstance == null)
             displayCurrentEvents(currentDayInstance?.time)
@@ -215,6 +246,14 @@ class EventsFragment: Fragment() {
         binding.concertiRecycler.visibility = View.VISIBLE
     }
 
+    private fun hideAll() {
+        binding.noData.visibility = View.INVISIBLE
+        binding.concertiRecycler.visibility = View.INVISIBLE
+        binding.animation.visibility = View.VISIBLE
+        binding.courtesyMessage.visibility = View.VISIBLE
+        binding.threeDots.visibility = View.VISIBLE
+    }
+
     private fun checkIfBatchCanRun() {
         if (networkMonitor?.isNetworkAvailable() == false) {
             Toast.makeText(requireContext(), getString(R.string.no_connection_hint), Toast.LENGTH_LONG).show()
@@ -223,7 +262,6 @@ class EventsFragment: Fragment() {
                 .commit()
         }
         else {
-            Toast.makeText(requireContext(), getString(R.string.db_init), Toast.LENGTH_LONG).show()
             setScrapeCanzoniBatch()
         }
     }
@@ -241,6 +279,9 @@ class EventsFragment: Fragment() {
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
+
+        PalcoApplication.concerti = arrayListOf()
+
         checkCanzoniWorker()
     }
 
@@ -282,25 +323,20 @@ class EventsFragment: Fragment() {
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
-                        Log.d(tag, "checkWorker enqueued in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkCanzoniWorker enqueued in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.RUNNING -> {
-                        Log.d(tag, "checkWorker running in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkCanzoniWorker running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
                         setScrapeGothBatch()
-                        Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkCanzoniWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        viewModel.setBatchEnded(false)
-                        binding.animation.visibility = View.INVISIBLE
-                        Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, NoConnectionFragment())
-                            .commit()
-                        Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
+                        setScrapeGothBatch()
+                        Log.d(tag, "checkCanzoniWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
-                    else -> Log.d(tag, "checkWorker canceled in ${workInfo?.runAttemptCount}")
+                    else -> Log.d(tag, "checkCanzoniWorker canceled in ${workInfo?.runAttemptCount}")
                 }
             })
     }
@@ -311,21 +347,20 @@ class EventsFragment: Fragment() {
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
-                        Log.d(tag, "checkWorker enqueued in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkGothWorker enqueued in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.RUNNING -> {
-                        Log.d(tag, "checkWorker running in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkGothWorker running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
                         setScrapeRockShockBatch()
-                        Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkGothWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        viewModel.setBatchEnded(false)
-                        Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
+                        setScrapeRockShockBatch()
+                        Log.d(tag, "checkGothWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
-                    else -> Log.d(tag, "checkWorker canceled in ${workInfo?.runAttemptCount}")
+                    else -> Log.d(tag, "checkGothWorker canceled in ${workInfo?.runAttemptCount}")
                 }
             })
     }
@@ -336,29 +371,47 @@ class EventsFragment: Fragment() {
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
-                        Log.d(tag, "checkWorker enqueued in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkRockShockWorker enqueued in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.RUNNING -> {
-                        Log.d(tag, "checkWorker running in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkRockShockWorker running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
                         viewModel.setBatchEnded(true)
+                        val concerti = viewModel.getAllConcerti()
                         viewModel.setConcerti(
-                            viewModel.getAllConcerti()
+                            concerti
                         )
                         binding.animation.visibility = View.INVISIBLE
-                        Toast.makeText(requireContext(), getString(R.string.db_initialized), Toast.LENGTH_LONG).show()
-                        Log.d(tag, "checkWorker success in ${workInfo.runAttemptCount}")
+                        binding.threeDots.visibility = View.INVISIBLE
+                        binding.courtesyMessage.visibility = View.INVISIBLE
+                        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
+                        Log.d(tag, "checkRockShockWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        Log.d(tag, "checkWorker failed/blocked in ${workInfo.runAttemptCount}")
+                        if (!viewModel.getAllConcerti().isEmpty()) {
+                            viewModel.setBatchEnded(true)
+                            val concerti = viewModel.getAllConcerti()
+                            viewModel.setConcerti(
+                                concerti
+                            )
+                            binding.animation.visibility = View.INVISIBLE
+                            binding.threeDots.visibility = View.INVISIBLE
+                            binding.courtesyMessage.visibility = View.INVISIBLE
+                            Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
+                        } else {
+                            viewModel.setBatchEnded(false)
+                            binding.animation.visibility = View.INVISIBLE
+                            binding.threeDots.visibility = View.INVISIBLE
+                            binding.courtesyMessage.visibility = View.INVISIBLE
+                            Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
+                        }
+                        Log.d(tag, "checkRockShockWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
-                    else -> Log.d(tag, "checkWorker canceled in ${workInfo?.runAttemptCount}")
+                    else -> Log.d(tag, "checkRockShockWorker canceled in ${workInfo?.runAttemptCount}")
                 }
             })
     }
-
     private fun startAnimation() {
         richPath
             .pathAnimator
@@ -367,6 +420,20 @@ class EventsFragment: Fragment() {
             }
             .listenerEnd {
                 startAnimation()
+            }
+            .delay(0)
+            .duration(3000)
+            .start()
+    }
+
+    private fun startThreeDots() {
+        threeDotPath
+            .pathAnimator
+            .interpolator { input ->
+                input.plus(1f).mod(1f)
+            }
+            .listenerEnd {
+                startThreeDots()
             }
             .delay(0)
             .duration(3000)

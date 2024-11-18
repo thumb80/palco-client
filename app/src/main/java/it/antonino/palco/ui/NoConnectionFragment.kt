@@ -1,5 +1,6 @@
 package it.antonino.palco.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,17 +28,13 @@ class NoConnectionFragment: Fragment() {
         if (viewModel.batchEnded.value == false) {
             batchErrorBinding = FragmentBatchErrorBinding.inflate(layoutInflater)
             batchErrorBinding.noConnectionHint.setOnClickListener {
-                (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, AdviceFragment())
-                    .commit()
+                startActivity(Intent(requireContext(), PalcoActivity::class.java))
             }
             return batchErrorBinding.root
         } else {
             noConnectionBinding = FragmentNoConnectionBinding.inflate(layoutInflater)
             noConnectionBinding.noConnectionHint.setOnClickListener {
-                (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, AdviceFragment())
-                    .commit()
+                startActivity(Intent(requireContext(), PalcoActivity::class.java))
             }
             return noConnectionBinding.root
         }

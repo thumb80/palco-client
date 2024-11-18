@@ -12,6 +12,7 @@ import it.antonino.palco.PalcoActivity
 import it.antonino.palco.PalcoApplication.Companion.sharedPreferences
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentAdviceBinding
+import it.antonino.palco.util.Constant.checkNewDay
 import kotlin.system.exitProcess
 
 class AdviceFragment: Fragment() {
@@ -32,6 +33,7 @@ class AdviceFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (sharedPreferences?.getBoolean("ok_consent", false) == true) {
+            checkNewDay(requireContext())
             (activity as PalcoActivity).supportFragmentManager.beginTransaction()
                 .replace(R.id.container, ConcertiFragment())
                 .commit()
@@ -40,6 +42,7 @@ class AdviceFragment: Fragment() {
             dialog.setView(R.layout.dialog_advice)
             dialog.setPositiveButton(R.string.ok_consent, object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
+                    checkNewDay(requireContext())
                     sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
                     p0?.cancel()
                     (activity as PalcoActivity).supportFragmentManager.beginTransaction()

@@ -6,9 +6,9 @@
     <string name="disclaimer_title">Attenzione</string>
     <string name="disclaimer">L\'app Palco ha il solo scopo di informativa sui concerti nazionali e non riserva nessun diritto sugli eventi pubblicati, sull\'organizzazione nè sulla vendita dei biglietti.</string>
     <string name="db_init">Sto cercando i concerti …</string>
-    <string name="db_initialized">Concerti trovati</string>
+    <string name="db_initialized">Eventi recuperati %1$s</string>
     <string name="db_not_init">Ops … c\'è stato un problema</string>
-    <string name="concerti_nazionali">Concerti</string>
+    <string name="concerti_nazionali">Eventi</string>
     <string name="concerti_filter">Filtri</string>
     <string name="prev_month">Mese precedente</string>
     <string name="next_month">Mese successivo</string>
@@ -36,4 +36,5 @@
     <string name="no_connection">Non sei connesso alla rete, controlla le impostazioni</string>
     <string name="batch_error_string">C\'è stato un problema nel recupero dei concerti</string>
     <string name="batch_error_hint">Riprova</string>
+    <string name="courtesy_message">Attendere, recupero degli eventi in corso</string>
 </resources>

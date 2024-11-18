@@ -1,5 +1,6 @@
 package it.antonino.palco.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eftimoff.androipathview.PathView
+import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.databinding.FragmentFilterArtistBinding
@@ -51,7 +53,21 @@ class FilterArtistFragment : Fragment() {
             binding.animation.visibility = View.INVISIBLE
         }
 
+        viewModel.isNewDay.observe(viewLifecycleOwner) {
+            if (it) {
+                hideConcerti()
+                startAnimation()
+            }
+        }
+
         richPath = binding.animation
+
+        val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
+
+        if (file?.exists() == true && prefs?.getBoolean("isNewDay", false) == false) {
+            viewModel.getAllArtist()
+            binding.animation.visibility = View.INVISIBLE
+        }
 
         return binding.root
     }

@@ -14,8 +14,8 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 21
         targetSdk = 34
-        versionCode = 44
-        versionName = "3.2"
+        versionCode = 45
+        versionName = "3.3"
 
         ndk {
             // On Apple silicon, you can omit x86_64.
