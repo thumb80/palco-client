@@ -14,7 +14,7 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 21
         targetSdk = 34
-        versionCode = 46
+        versionCode = 47
         versionName = "3.3"
 
         ndk {
@@ -77,7 +77,15 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.eftimoff:android-pathview:1.0.8@aar")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
+    testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
+    testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:${rootProject.extra["mockito_kotlin_version"]}")
+    testImplementation("io.mockk:mockk:${rootProject.extra["mockkVersion"]}")
+    testImplementation("io.insert-koin:koin-test:4.0.2")
+    testImplementation("io.insert-koin:koin-test-junit4:4.0.2")
+    androidTestImplementation("io.insert-koin:koin-test-jvm:4.0.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test:runner:1.6.2")
 }

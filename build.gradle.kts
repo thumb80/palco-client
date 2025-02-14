@@ -12,5 +12,10 @@ buildscript {
         set("koin_version","4.0.0")
         set("crypto_version", "1.1.0-alpha06")
         set("work_version", "2.9.1")
+        set("junit_version", "4.13.2")
+        set("androidx_test_version","1.6.1")
+        set("mockito_version","5.12.0")
+        set("mockito_kotlin_version","4.0.0")
+        set("mockkVersion","1.4.1")
     }
 }

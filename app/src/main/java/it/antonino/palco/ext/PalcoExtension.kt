@@ -1,5 +1,6 @@
 package it.antonino.palco.ext
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.view.View
@@ -9,18 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import it.antonino.palco.PalcoApplication
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
-import java.time.Instant
 import java.util.Date
 
-fun SharedPreferences?.getShared(): SharedPreferences {
-    val masterKey = MasterKey.Builder(PalcoApplication.instance)
+fun SharedPreferences?.getShared(context: Context): SharedPreferences {
+    val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
     return EncryptedSharedPreferences.create(
-        PalcoApplication.instance,
+        context,
         "palco_prefs",
         masterKey,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
@@ -31,7 +30,7 @@ fun SharedPreferences?.getShared(): SharedPreferences {
 fun String?.getDate(): Date? {
     return try {
         this?.let {
-            Constant.dateTimeDateFormat.parse(it)
+            Constant.concertoDateFormat.parse(it)
         }
     } catch (e: Exception) {
         return null

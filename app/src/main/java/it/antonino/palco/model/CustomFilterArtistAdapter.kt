@@ -137,7 +137,7 @@ class CustomFilterArtistAdapter(
             concerti[position]?.city,
             concerti[position]?.place,
             concerti[position]?.time?.let { time ->
-                SimpleDateFormat("yyyy-MM-dd", Locale.ITALY).parse(time)
+                SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).parse(time)
             },
             artistThumb,
             artistInfo

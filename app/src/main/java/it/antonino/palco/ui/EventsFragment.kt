@@ -262,7 +262,7 @@ class EventsFragment: Fragment() {
                 .commit()
         }
         else {
-            setScrapeCanzoniBatch()
+            setScrapeGothBatch()
         }
     }
 
@@ -298,6 +298,7 @@ class EventsFragment: Fragment() {
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
+        PalcoApplication.concerti = arrayListOf()
         checkGothWorker()
     }
 
@@ -389,7 +390,7 @@ class EventsFragment: Fragment() {
                         Log.d(tag, "checkRockShockWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        if (!viewModel.getAllConcerti().isEmpty()) {
+                        if (viewModel.getAllConcerti().isNotEmpty()) {
                             viewModel.setBatchEnded(true)
                             val concerti = viewModel.getAllConcerti()
                             viewModel.setConcerti(
