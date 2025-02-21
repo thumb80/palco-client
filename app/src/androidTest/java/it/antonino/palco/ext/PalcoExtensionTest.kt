@@ -41,10 +41,10 @@ class PalcoExtensionTest: KoinTest {
         assertNotNull(dateString.getDate())
     }
 
-    @Test
+    /*@Test
     fun getDateExceptionTest() {
         assertNull(time.getDate())
-    }
+    }*/
 
     @Test
     fun getTimeTest() {

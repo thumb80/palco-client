@@ -64,9 +64,9 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
             if (constraint == null || constraint.isEmpty()) {
                 initialCityDataList.let { filteredList.addAll(it) }
             } else {
-                val query = constraint.toString().trim().toLowerCase()
+                val query = constraint.toString().trim().lowercase()
                 initialCityDataList.forEach {
-                    if (it.toLowerCase(Locale.ROOT).contains(query)) {
+                    if (it.lowercase(Locale.ROOT).contains(query)) {
                         filteredList.add(it)
                     }
                 }

@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -41,9 +40,9 @@ import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.CustomAdapter
 import it.antonino.palco.model.CustomSnapHelper
-import it.antonino.palco.model.workers.ScrapeCanzoniWorker
-import it.antonino.palco.model.workers.ScrapeGothWorker
-import it.antonino.palco.model.workers.ScrapeRockolWorker
+import it.antonino.palco.workers.ScrapeCanzoniWorker
+import it.antonino.palco.workers.ScrapeGothWorker
+import it.antonino.palco.workers.ScrapeRockolWorker
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import it.antonino.palco.viewmodel.SharedViewModel

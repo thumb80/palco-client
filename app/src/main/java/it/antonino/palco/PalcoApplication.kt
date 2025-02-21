@@ -7,6 +7,7 @@ import it.antonino.palco.ext.getShared
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.network.monitor.NetworkMonitor
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import java.io.File
 
@@ -30,6 +31,7 @@ class PalcoApplication: Application() {
 
         startKoin {
             androidContext(this@PalcoApplication)
+            workManagerFactory()
             modules(appModule)
         }
 

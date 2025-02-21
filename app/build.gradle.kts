@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "it.antonino.palco"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "it.antonino.palco"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 47
         versionName = "3.3"
 
@@ -47,7 +47,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    buildToolsVersion = "30.0.3"
+    buildToolsVersion = "35.0.0"
 }
 
 chaquopy {
@@ -61,11 +61,12 @@ chaquopy {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("io.insert-koin:koin-android:${rootProject.extra["koin_version"]}")
     implementation("io.insert-koin:koin-core-viewmodel:${rootProject.extra["koin_version"]}")
+    implementation("io.insert-koin:koin-androidx-workmanager:${rootProject.extra["koin_version"]}")
     implementation("androidx.security:security-crypto-ktx:${rootProject.extra["crypto_version"]}")
     implementation("androidx.work:work-runtime:${rootProject.extra["work_version"]}")
     implementation("androidx.work:work-runtime-ktx:${rootProject.extra["work_version"]}")
@@ -77,6 +78,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.eftimoff:android-pathview:1.0.8@aar")
+    implementation("androidx.test.ext:junit-ktx:1.2.1")
+    implementation("androidx.work:work-testing:2.10.0")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
@@ -88,4 +91,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.test:runner:1.6.2")
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }

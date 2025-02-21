@@ -1,5 +1,8 @@
 package it.antonino.palco.di
 
+import it.antonino.palco.workers.ScrapeCanzoniWorker
+import it.antonino.palco.workers.ScrapeGothWorker
+import it.antonino.palco.workers.ScrapeRockolWorker
 import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.network.WikiPediaAPI
@@ -10,6 +13,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.workmanager.dsl.worker
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +21,7 @@ import java.util.concurrent.TimeUnit
 
 val appModule = module {
 
-    // Network Dependencies
+    // Network
     single {
         NetworkRepository.getInstance(get(),get())
     }
@@ -55,8 +59,17 @@ val appModule = module {
         get<Retrofit>()
             .create(WikiPediaAPI::class.java)
     }
-
-    // ViewModel Dependency
+    // ViewModel
     viewModel { SharedViewModel(get()) }
+    // WorkManager
+    worker {
+        ScrapeCanzoniWorker(get(), get())
+    }
+    worker {
+        ScrapeGothWorker(get(), get())
+    }
+    worker {
+        ScrapeRockolWorker(get(), get())
+    }
 
 }

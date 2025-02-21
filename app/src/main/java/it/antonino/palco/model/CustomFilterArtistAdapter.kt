@@ -43,7 +43,7 @@ class CustomFilterArtistAdapter(
                 SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(
                     it
                 )
-            }).substring(0,1).toUpperCase() + org.apache.commons.lang3.StringEscapeUtils.unescapeJava(time?.let {
+            }).substring(0,1).uppercase() + org.apache.commons.lang3.StringEscapeUtils.unescapeJava(time?.let {
                 SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(
                     it
                 )

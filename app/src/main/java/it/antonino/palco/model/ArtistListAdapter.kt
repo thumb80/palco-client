@@ -67,9 +67,9 @@ class ArtistListAdapter(val artists: ArrayList<String>, val  listener: (String) 
             if (constraint == null || constraint.isEmpty()) {
                 initialArtistDataList.let { filteredList.addAll(it) }
             } else {
-                val query = constraint.toString().trim().toLowerCase()
+                val query = constraint.toString().trim().lowercase()
                 initialArtistDataList.forEach {
-                    if (it.toLowerCase(Locale.ROOT).contains(query)) {
+                    if (it.lowercase(Locale.ROOT).contains(query)) {
                         filteredList.add(it)
                     }
                 }
