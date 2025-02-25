@@ -42,9 +42,9 @@ class AdviceFragment: Fragment() {
             dialog.setView(R.layout.dialog_advice)
             dialog.setPositiveButton(R.string.ok_consent, object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
+                    p0?.cancel()
                     checkNewDay(requireContext())
                     sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
-                    p0?.cancel()
                     (activity as PalcoActivity).supportFragmentManager.beginTransaction()
                         .replace(R.id.container, ConcertiFragment())
                         .commit()
@@ -53,6 +53,7 @@ class AdviceFragment: Fragment() {
             })
             dialog.setNegativeButton(R.string.no_consent, object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
+                    p0?.cancel()
                     exitProcess(0)
                 }
             })

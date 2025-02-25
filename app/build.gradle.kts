@@ -14,7 +14,7 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 21
         targetSdk = 35
-        versionCode = 47
+        versionCode = 48
         versionName = "3.3"
 
         ndk {

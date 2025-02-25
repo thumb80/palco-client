@@ -29,7 +29,6 @@ import com.google.gson.JsonParser
 import it.antonino.palco.PalcoActivity
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.PalcoApplication.Companion.file
-import it.antonino.palco.PalcoApplication.Companion.networkMonitor
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.CustomDialog
@@ -119,7 +118,7 @@ class EventsFragment: Fragment() {
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
                 selectedDayInstance = dateClicked
-                if (viewModel.batchEnded.value == true) {
+                if (viewModel.batchEnded.value != false) {
                     if (dateClicked?.compareDate() == false) {
                         hideEmpty()
                         displayCurrentEvents(dateClicked)
@@ -136,11 +135,11 @@ class EventsFragment: Fragment() {
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
                 if (firstDayOfNewMonth?.isActualMonth() == true) {
                     binding.calendarView.setCurrentDate(currentDayInstance?.time)
-                    if (viewModel.batchEnded.value == true)
+                    if (viewModel.batchEnded.value != false)
                         displayCurrentEvents(currentDayInstance?.time)
                 } else {
                     binding.calendarView.setCurrentDate(firstDayOfNewMonth)
-                    if (viewModel.batchEnded.value == true)
+                    if (viewModel.batchEnded.value != false)
                         displayCurrentEvents(firstDayOfNewMonth)
                 }
             }
@@ -174,7 +173,7 @@ class EventsFragment: Fragment() {
                 hideAll()
                 startAnimation()
                 startThreeDots()
-                checkIfBatchCanRun()
+                setScrapeGothBatch()
             }
         }
 
@@ -251,18 +250,6 @@ class EventsFragment: Fragment() {
         binding.animation.visibility = View.VISIBLE
         binding.courtesyMessage.visibility = View.VISIBLE
         binding.threeDots.visibility = View.VISIBLE
-    }
-
-    private fun checkIfBatchCanRun() {
-        if (networkMonitor?.isNetworkAvailable() == false) {
-            Toast.makeText(requireContext(), getString(R.string.no_connection_hint), Toast.LENGTH_LONG).show()
-            (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                .replace(R.id.container, NoConnectionFragment())
-                .commit()
-        }
-        else {
-            setScrapeGothBatch()
-        }
     }
 
     private fun setScrapeCanzoniBatch() {

@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import it.antonino.palco.di.appModule
 import it.antonino.palco.ext.getShared
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.network.monitor.NetworkMonitor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
@@ -18,7 +17,6 @@ class PalcoApplication: Application() {
         lateinit var instance: PalcoApplication
         lateinit var concerti: ArrayList<Concerto>
         var sharedPreferences: SharedPreferences? = null
-        var networkMonitor: NetworkMonitor? = null
         var file: File? = null
     }
 
