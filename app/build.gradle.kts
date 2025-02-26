@@ -87,6 +87,7 @@ dependencies {
     testImplementation("io.mockk:mockk:${rootProject.extra["mockkVersion"]}")
     testImplementation("io.insert-koin:koin-test:4.0.2")
     testImplementation("io.insert-koin:koin-test-junit4:4.0.2")
+    testImplementation("android.arch.core:core-testing:1.1.1")
     androidTestImplementation("io.insert-koin:koin-test-jvm:4.0.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
