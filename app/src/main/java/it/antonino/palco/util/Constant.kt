@@ -19,9 +19,9 @@ object Constant {
     const val greenColorRGB = 90
     const val blueColorRGB = 36
     const val cacheSize = (5 * 1024 * 1024).toLong()
+    const val roundRadius = 12
     val monthDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ITALY)
     val shareDateFormat = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY)
-    val dateTimeDateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ITALY)
     val actualDateFormat = SimpleDateFormat("yyyy-MM", Locale.ITALY)
     val concertoDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ITALY)
     val gson: Gson = Gson()

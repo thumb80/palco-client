@@ -1,27 +1,34 @@
 package it.antonino.palco.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.JsonElement
 import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoFilterArtistViewBinding
 import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.ConcertRow
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
+private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
 class CustomFilterArtistAdapter(
     val concerti: ArrayList<Concerto?>,
     val listener: (ConcertRow) -> Unit
 ) : RecyclerView.Adapter<CustomFilterArtistAdapter.FilterArtistListViewHolder>() {
 
+    private val context: Context by inject(Context::class.java)
     private var artistThumb: String? = null
     private var artistInfo: String? = null
 
@@ -62,7 +69,7 @@ class CustomFilterArtistAdapter(
                 artistInfo = null
             )
 
-            /*viewModel.getArtistThumb(concerto.artist).observeForever {
+            viewModel.getArtistThumb(concerto.artist).observeForever {
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                     artistThumb = it.get("results")
                         ?.asJsonArray
@@ -72,17 +79,17 @@ class CustomFilterArtistAdapter(
                     if (artistThumb?.contains(".gif") == true) {
                         binding.artistImage.setImageDrawable(
                             ResourcesCompat.getDrawable(
-                                PalcoApplication.instance.resources,
+                                context.resources,
                                 R.drawable.placeholder_scheda, null)
                         )
                     } else {
                         concertRow.addArtistThumb(artistThumb)
                         Glide
-                            .with(PalcoApplication.instance)
+                            .with(context)
                             .load(artistThumb)
                             .transform(RoundedCorners(roundRadius))
                             .error(ResourcesCompat.getDrawable(
-                                PalcoApplication.instance.resources,
+                                context.resources,
                                 R.drawable.placeholder_scheda, null)
                             )
                             .into(binding.artistImage)
@@ -92,13 +99,13 @@ class CustomFilterArtistAdapter(
                     artistThumb = null
                     binding.artistImage.setImageDrawable(
                         ResourcesCompat.getDrawable(
-                            PalcoApplication.instance.resources,
+                            context.resources,
                             R.drawable.placeholder_scheda,
                             null
                         )
                     )
                 }
-            }*/
+            }
 
             viewModel.getArtistInfos(mArtist).observeForever {
                 if (it?.isJsonNull == false) {

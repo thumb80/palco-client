@@ -14,14 +14,9 @@ import java.io.File
 class PalcoApplication: Application() {
 
     companion object {
-        lateinit var instance: PalcoApplication
         lateinit var concerti: ArrayList<Concerto>
         var sharedPreferences: SharedPreferences? = null
         var file: File? = null
-    }
-
-    init {
-        instance = this
     }
 
     override fun onCreate() {

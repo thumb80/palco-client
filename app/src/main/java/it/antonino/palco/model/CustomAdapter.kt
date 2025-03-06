@@ -1,15 +1,22 @@
 package it.antonino.palco.model
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoCardViewBinding
 import it.antonino.palco.ext.getDate
+import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
@@ -21,6 +28,7 @@ class CustomAdapter(
     private var artistThumb: String? = null
     private var artistInfo: String? = null
     private lateinit var binding: ConcertoCardViewBinding
+    private val context: Context by inject(Context::class.java)
 
     inner class ConcertiViewHolder(
         val binding: ConcertoCardViewBinding
@@ -45,6 +53,45 @@ class CustomAdapter(
                 artistThumb = null,
                 artistInfo = null
             )
+
+            viewModel.getArtistThumb(artist).observeForever {
+                if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
+                    artistThumb = it.get("results")
+                        ?.asJsonArray
+                        ?.get(0)
+                        ?.asJsonObject
+                        ?.get("cover_image")?.asString
+                    if (artistThumb?.contains(".gif") == true) {
+                        binding.roundedImageView.setImageDrawable(
+                            ResourcesCompat.getDrawable(
+                                context.resources,
+                                R.drawable.placeholder_scheda, null)
+                        )
+                    } else {
+                        concertRow.addArtistThumb(artistThumb)
+                        Glide
+                            .with(context)
+                            .load(artistThumb)
+                            .transform(RoundedCorners(roundRadius))
+                            .error(
+                                ResourcesCompat.getDrawable(
+                                context.resources,
+                                R.drawable.placeholder_scheda, null)
+                            )
+                            .into(binding.roundedImageView)
+                    }
+                }
+                else  {
+                    artistThumb = null
+                    binding.roundedImageView.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            context.resources,
+                            R.drawable.placeholder_scheda,
+                            null
+                        )
+                    )
+                }
+            }
 
             viewModel.getArtistInfos(org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)).observeForever {
                 if (it?.isJsonNull == false) {

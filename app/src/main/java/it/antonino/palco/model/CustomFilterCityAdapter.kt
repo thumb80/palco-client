@@ -1,12 +1,19 @@
 package it.antonino.palco.model
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.JsonElement
+import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoFilterCityViewBinding
+import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -20,6 +27,8 @@ class CustomFilterCityAdapter(
     private var artistThumb: String? = null
     private var artistInfo: String? = null
     private lateinit var binding: ConcertoFilterCityViewBinding
+
+    private val context: Context by inject(Context::class.java)
 
     inner class FilterCityListViewHolder(
         val binding: ConcertoFilterCityViewBinding
@@ -55,7 +64,7 @@ class CustomFilterCityAdapter(
                 artistInfo = null
             )
 
-            /*viewModel.getArtistThumb(concerto.artist).observeForever {
+            viewModel.getArtistThumb(concerto.artist).observeForever {
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                     artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                     concertRow.addArtistThumb(artistThumb)
@@ -84,7 +93,7 @@ class CustomFilterCityAdapter(
                         )
                     )
                 }
-            }*/
+            }
 
             viewModel.getArtistInfos(mArtist).observeForever {
                 if (it?.isJsonNull == false) {

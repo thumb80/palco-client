@@ -18,8 +18,11 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 24
         targetSdk = 35
-        versionCode = 49
-        versionName = "3.3"
+        versionCode = 50
+        versionName = "4.0"
+
+        buildConfigField("String", "DiscogsApiKey", "\"gyiIPkAvdwbSPfMpHIvl\"")
+        buildConfigField("String","DiscogsSecret", "\"RoZqHSqfZiqBrYTDEXywSYhdGKVvqmQI\"")
 
         ndk {
             // On Apple silicon, you can omit x86_64.
@@ -57,7 +60,10 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
+
+    useLibrary("android.test.mock")
 
     buildToolsVersion = "35.0.0"
 
@@ -116,6 +122,7 @@ dependencies {
     implementation("com.eftimoff:android-pathview:1.0.8@aar")
     implementation("androidx.test.ext:junit-ktx:1.2.1")
     implementation("androidx.work:work-testing:2.10.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")

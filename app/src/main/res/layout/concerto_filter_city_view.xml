@@ -13,28 +13,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/filter_guideline"
-        android:layout_width="@dimen/dp_2"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintGuide_percent="0.45"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/filter_end_guideline"
-        android:layout_width="@dimen/dp_2"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintGuide_percent="1"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/card_view_background_accent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -50,16 +31,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/roundedImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/placeholder_scheda" />
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <TextView
-            tools:text="Artista"
+            tools:text="City"
             android:id="@+id/artist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -69,7 +44,7 @@
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/place"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,29 +62,39 @@
             android:fontFamily="@font/gotham_bold"
             android:layout_gravity="center_horizontal"
             android:maxLines="2"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
             app:layout_constraintTop_toBottomOf="@+id/artist"
-            app:layout_constraintBottom_toTopOf="@+id/time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <ImageView
+            android:id="@+id/artistImage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_500"
+            android:scaleType="fitXY"
+            android:src="@drawable/placeholder_scheda"
+            app:layout_constraintTop_toBottomOf="@+id/place"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/time"/>
+
         <TextView
-            tools:text="Sabato 22 Luglio 2023"
             android:id="@+id/time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_4"
-            android:textStyle="bold"
-            android:textSize="@dimen/sp_22"
-            android:textAlignment="center"
-            android:fontFamily="@font/gotham_bold"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_4"
+            android:fontFamily="@font/gotham_bold"
             android:maxLines="2"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@+id/place"
+            android:textAlignment="center"
+            android:textSize="@dimen/sp_22"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/artistImage"
+            tools:text="Sabato 22 Luglio 2023" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
