@@ -1,9 +1,13 @@
+import com.android.build.gradle.internal.packaging.defaultExcludes
+import org.gradle.internal.impldep.bsh.commands.dir
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.chaquo.python")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    id("jacoco")
 }
 
 android {
@@ -12,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "it.antonino.palco"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 35
         versionCode = 49
         versionName = "3.3"
@@ -26,6 +30,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(
@@ -37,17 +45,45 @@ android {
             }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         viewBinding = true
     }
+
     buildToolsVersion = "35.0.0"
+
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+tasks {
+    val jacocoTestReport by registering(org.gradle.testing.jacoco.tasks.JacocoReport::class) {
+        dependsOn("testDebugUnitTest") // O il task che vuoi eseguire per i test
+
+        reports {
+            xml.required = true
+            html.required = true
+            html.outputLocation = file("build/jacoco/reports/jacoco/testDebugUnitTest/html")
+        }
+
+        val fileFilter = arrayOf("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
+
+        sourceDirectories = files(arrayOf("src/main/java"))
+
+
+        executionData = files("build/jacoco/testDebugUnitTest.exec")
+    }
 }
 
 chaquopy {
@@ -93,6 +129,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.test:runner:1.6.2")
 }
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)

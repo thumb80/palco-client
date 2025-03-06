@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @RunWith(AndroidJUnit4::class)
 class SharedViewModelTest: KoinTest {
@@ -34,12 +35,12 @@ class SharedViewModelTest: KoinTest {
 
     @Test
     fun getByArtistsTest() {
-        assertNotNull(viewModel.getAllByArtist(concerti[0].artist))
+        assert(viewModel.getAllByArtist("test").isEmpty())
     }
 
     @Test
     fun getByCityTest() {
-        assertNotNull(viewModel.getAllByCity(concerti[0].city))
+        assert(viewModel.getAllByCity("test").isEmpty())
     }
 
     @Test

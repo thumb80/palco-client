@@ -25,7 +25,6 @@ class SharedViewModelTest: KoinTest {
     private lateinit var context: PalcoApplication
     @get:Rule
     val rule = InstantTaskExecutorRule()
-
     private val viewModel: SharedViewModel by inject()
 
     @Before

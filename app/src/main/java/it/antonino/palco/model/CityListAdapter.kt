@@ -18,7 +18,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
 
 
     private lateinit var binding: CityListBinding
-    private var cities: ArrayList<String?>? = null
+    var cities: ArrayList<String?>? = null
 
     val initialCityDataList = ArrayList<String>().apply {
         city?.let { addAll(it) }
