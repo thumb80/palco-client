@@ -111,6 +111,8 @@
                 android:orientation="horizontal"
                 android:visibility="invisible"
                 tools:visibility="invisible"
+                android:paddingStart="@dimen/dp_24"
+                android:paddingEnd="@dimen/dp_24"
                 android:paddingTop="@dimen/dp_12"
                 android:paddingBottom="@dimen/dp_12"
                 android:contentDescription="@string/concerti_recycler"

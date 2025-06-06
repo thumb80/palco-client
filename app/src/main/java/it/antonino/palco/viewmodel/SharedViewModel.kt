@@ -16,13 +16,20 @@ import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.network.NetworkRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.lang.reflect.Type
 import java.nio.charset.Charset
 
 class SharedViewModel(private val networkRepository: NetworkRepository): ViewModel() {
+
+    private val _isTargetHour = MutableStateFlow(false)
+    val isTargetHour: StateFlow<Boolean> = _isTargetHour
 
     private var _isNewDay: MutableLiveData<Boolean> = MutableLiveData()
     val isNewDay: LiveData<Boolean> = _isNewDay
@@ -44,6 +51,27 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
     private var _concertiFilterArtist: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
     val concertiFilterArtist: LiveData<ArrayList<Concerto>> = _concertiFilterArtist
+
+    private val targetHour = 4
+    private val tagetMinute = 20
+
+    init {
+        scheduleNextCheck()
+    }
+
+    fun scheduleNextCheck() {
+        viewModelScope.launch {
+            checkHour()
+            delay(60_000L) // Delay for 1 minute
+            scheduleNextCheck()
+        }
+    }
+
+    fun checkHour() {
+        val currentHour = LocalDateTime.now().hour
+        val currntMinute = LocalDateTime.now().minute
+        _isTargetHour.value = currentHour == targetHour && currntMinute == tagetMinute
+    }
 
     fun setIsNewDay(value: Boolean) {
         _isNewDay.postValue(value)
@@ -110,13 +138,13 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
         return ret
     }
 
-    fun scrapeCanzoni(context: Context) {
+    fun scrape01(context: Context) {
         runBlocking(Dispatchers.IO) {
             if (!Python.isStarted())
                 Python.start(AndroidPlatform(context))
             val py = Python.getInstance()
             val pyObj = py.getModule("batch")
-            val message = pyObj.callAttr("scrapeCanzoni")
+            val message = pyObj.callAttr("scrape01")
             println(message)
             val gson: Gson = Gson().newBuilder().create()
             val collectionType: Type =
@@ -131,13 +159,13 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
         }
     }
 
-    fun scrapeGoth(context: Context) {
+    fun scrape02(context: Context) {
         runBlocking(Dispatchers.IO) {
             if (!Python.isStarted())
                 Python.start(AndroidPlatform(context))
             val py = Python.getInstance()
             val pyObj = py.getModule("batch")
-            val message = pyObj.callAttr("scrapeGoth")
+            val message = pyObj.callAttr("scrape02")
             println(message)
             val gson: Gson = Gson().newBuilder().create()
             val collectionType: Type =

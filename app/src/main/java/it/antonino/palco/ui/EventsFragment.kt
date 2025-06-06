@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Constraints
@@ -26,7 +29,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
-import it.antonino.palco.PalcoActivity
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.R
@@ -39,12 +41,14 @@ import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.CustomAdapter
 import it.antonino.palco.model.CustomSnapHelper
-import it.antonino.palco.workers.ScrapeCanzoniWorker
-import it.antonino.palco.workers.ScrapeGothWorker
+import it.antonino.palco.model.HorizontalSpaceItemDecoration
+import it.antonino.palco.workers.Scrape01Worker
+import it.antonino.palco.workers.Scrape02Worker
 import it.antonino.palco.workers.ScrapeRockolWorker
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import it.antonino.palco.viewmodel.SharedViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.util.Calendar
 import java.util.Date
@@ -173,7 +177,20 @@ class EventsFragment: Fragment() {
                 hideAll()
                 startAnimation()
                 startThreeDots()
-                setScrapeGothBatch()
+                setScrapeCanzoniBatch()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isTargetHour.collect { isTarget ->
+                    if (isTarget) {
+                        hideAll()
+                        startAnimation()
+                        startThreeDots()
+                        setScrapeCanzoniBatch()
+                    }
+                }
             }
         }
 
@@ -203,6 +220,8 @@ class EventsFragment: Fragment() {
                 dialog.show(childFragmentManager,null)
 
             }
+            val spacing = resources.getDimensionPixelSize(R.dimen.recycler_item_spacing)
+            binding.concertiRecycler.addItemDecoration(HorizontalSpaceItemDecoration(spacing))
             binding.concertiRecycler.adapter = adapter
             hideEmpty()
         }
@@ -256,7 +275,7 @@ class EventsFragment: Fragment() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeCanzoniWorker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<Scrape01Worker>()
             .setConstraints(constraints)
             .build()
         workCanzoniRequestId = scrapeWork.id
@@ -266,7 +285,7 @@ class EventsFragment: Fragment() {
             scrapeWork
         )
 
-        PalcoApplication.concerti = arrayListOf()
+        //PalcoApplication.concerti = arrayListOf()
 
         checkCanzoniWorker()
     }
@@ -275,7 +294,7 @@ class EventsFragment: Fragment() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeGothWorker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<Scrape02Worker>()
             .setConstraints(constraints)
             .build()
         workGothRequestId = scrapeWork.id
@@ -284,7 +303,7 @@ class EventsFragment: Fragment() {
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
-        PalcoApplication.concerti = arrayListOf()
+        //PalcoApplication.concerti = arrayListOf()
         checkGothWorker()
     }
 
@@ -320,6 +339,7 @@ class EventsFragment: Fragment() {
                         Log.d(tag, "checkCanzoniWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
+                        PalcoApplication.concerti = arrayListOf()
                         setScrapeGothBatch()
                         Log.d(tag, "checkCanzoniWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
@@ -340,11 +360,34 @@ class EventsFragment: Fragment() {
                         Log.d(tag, "checkGothWorker running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        setScrapeRockShockBatch()
-                        Log.d(tag, "checkGothWorker success in ${workInfo.runAttemptCount}")
+                        viewModel.setBatchEnded(true)
+                        val concerti = viewModel.getAllConcerti()
+                        viewModel.setConcerti(
+                            concerti
+                        )
+                        binding.animation.visibility = View.INVISIBLE
+                        binding.threeDots.visibility = View.INVISIBLE
+                        binding.courtesyMessage.visibility = View.INVISIBLE
+                        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        setScrapeRockShockBatch()
+                        if (viewModel.getAllConcerti().isNotEmpty()) {
+                            viewModel.setBatchEnded(true)
+                            val concerti = viewModel.getAllConcerti()
+                            viewModel.setConcerti(
+                                concerti
+                            )
+                            binding.animation.visibility = View.INVISIBLE
+                            binding.threeDots.visibility = View.INVISIBLE
+                            binding.courtesyMessage.visibility = View.INVISIBLE
+                            Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
+                        } else {
+                            viewModel.setBatchEnded(false)
+                            binding.animation.visibility = View.INVISIBLE
+                            binding.threeDots.visibility = View.INVISIBLE
+                            binding.courtesyMessage.visibility = View.INVISIBLE
+                            Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
+                        }
                         Log.d(tag, "checkGothWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
                     else -> Log.d(tag, "checkGothWorker canceled in ${workInfo?.runAttemptCount}")
@@ -399,6 +442,7 @@ class EventsFragment: Fragment() {
                 }
             })
     }
+
     private fun startAnimation() {
         richPath
             .pathAnimator

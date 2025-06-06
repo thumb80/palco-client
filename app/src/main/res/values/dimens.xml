@@ -22,6 +22,7 @@
     <dimen name="dp_334">334dp</dimen>
     <dimen name="dp_352">352dp</dimen>
     <dimen name="dp_500">500dp</dimen>
+    <dimen name="recycler_item_spacing">24dp</dimen>
 
     <dimen name="sp_2">2sp</dimen>
     <dimen name="sp_4">4sp</dimen>

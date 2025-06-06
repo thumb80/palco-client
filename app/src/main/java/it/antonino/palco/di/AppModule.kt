@@ -1,8 +1,7 @@
 package it.antonino.palco.di
 
-import android.content.Context
-import it.antonino.palco.workers.ScrapeCanzoniWorker
-import it.antonino.palco.workers.ScrapeGothWorker
+import it.antonino.palco.workers.Scrape01Worker
+import it.antonino.palco.workers.Scrape02Worker
 import it.antonino.palco.workers.ScrapeRockolWorker
 import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkRepository
@@ -64,10 +63,10 @@ val appModule = module {
     viewModel { SharedViewModel(get()) }
     // WorkManager
     worker {
-        ScrapeCanzoniWorker(get(), get())
+        Scrape01Worker(get(), get())
     }
     worker {
-        ScrapeGothWorker(get(), get())
+        Scrape02Worker(get(), get())
     }
     worker {
         ScrapeRockolWorker(get(), get())

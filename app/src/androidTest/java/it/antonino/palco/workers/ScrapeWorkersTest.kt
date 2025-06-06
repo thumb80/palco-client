@@ -24,7 +24,7 @@ class ScrapeWorkersTest {
 
     @Test
     fun scrapeGothTest() {
-        val worker = TestListenableWorkerBuilder<ScrapeGothWorker>(context).build()
+        val worker = TestListenableWorkerBuilder<Scrape02Worker>(context).build()
         runBlocking {
             val result = worker.doWork()
             assertNotNull(result)

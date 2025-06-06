@@ -2,6 +2,7 @@ package it.antonino.palco
 
 import android.app.Application
 import android.content.SharedPreferences
+import com.jakewharton.threetenabp.AndroidThreeTen
 import it.antonino.palco.di.appModule
 import it.antonino.palco.ext.getShared
 import it.antonino.palco.model.Concerto
@@ -28,6 +29,7 @@ class PalcoApplication: Application() {
             modules(appModule)
         }
 
+        AndroidThreeTen.init(this);
         sharedPreferences = sharedPreferences.getShared(this)
         file = File(cacheDir, "concerti.json")
     }

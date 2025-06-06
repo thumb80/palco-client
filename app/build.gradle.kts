@@ -1,5 +1,5 @@
-import com.android.build.gradle.internal.packaging.defaultExcludes
-import org.gradle.internal.impldep.bsh.commands.dir
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -10,6 +10,11 @@ plugins {
     id("jacoco")
 }
 
+val localProps = Properties()
+localProps.load(FileInputStream(file("../local.properties")))
+val discogsApiKey = localProps["discogsApiKey"] as String
+val discogsSecret = localProps["discogsSecret"] as String
+
 android {
     namespace = "it.antonino.palco"
     compileSdk = 35
@@ -18,11 +23,11 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 24
         targetSdk = 35
-        versionCode = 50
-        versionName = "4.0"
+        versionCode = 51
+        versionName = "4.20"
 
-        buildConfigField("String", "DiscogsApiKey", "\"gyiIPkAvdwbSPfMpHIvl\"")
-        buildConfigField("String","DiscogsSecret", "\"RoZqHSqfZiqBrYTDEXywSYhdGKVvqmQI\"")
+        buildConfigField("String", "DiscogsApiKey", discogsApiKey)
+        buildConfigField("String","DiscogsSecret", discogsSecret)
 
         ndk {
             // On Apple silicon, you can omit x86_64.
@@ -66,6 +71,7 @@ android {
     useLibrary("android.test.mock")
 
     buildToolsVersion = "35.0.0"
+    ndkVersion = "25.1.8937393"
 
 }
 
@@ -123,6 +129,7 @@ dependencies {
     implementation("androidx.test.ext:junit-ktx:1.2.1")
     implementation("androidx.work:work-testing:2.10.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
