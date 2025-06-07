@@ -18,6 +18,7 @@ class DotsItemDecoration(
     radius: Int,
     padding: Int,
     indicatorHeight: Int,
+    space: Int,
     @ColorInt colorInactive: Int,
     @ColorInt colorActive: Int
 ) : RecyclerView.ItemDecoration() {
@@ -27,6 +28,7 @@ class DotsItemDecoration(
     private val radius: Int
     private val inactivePaint = Paint()
     private val activePaint = Paint()
+    private val space = space
 
     var activePosition = 0
 
@@ -127,10 +129,10 @@ class DotsItemDecoration(
         @NotNull parent: RecyclerView,
         @NotNull state: RecyclerView.State
     ) {
-        super.getItemOffsets(outRect, view, parent, state)
-        if (parent.getChildAdapterPosition(view) == parent.adapter?.itemCount!!)
-            outRect.right = (parent.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-                .defaultDisplay.width/ defaultDisplayFactor
+
+        outRect.right = space
+        outRect.left = space
+
     }
 
     init {

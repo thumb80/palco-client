@@ -85,6 +85,7 @@ class EventsFragment: Fragment() {
             resources.getDimension(R.dimen.dp_4).toInt(),
             resources.getDimension(R.dimen.dp_6).toInt(),
             resources.getDimension(R.dimen.dp_8).toInt(),
+            resources.getDimension(R.dimen.recycler_item_spacing).toInt(),
             ResourcesCompat.getColor(resources, R.color.colorWhite, null),
             ResourcesCompat.getColor(resources, R.color.colorAccent, null)
         )
@@ -220,8 +221,7 @@ class EventsFragment: Fragment() {
                 dialog.show(childFragmentManager,null)
 
             }
-            val spacing = resources.getDimensionPixelSize(R.dimen.recycler_item_spacing)
-            binding.concertiRecycler.addItemDecoration(HorizontalSpaceItemDecoration(spacing))
+
             binding.concertiRecycler.adapter = adapter
             hideEmpty()
         }
