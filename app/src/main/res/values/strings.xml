@@ -17,6 +17,7 @@
     <string name="share_concert_string">C\'è un concerto \n%1$s a %2$s\n%3$s - %4$s\nScarica Palco per cercare altri concerti\nhttps://play.google.com/store/apps/details?id=it.antonino.palco</string>
     <string name="no_share_string">Non hai whatsapp per condividere il concerto</string>
     <string name="share_string">Invia su Whatsapp</string>
+    <string name="title_maps">Mappa</string>
     <string name="listen_button_string">Ascolta</string>
     <string name="info_string">Informazioni</string>
     <string name="filter_city">Città</string>
@@ -36,5 +37,5 @@
     <string name="no_connection">Non sei connesso alla rete, controlla le impostazioni</string>
     <string name="batch_error_string">C\'è stato un problema nel recupero dei concerti</string>
     <string name="batch_error_hint">Riprova</string>
-    <string name="courtesy_message">Attendere, recupero degli eventi in corso</string>
+    <string name="courtesy_message">Attendere... sto recuperando gli eventi</string>
 </resources>

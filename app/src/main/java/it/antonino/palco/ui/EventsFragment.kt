@@ -41,10 +41,8 @@ import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.CustomAdapter
 import it.antonino.palco.model.CustomSnapHelper
-import it.antonino.palco.model.HorizontalSpaceItemDecoration
 import it.antonino.palco.workers.Scrape01Worker
 import it.antonino.palco.workers.Scrape02Worker
-import it.antonino.palco.workers.ScrapeRockolWorker
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import it.antonino.palco.viewmodel.SharedViewModel
@@ -72,6 +70,7 @@ class EventsFragment: Fragment() {
     companion object {
         private var currentDayInstance: Calendar? = null
         private var selectedDayInstance: Date? = null
+        private var canClickDays: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,14 +121,16 @@ class EventsFragment: Fragment() {
         binding.calendarView.setListener(object :
             CompactCalendarView.CompactCalendarViewListener {
             override fun onDayClick(dateClicked: Date?) {
-                selectedDayInstance = dateClicked
-                if (viewModel.batchEnded.value != false) {
-                    if (dateClicked?.compareDate() == false) {
-                        hideEmpty()
-                        displayCurrentEvents(dateClicked)
+                if (canClickDays) {
+                    selectedDayInstance = dateClicked
+                    if (viewModel.batchEnded.value != false) {
+                        if (dateClicked?.compareDate() == false) {
+                            hideEmpty()
+                            displayCurrentEvents(dateClicked)
+                        }
+                        else
+                            showEmpty()
                     }
-                    else
-                        showEmpty()
                 }
             }
 
@@ -250,6 +251,14 @@ class EventsFragment: Fragment() {
             displayCurrentEvents(currentDayInstance?.time)
         else
             displayCurrentEvents(selectedDayInstance)
+
+        enableCalendarTouch(true)
+    }
+
+    private fun enableCalendarTouch(isEnabled: Boolean) {
+        binding.nextMonth.isEnabled = isEnabled
+        binding.prevMonth.isEnabled = isEnabled
+        canClickDays = isEnabled
     }
 
     private fun showEmpty() {
@@ -285,7 +294,7 @@ class EventsFragment: Fragment() {
             scrapeWork
         )
 
-        //PalcoApplication.concerti = arrayListOf()
+        enableCalendarTouch(false)
 
         checkCanzoniWorker()
     }
@@ -303,24 +312,8 @@ class EventsFragment: Fragment() {
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
-        //PalcoApplication.concerti = arrayListOf()
-        checkGothWorker()
-    }
 
-    private fun setScrapeRockShockBatch() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<ScrapeRockolWorker>()
-            .setConstraints(constraints)
-            .build()
-        workRockolRequestId = scrapeWork.id
-        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-            "it-antonino-scrape-rockol",
-            ExistingWorkPolicy.REPLACE,
-            scrapeWork
-        )
-        checkRockShockWorker()
+        checkGothWorker()
     }
 
     private fun checkCanzoniWorker() {
@@ -391,54 +384,6 @@ class EventsFragment: Fragment() {
                         Log.d(tag, "checkGothWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
                     else -> Log.d(tag, "checkGothWorker canceled in ${workInfo?.runAttemptCount}")
-                }
-            })
-    }
-
-    private fun checkRockShockWorker() {
-
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workRockolRequestId)
-            .observe(requireActivity(), Observer { workInfo ->
-                when (workInfo?.state) {
-                    WorkInfo.State.ENQUEUED -> {
-                        Log.d(tag, "checkRockShockWorker enqueued in ${workInfo.runAttemptCount}")
-                    }
-                    WorkInfo.State.RUNNING -> {
-                        Log.d(tag, "checkRockShockWorker running in ${workInfo.runAttemptCount}")
-                    }
-                    WorkInfo.State.SUCCEEDED -> {
-                        viewModel.setBatchEnded(true)
-                        val concerti = viewModel.getAllConcerti()
-                        viewModel.setConcerti(
-                            concerti
-                        )
-                        binding.animation.visibility = View.INVISIBLE
-                        binding.threeDots.visibility = View.INVISIBLE
-                        binding.courtesyMessage.visibility = View.INVISIBLE
-                        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
-                        Log.d(tag, "checkRockShockWorker success in ${workInfo.runAttemptCount}")
-                    }
-                    WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        if (viewModel.getAllConcerti().isNotEmpty()) {
-                            viewModel.setBatchEnded(true)
-                            val concerti = viewModel.getAllConcerti()
-                            viewModel.setConcerti(
-                                concerti
-                            )
-                            binding.animation.visibility = View.INVISIBLE
-                            binding.threeDots.visibility = View.INVISIBLE
-                            binding.courtesyMessage.visibility = View.INVISIBLE
-                            Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
-                        } else {
-                            viewModel.setBatchEnded(false)
-                            binding.animation.visibility = View.INVISIBLE
-                            binding.threeDots.visibility = View.INVISIBLE
-                            binding.courtesyMessage.visibility = View.INVISIBLE
-                            Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        }
-                        Log.d(tag, "checkRockShockWorker failed/blocked in ${workInfo.runAttemptCount}")
-                    }
-                    else -> Log.d(tag, "checkRockShockWorker canceled in ${workInfo?.runAttemptCount}")
                 }
             })
     }

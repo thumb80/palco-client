@@ -3,6 +3,8 @@ package it.antonino.palco.ext
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.location.Geocoder
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
@@ -12,7 +14,9 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
+import kotlinx.coroutines.runBlocking
 import java.util.Date
+import java.util.Locale
 
 fun SharedPreferences?.getShared(context: Context): SharedPreferences {
     val masterKey = MasterKey.Builder(context)
@@ -25,6 +29,34 @@ fun SharedPreferences?.getShared(context: Context): SharedPreferences {
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
+}
+
+fun String.getGeoPosition(context: Context): Pair<Double, Double>? {
+
+    val locationName = this
+    val geocoder = Geocoder(context, Locale.getDefault())
+    var ret: Pair<Double, Double>? = null
+
+    runBlocking {
+        try {
+            val addressList = geocoder.getFromLocationName(locationName, 1)
+            if (!addressList.isNullOrEmpty()) {
+                val address = addressList[0]
+                val latitude = address.latitude
+                val longitude = address.longitude
+
+                ret = Pair<Double, Double>(latitude, longitude)
+
+                Log.d("Geocoder", "Location: $locationName -> Lat: $latitude, Lon: $longitude")
+            } else {
+                Log.e("Geocoder", "Location not found")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    return ret
 }
 
 fun String?.getDate(): Date? {

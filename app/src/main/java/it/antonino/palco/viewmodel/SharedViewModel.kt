@@ -62,7 +62,7 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
     fun scheduleNextCheck() {
         viewModelScope.launch {
             checkHour()
-            delay(60_000L) // Delay for 1 minute
+            delay(60_000L)
             scheduleNextCheck()
         }
     }
@@ -151,7 +151,6 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 object : TypeToken<ArrayList<Concerto?>?>() {}.type
             val concerti: Collection<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
                 Charset.forName("UTF-8"))), collectionType)
-            println(concerti)
             PalcoApplication.concerti = concerti as ArrayList<Concerto>
             if (file?.exists() == true)
                 file?.writeText("")
@@ -166,41 +165,11 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
             val py = Python.getInstance()
             val pyObj = py.getModule("batch")
             val message = pyObj.callAttr("scrape02")
-            println(message)
             val gson: Gson = Gson().newBuilder().create()
             val collectionType: Type =
                 object : TypeToken<ArrayList<Concerto?>?>() {}.type
             val concerti: ArrayList<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
                 Charset.forName("UTF-8"))), collectionType)
-            println(concerti)
-            val temp : MutableList<Concerto> = mutableListOf()
-            try {
-                concerti.forEach {
-                    if (containsSpecificJsonValues(file, it))
-                        temp.add(it)
-                }
-                PalcoApplication.concerti.addAll(temp)
-            } catch (e: Exception) {
-                PalcoApplication.concerti.addAll(concerti)
-            }
-            file?.writeText(Gson().toJson(PalcoApplication.concerti))
-        }
-    }
-
-    fun scrapeRockShock(context: Context) {
-        runBlocking(Dispatchers.IO) {
-            if (!Python.isStarted())
-                Python.start(AndroidPlatform(context))
-            val py = Python.getInstance()
-            val pyObj = py.getModule("batch")
-            val message = pyObj.callAttr("scrapeRockShock")
-            println(message)
-            val gson: Gson = Gson().newBuilder().create()
-            val collectionType: Type =
-                object : TypeToken<ArrayList<Concerto?>?>() {}.type
-            val concerti: ArrayList<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
-                Charset.forName("UTF-8"))), collectionType)
-            println(concerti)
             val temp : MutableList<Concerto> = mutableListOf()
             try {
                 concerti.forEach {
@@ -217,7 +186,7 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
     fun containsSpecificJsonValues(file: File?, requiredValues: Concerto): Boolean {
         return try {
-            val content = file?.readText() // Read file content as a string
+            val content = file?.readText()
             val gson = Gson()
             val itemType = object : TypeToken<List<Concerto>>() {}.type
             val jsonMap: ArrayList<Concerto> = gson.fromJson(content, itemType) // Parse JSON as a map
@@ -229,7 +198,7 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
             return true
         } catch (e: JsonSyntaxException) {
-            false // Return false if parsing fails or keys don't match
+            false
         }
     }
 

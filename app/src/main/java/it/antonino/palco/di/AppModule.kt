@@ -1,13 +1,12 @@
 package it.antonino.palco.di
 
-import it.antonino.palco.workers.Scrape01Worker
-import it.antonino.palco.workers.Scrape02Worker
-import it.antonino.palco.workers.ScrapeRockolWorker
 import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.network.WikiPediaAPI
 import it.antonino.palco.util.Constant
 import it.antonino.palco.viewmodel.SharedViewModel
+import it.antonino.palco.workers.Scrape01Worker
+import it.antonino.palco.workers.Scrape02Worker
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -68,8 +67,4 @@ val appModule = module {
     worker {
         Scrape02Worker(get(), get())
     }
-    worker {
-        ScrapeRockolWorker(get(), get())
-    }
-
 }

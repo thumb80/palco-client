@@ -5,8 +5,11 @@
     <queries>
         <package android:name="com.whatsapp" />
     </queries>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
@@ -19,17 +22,35 @@
         android:roundIcon="@drawable/palco_launcher_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Palco"
-        tools:targetApi="34" >
+        tools:targetApi="36">
 
         <activity
             android:name=".PalcoActivity"
-            android:theme="@style/SplashScreenTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".maps.MapsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.OPENABLE"/>
+            </intent-filter>
+
+        </activity>
+
+        <meta-data
+            android:name="osmdroid.basePath"
+            android:value="osmdroid" />
+        <meta-data
+            android:name="osmdroid.cachePath"
+            android:value="osmdroid/tiles" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -41,7 +62,6 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
-
-     </application>
+    </application>
 
 </manifest>

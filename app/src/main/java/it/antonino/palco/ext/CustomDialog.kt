@@ -19,6 +19,7 @@ import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.fragment.app.DialogFragment
 import it.antonino.palco.R
 import it.antonino.palco.databinding.CustomDialogBinding
+import it.antonino.palco.maps.MapsActivity
 import it.antonino.palco.model.ConcertRow
 
 
@@ -57,6 +58,16 @@ class CustomDialog(
 
         binding.shareButton.setOnClickListener {
             shareConcert()
+        }
+
+        binding.mapsButton.setOnClickListener {
+            val locationName = concertRow.place + ", " + concertRow.city
+            val coordinates = locationName.getGeoPosition(requireContext())
+            val intent = Intent(requireContext(), MapsActivity::class.java)
+            intent.putExtra("latitude", coordinates?.first)
+            intent.putExtra("longitude", coordinates?.second)
+            intent.putExtra("locationName", locationName)
+            startActivity(intent)
         }
 
         builder.setView(binding.root)

@@ -8,6 +8,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
     id("jacoco")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 val localProps = Properties()
@@ -17,13 +18,13 @@ val discogsSecret = localProps["discogsSecret"] as String
 
 android {
     namespace = "it.antonino.palco"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "it.antonino.palco"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 52
+        targetSdk = 36
+        versionCode = 53
         versionName = "4.20"
 
         buildConfigField("String", "DiscogsApiKey", discogsApiKey)
@@ -130,6 +131,9 @@ dependencies {
     implementation("androidx.work:work-testing:2.10.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
