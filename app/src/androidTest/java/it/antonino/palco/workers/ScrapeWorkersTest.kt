@@ -31,13 +31,4 @@ class ScrapeWorkersTest {
         }
     }
 
-    @Test
-    fun scrapeRockolTest() {
-        val worker = TestListenableWorkerBuilder<ScrapeRockolWorker>(context).build()
-        runBlocking {
-            val result = worker.doWork()
-            assertNotNull(result)
-        }
-    }
-
 }

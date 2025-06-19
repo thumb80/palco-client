@@ -6,6 +6,18 @@
     android:padding="@dimen/dp_24"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/back_button"
+        android:layout_width="@dimen/dp_48"
+        android:layout_height="@dimen/dp_48"
+        android:padding="@dimen/dp_12"
+        android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/ic_icon_left"
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_marginStart="@dimen/dp_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <org.osmdroid.views.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"

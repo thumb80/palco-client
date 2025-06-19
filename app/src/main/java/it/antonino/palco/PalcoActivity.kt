@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import it.antonino.palco.databinding.ActivityMainBinding
 import it.antonino.palco.ui.AdviceFragment
+import androidx.activity.enableEdgeToEdge
 
 class PalcoActivity: AppCompatActivity() {
 
@@ -13,6 +14,7 @@ class PalcoActivity: AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.root)
 
         supportFragmentManager.beginTransaction()

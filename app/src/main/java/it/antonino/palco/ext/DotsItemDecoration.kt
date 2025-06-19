@@ -1,18 +1,15 @@
 package it.antonino.palco.ext
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.view.View
-import android.view.WindowManager
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.jetbrains.annotations.NotNull
-import it.antonino.palco.util.Constant.defaultDisplayFactor
 import it.antonino.palco.util.Constant.maximumCardNumber
+import org.jetbrains.annotations.NotNull
 
 class DotsItemDecoration(
     radius: Int,

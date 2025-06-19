@@ -10,132 +10,137 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/card_view_background_accent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintGuide_percent="0.03"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/filter_end_guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintGuide_percent="0.97"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/filter_guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintGuide_percent="0.2"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/filter_x_guideline"
-            android:layout_width="@dimen/dp_2"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintGuide_percent="0.8"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            android:alpha="0.3"
+            android:background="@color/colorPrimary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/artist"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/gotham_bold"
-            android:maxLines="2"
-            android:textColor="@color/colorPrimary"
-            android:textAlignment="center"
-            android:textSize="@dimen/sp_22"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/place"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Artista con nome lungo che va su due righe" />
-
-        <TextView
-            android:id="@+id/place"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp_4"
-            android:fontFamily="@font/gotham_bold"
-            android:maxLines="2"
-            android:textAlignment="center"
-            android:textSize="@dimen/sp_22"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toTopOf="@+id/image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/artist"
-            tools:text="Locale col nome luungo che va su due righe" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/image"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/filter_guideline"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintEnd_toEndOf="@+id/filter_end_guideline"
-            app:layout_constraintBottom_toTopOf="@+id/filter_x_guideline">
-
-            <ImageView
-                android:id="@+id/roundedImageView"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:padding="@dimen/dp_24"
+                android:background="@drawable/card_view_background_accent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:src="@drawable/placeholder_scheda"/>
+                android:layout_height="match_parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="@dimen/dp_2"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintGuide_percent="0.03"/>
 
-        <TextView
-            android:id="@+id/city"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/dp_4"
-            android:fontFamily="@font/gotham_bold"
-            android:maxLines="2"
-            android:textAlignment="center"
-            android:textSize="@dimen/sp_36"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filter_x_guideline"
-            tools:text="Città con il nome lungo che va su due rjfd" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/filter_end_guideline"
+                    android:layout_width="@dimen/dp_2"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintGuide_percent="0.97"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/filter_guideline"
+                    android:layout_width="@dimen/dp_2"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintGuide_percent="0.2"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/filter_x_guideline"
+                    android:layout_width="@dimen/dp_2"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintGuide_percent="0.8"/>
+
+                <TextView
+                    android:id="@+id/artist"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/gotham_bold"
+                    android:maxLines="2"
+                    android:textColor="@color/colorPrimary"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/sp_22"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/place"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Artista con nome lungo che va su due righe" />
+
+                <TextView
+                    android:id="@+id/place"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:fontFamily="@font/gotham_bold"
+                    android:maxLines="2"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/sp_22"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/artist"
+                    tools:text="Locale col nome luungo che va su due righe" />
+
+                <TextView
+                    android:id="@+id/city"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:fontFamily="@font/gotham_bold"
+                    android:maxLines="2"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/sp_36"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="Città con il nome lungo che va su due rjfd" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toBottomOf="@+id/filter_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintEnd_toEndOf="@+id/filter_end_guideline"
+                    app:layout_constraintBottom_toTopOf="@+id/filter_x_guideline">
+
+                    <ImageView
+                        android:id="@+id/roundedImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/placeholder_scheda"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -20,6 +20,10 @@ class MapsActivity: AppCompatActivity() {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         // Configura osmdroid
         Configuration.getInstance().load(applicationContext, getSharedPreferences("osmdroid", MODE_PRIVATE))
         Configuration.getInstance().userAgentValue = packageName
@@ -27,6 +31,8 @@ class MapsActivity: AppCompatActivity() {
 
         mapView = binding.mapview
         mapView.setTileSource(TileSourceFactory.MAPNIK)
+        mapView.setDestroyMode(true)
+
         mapView.setMultiTouchControls(true)
 
         // Imposta il punto di partenza (Roma)
