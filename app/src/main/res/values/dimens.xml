@@ -14,6 +14,7 @@
     <dimen name="dp_64">64dp</dimen>
     <dimen name="dp_96">96dp</dimen>
     <dimen name="dp_120">120dp</dimen>
+    <dimen name="dp_180">180dp</dimen>
     <dimen name="dp_196">196dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_228">228dp</dimen>

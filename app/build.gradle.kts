@@ -23,7 +23,7 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 24
         targetSdk = 36
-        versionCode = 55
+        versionCode = 57
         versionName = "4.20"
 
         buildConfigField("String", "DiscogsApiKey", discogsApiKey)
@@ -31,7 +31,7 @@ android {
 
         ndk {
             // On Apple silicon, you can omit x86_64.
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64","x86")
+            abiFilters += listOf("arm64-v8a", "x86_64")
         }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -103,7 +103,8 @@ chaquopy {
         pip {
             install("bs4")
             install("numpy")
-            install("pandas")
+            install("DateTime")
+            install("beautifulsoup4")
         }
     }
 }

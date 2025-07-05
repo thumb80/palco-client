@@ -16,4 +16,5 @@
     <color name="colorGreyIcon">#ACAAAA</color>
     <color name="white_alpha">#80FFFFFF</color>
     <color name="accent_alpha">#F3955C</color>
+    <color name="colorTransparent">#00000000</color>
 </resources>
