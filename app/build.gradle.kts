@@ -23,7 +23,7 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 24
         targetSdk = 36
-        versionCode = 57
+        versionCode = 58
         versionName = "4.20"
 
         buildConfigField("String", "DiscogsApiKey", discogsApiKey)
