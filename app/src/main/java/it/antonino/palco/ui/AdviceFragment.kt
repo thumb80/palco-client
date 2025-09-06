@@ -35,7 +35,7 @@ class AdviceFragment: Fragment() {
         if (sharedPreferences?.getBoolean("ok_consent", false) == true) {
             checkNewDay(requireContext())
             (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                .replace(R.id.container, ConcertiFragment())
+                .replace(R.id.container, ConcertsFragment())
                 .commit()
         } else {
             val dialog = AlertDialog.Builder(ContextThemeWrapper(requireContext(), R.style.AlertDialogCustom))
@@ -46,7 +46,7 @@ class AdviceFragment: Fragment() {
                     checkNewDay(requireContext())
                     sharedPreferences?.edit()?.putBoolean("ok_consent", true)?.apply()
                     (activity as PalcoActivity).supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, ConcertiFragment())
+                        .replace(R.id.container, ConcertsFragment())
                         .commit()
                 }
 

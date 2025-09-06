@@ -26,9 +26,12 @@ import androidx.work.WorkManager
 import com.eftimoff.androipathview.PathView
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.Strictness
+import com.google.gson.stream.JsonReader
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.R
@@ -41,13 +44,14 @@ import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.CustomAdapter
 import it.antonino.palco.model.CustomSnapHelper
-import it.antonino.palco.workers.Scrape01Worker
-import it.antonino.palco.workers.Scrape02Worker
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import it.antonino.palco.viewmodel.SharedViewModel
+import it.antonino.palco.workers.Scrape01Worker
+import it.antonino.palco.workers.Scrape02Worker
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import java.io.StringReader
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -112,7 +116,9 @@ class EventsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.monthView.text = currentDayInstance?.time?.let {
-            Constant.monthDateFormat.format(it).capitalize()
+            Constant.monthDateFormat.format(it).replaceFirstChar { mTime ->
+                if (mTime.isLowerCase()) mTime.titlecase(Locale.getDefault()) else mTime.toString()
+            }
         }
 
         binding.calendarView.setLocale(TimeZone.getDefault(), Locale.ITALY)
@@ -212,12 +218,27 @@ class EventsFragment: Fragment() {
         val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
 
         if (events.isNotEmpty()) {
-            val concerti = JsonArray(events.size )
+            val concerts = JsonArray(events.size )
             for (event in events)
             {
-                concerti.add(JsonParser().parse(GsonBuilder().setLenient().create().toJson(event.data)))
+                val inside: String = event.data.toString().substring(event.data.toString().indexOf('(') + 1, event.data.toString().lastIndexOf(')'))
+                val jsonObject = JsonObject()
+                val pairs =
+                    inside.split(", (?=[a-zA-Z]+=)".toRegex()).dropLastWhile { it.isEmpty() }
+                        .toTypedArray()
+
+                for (pair in pairs) {
+                    val keyValue = pair.split("=".toRegex(), limit = 2)
+                        .toTypedArray()
+                    if (keyValue.size == 2) {
+                        val key = keyValue[0].trim { it <= ' ' }
+                        val value = keyValue[1].trim { it <= ' ' }
+                        jsonObject.addProperty(key, value)
+                    }
+                }
+                concerts.add(jsonObject)
             }
-            adapter = CustomAdapter(concerti) { concertRow ->
+            adapter = CustomAdapter(concerts) { concertRow ->
                 val dialog = CustomDialog(concertRow)
                 dialog.show(childFragmentManager,null)
 

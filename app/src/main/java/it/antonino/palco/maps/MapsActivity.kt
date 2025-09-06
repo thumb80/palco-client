@@ -40,7 +40,8 @@ class MapsActivity: AppCompatActivity() {
         val longitude = intent.extras?.getDouble("longitude") ?: 12.4964
 
         val startPoint = GeoPoint(latitude, longitude)
-        mapView.controller.setZoom(18.0)
+        mapView.setZoomRounding(true)
+        mapView.controller.setZoom(20.0)
         mapView.controller.setCenter(startPoint)
 
         // Aggiungi un marker

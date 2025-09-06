@@ -5,16 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import it.antonino.palco.databinding.ActivityMainBinding
 import it.antonino.palco.ui.AdviceFragment
 import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
 
 class PalcoActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(binding.root)
 
         supportFragmentManager.beginTransaction()

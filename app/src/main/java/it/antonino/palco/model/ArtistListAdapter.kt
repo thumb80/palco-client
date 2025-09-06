@@ -33,7 +33,7 @@ class ArtistListAdapter(val artists: ArrayList<String>, val  listener: (String) 
 
 
         fun bind(artist: String) {
-            binding.artistItem.text = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)
+            binding.artistItem.text = org.apache.commons.text.StringEscapeUtils.unescapeJava(artist)
             binding.root.setOnClickListener {
                 listener.invoke(artist)
             }
@@ -81,6 +81,8 @@ class ArtistListAdapter(val artists: ArrayList<String>, val  listener: (String) 
         }
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            artists.clear()
+
             if (results?.values is ArrayList<*>) {
                 artists.clear()
                 artists.addAll(results.values as ArrayList<String>)

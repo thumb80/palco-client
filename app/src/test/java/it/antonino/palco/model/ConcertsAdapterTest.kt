@@ -16,7 +16,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class ConcertiAdapterTest {
+class ConcertsAdapterTest {
 
     @Mock
     private lateinit var fragmentManager: FragmentManager
@@ -38,10 +38,10 @@ class ConcertiAdapterTest {
 
     @Test
     fun concertiAdapterTest() {
-        val concertiAdapter = ConcertiAdapter(fragmentManager)
-        assert(concertiAdapter.count == 2)
-        assert(concertiAdapter.getItem(0) is EventsFragment)
-        assert(concertiAdapter.getItem(1) is FilterFragment)
+        val concertsAdapter = ConcertsAdapter(fragmentManager)
+        assert(concertsAdapter.count == 2)
+        assert(concertsAdapter.getItem(0) is EventsFragment)
+        assert(concertsAdapter.getItem(1) is FilterFragment)
         //assert(concertiAdapter.getPageTitle(0) == "Eventi")
         //assert(concertiAdapter.getPageTitle(1) == "Filtri")
     }

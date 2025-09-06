@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import it.antonino.palco.R
-import it.antonino.palco.adapter.FilterConcertiAdapter
+import it.antonino.palco.adapter.FilterConcertsAdapter
 import it.antonino.palco.databinding.FragmentFilterBinding
 import it.antonino.palco.util.Constant
 
@@ -30,11 +31,14 @@ class FilterFragment : Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val viewPager = view.findViewById<ViewPager>(R.id.filter_pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.filter_tab_layout)
-        val filterConcertiViewPagerAdapter = FilterConcertiAdapter(childFragmentManager)
+        val tabTitles = listOf(getString(R.string.filter_city),getString(R.string.filter_artist))
 
-        tabLayout.setTabTextColors(requireContext().resources.getColor(R.color.colorPrimary), requireContext().resources.getColor(R.color.colorWhite))
+
+        val viewPager = view.findViewById<ViewPager2>(R.id.filter_pager)
+        val tabLayout = view.findViewById<TabLayout>(R.id.filter_tab_layout)
+        val filterConcertsViewPagerAdapter = FilterConcertsAdapter(requireActivity())
+
+        tabLayout.setTabTextColors(requireContext().resources.getColor(R.color.colorPrimary, null), requireContext().resources.getColor(R.color.colorWhite, null))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 setTabTypeface(tab, ResourcesCompat.getFont(requireContext(), R.font.gotham_bold))
@@ -49,10 +53,12 @@ class FilterFragment : Fragment()  {
 
         })
 
-        viewPager.adapter = filterConcertiViewPagerAdapter
+        viewPager.adapter = filterConcertsViewPagerAdapter
         viewPager.setCurrentItem(Constant.currentItem,true)
-        viewPager.offscreenPageLimit = Constant.offscreenPageLimit
-        tabLayout.setupWithViewPager(viewPager, true)
+        viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
 
     }
 

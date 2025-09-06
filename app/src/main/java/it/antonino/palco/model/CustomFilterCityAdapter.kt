@@ -40,13 +40,13 @@ class CustomFilterCityAdapter(
             val place = concerto.place
             val time = concerto.time
 
-            val mArtist = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)
-            val mPlace = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place)
-            val mTime = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(time?.let {
+            val mArtist = org.apache.commons.text.StringEscapeUtils.unescapeJava(artist)
+            val mPlace = org.apache.commons.text.StringEscapeUtils.unescapeJava(place)
+            val mTime = org.apache.commons.text.StringEscapeUtils.unescapeJava(time?.let {
                 SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(
                     it
                 )
-            }).substring(0,1).uppercase() + org.apache.commons.lang3.StringEscapeUtils.unescapeJava(time?.let {
+            }).substring(0,1).uppercase() + org.apache.commons.text.StringEscapeUtils.unescapeJava(time?.let {
                 SimpleDateFormat("EEEE dd MMMM yyyy", Locale.ITALY).format(
                     it
                 )

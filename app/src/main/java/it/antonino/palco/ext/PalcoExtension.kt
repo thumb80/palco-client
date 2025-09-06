@@ -39,7 +39,7 @@ fun String.getGeoPosition(context: Context): Pair<Double, Double>? {
 
     runBlocking {
         try {
-            val addressList = geocoder.getFromLocationName(locationName, 1)
+            val addressList = geocoder.getFromLocationName(locationName, 1, 0.0,0.0,0.0,0.0)
             if (!addressList.isNullOrEmpty()) {
                 val address = addressList[0]
                 val latitude = address.latitude
@@ -90,8 +90,12 @@ fun Date?.getString(): String? {
     return try {
         this?.let {
             val dateStringSplitted = Constant.shareDateFormat.format(it).split(" ")
-            val day = dateStringSplitted[0].capitalize()
-            val month = dateStringSplitted[2].capitalize()
+            val day = dateStringSplitted[0].replaceFirstChar { mDay ->
+                if (mDay.isLowerCase()) mDay.titlecase(Locale.getDefault()) else mDay.toString()
+            }
+            val month = dateStringSplitted[2].replaceFirstChar { mMonth ->
+                if (mMonth.isLowerCase()) mMonth.titlecase(Locale.getDefault()) else mMonth.toString()
+            }
             return day + " " + dateStringSplitted[1] + " " + month + " " + dateStringSplitted[3]
         }
     } catch (e: Exception) {

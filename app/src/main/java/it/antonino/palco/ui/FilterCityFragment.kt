@@ -95,8 +95,8 @@ class FilterCityFragment : Fragment() {
 
         editText.layoutParams = layoutParams
         editText.gravity = Gravity.CENTER
-        editText.setHintTextColor(requireContext().resources.getColor(R.color.colorWhite))
-        editText.setTextColor(requireContext().resources.getColor(R.color.colorWhite))
+        editText.setHintTextColor(requireContext().resources.getColor(R.color.colorWhite, null))
+        editText.setTextColor(requireContext().resources.getColor(R.color.colorWhite, null))
 
         binding.searchBar.queryHint = getString(R.string.search_city)
         binding.searchBar.setIconifiedByDefault(false)
@@ -129,7 +129,7 @@ class FilterCityFragment : Fragment() {
                 cityAdapter = CityListAdapter(cityList) {
                     binding.filterHeaderCity.visibility = View.VISIBLE
                     binding.filterHeaderCityReset.visibility = View.VISIBLE
-                    binding.filterHeaderCity.text = getString(R.string.filter_city_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(it))
+                    binding.filterHeaderCity.text = getString(R.string.filter_city_selected, org.apache.commons.text.StringEscapeUtils.unescapeJava(it))
                     binding.filterHeaderCityReset.text = getString(R.string.filter_city_reset)
                     viewModel.getAllByCity(it)
                     viewModel.concertiFilterCity.observe(viewLifecycleOwner, concertsObserver)

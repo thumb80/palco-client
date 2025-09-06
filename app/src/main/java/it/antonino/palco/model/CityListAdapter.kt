@@ -30,7 +30,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
 
         fun bind(city: String) {
 
-            binding.cityItem.text = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city)
+            binding.cityItem.text = org.apache.commons.text.StringEscapeUtils.unescapeJava(city)
             binding.root.setOnClickListener {
                 listener.invoke(city)
             }

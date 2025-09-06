@@ -96,8 +96,8 @@ class FilterArtistFragment : Fragment() {
 
         editText.layoutParams = layoutParams
         editText.gravity = Gravity.CENTER
-        editText.setHintTextColor(requireContext().resources.getColor(R.color.colorWhite))
-        editText.setTextColor(requireContext().resources.getColor(R.color.colorWhite))
+        editText.setHintTextColor(requireContext().resources.getColor(R.color.colorWhite, null))
+        editText.setTextColor(requireContext().resources.getColor(R.color.colorWhite, null))
 
         binding.searchBar.queryHint = getString(R.string.search_artist)
         binding.searchBar.setIconifiedByDefault(false)
@@ -127,7 +127,7 @@ class FilterArtistFragment : Fragment() {
                 artistAdapter = ArtistListAdapter(it) { artist ->
                     binding.filterHeaderArtist.visibility = View.VISIBLE
                     binding.filterHeaderArtistReset.visibility = View.VISIBLE
-                    binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist))
+                    binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, org.apache.commons.text.StringEscapeUtils.unescapeJava(artist))
                     binding.filterHeaderArtistReset.text = getString(R.string.filter_artist_reset)
                     viewModel.getAllByArtist(artist)
                     viewModel.concertiFilterArtist.observe(viewLifecycleOwner, concertsObserver)

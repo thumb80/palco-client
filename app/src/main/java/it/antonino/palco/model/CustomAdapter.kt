@@ -9,46 +9,44 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import it.antonino.palco.R
 import it.antonino.palco.databinding.ConcertoCardViewBinding
 import it.antonino.palco.ext.getDate
 import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
-import org.koin.java.KoinJavaComponent
 import org.koin.java.KoinJavaComponent.inject
 
-private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
+private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
 class CustomAdapter(
-    val concerti: JsonArray,
+    val concerts: JsonArray,
     val listener: (ConcertRow) -> Unit
-    ) : RecyclerView.Adapter<CustomAdapter.ConcertiViewHolder>() {
+    ) : RecyclerView.Adapter<CustomAdapter.ConcertsViewHolder>() {
 
     private var artistThumb: String? = null
     private var artistInfo: String? = null
     private lateinit var binding: ConcertoCardViewBinding
     private val context: Context by inject(Context::class.java)
 
-    inner class ConcertiViewHolder(
+    inner class ConcertsViewHolder(
         val binding: ConcertoCardViewBinding
         ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(concerto: JsonObject) {
+        fun bind(concerto: JsonElement) {
 
-            val artist = concerto.get("artist")?.asString
-            val place = concerto.get("place")?.asString
-            val city = concerto.get("city")?.asString
-            val time = concerto.get("time")?.asString?.getDate()
+            val artist = concerto.asJsonObject.get("artist").asString
+            val place = concerto.asJsonObject.get("place").asString
+            val city = concerto.asJsonObject.get("city").asString
+            val time = concerto.asJsonObject.get("time").asString?.getDate()
 
-            binding.artist.text = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)
-            binding.place.text = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place)
-            binding.city.text = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city)
+            binding.artist.text = org.apache.commons.text.StringEscapeUtils.unescapeJava(artist)
+            binding.place.text = org.apache.commons.text.StringEscapeUtils.unescapeJava(place)
+            binding.city.text = org.apache.commons.text.StringEscapeUtils.unescapeJava(city)
 
             val concertRow = ConcertRow(
-                artist = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist),
-                city = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(city),
-                place = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(place),
+                artist = org.apache.commons.text.StringEscapeUtils.unescapeJava(artist),
+                city = org.apache.commons.text.StringEscapeUtils.unescapeJava(city),
+                place = org.apache.commons.text.StringEscapeUtils.unescapeJava(place),
                 time = time,
                 artistThumb = null,
                 artistInfo = null
@@ -93,7 +91,7 @@ class CustomAdapter(
                 }
             }
 
-            viewModel.getArtistInfos(org.apache.commons.lang3.StringEscapeUtils.unescapeJava(artist)).observeForever {
+            viewModel.getArtistInfos(org.apache.commons.text.StringEscapeUtils.unescapeJava(artist)).observeForever {
                 if (it?.isJsonNull == false) {
                     var artistInfoExtract: JsonElement? = null
                     try {
@@ -118,18 +116,18 @@ class CustomAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: ConcertiViewHolder, position: Int) {
-        holder.bind(concerti[position].asJsonObject)
+    override fun onBindViewHolder(holder: ConcertsViewHolder, position: Int) {
+        holder.bind(concerts[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConcertiViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConcertsViewHolder {
         binding = ConcertoCardViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ConcertiViewHolder(binding)
+        return ConcertsViewHolder(binding)
 
     }
 
     override fun getItemCount(): Int {
-        return concerti.size()
+        return concerts.size()
     }
 
 }

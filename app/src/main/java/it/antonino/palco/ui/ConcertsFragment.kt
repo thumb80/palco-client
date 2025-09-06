@@ -8,14 +8,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentConcertiBinding
-import it.antonino.palco.model.ConcertiAdapter
-import it.antonino.palco.util.Constant.offscreenPageLimit
+import it.antonino.palco.model.ConcertsAdapter
 
-class ConcertiFragment: Fragment() {
+class ConcertsFragment: Fragment() {
 
     private lateinit var binding: FragmentConcertiBinding
 
@@ -30,11 +30,13 @@ class ConcertiFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val viewPager = view.findViewById<ViewPager>(R.id.pager)
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        val concertiViewPagerAdapter = ConcertiAdapter(childFragmentManager)
+        val tabTitles = listOf(getString(R.string.concerti_nazionali),getString(R.string.concerti_filter))
 
-        tabLayout.setTabTextColors(requireContext().resources.getColor(R.color.colorPrimary), requireContext().resources.getColor(R.color.colorWhite))
+        val viewPager = view.findViewById<ViewPager2>(R.id.pager)
+        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        val concertsViewPagerAdapter = ConcertsAdapter(requireActivity())
+
+        tabLayout.setTabTextColors(requireContext().resources.getColor(R.color.colorPrimary, null), requireContext().resources.getColor(R.color.colorWhite, null))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 setTabTypeface(tab, ResourcesCompat.getFont(requireContext(), R.font.gotham_bold))
@@ -49,10 +51,12 @@ class ConcertiFragment: Fragment() {
 
         })
 
-        viewPager.adapter = concertiViewPagerAdapter
+        viewPager.adapter = concertsViewPagerAdapter
         viewPager.setCurrentItem(0, true)
-        viewPager.offscreenPageLimit = offscreenPageLimit
-        tabLayout.setupWithViewPager(viewPager, true)
+        viewPager.offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
 
     }
 

@@ -21,6 +21,8 @@ import it.antonino.palco.R
 import it.antonino.palco.databinding.CustomDialogBinding
 import it.antonino.palco.maps.MapsActivity
 import it.antonino.palco.model.ConcertRow
+import java.net.URLEncoder
+import androidx.core.graphics.drawable.toDrawable
 
 
 class CustomDialog(
@@ -72,7 +74,7 @@ class CustomDialog(
 
         builder.setView(binding.root)
         val popupDialog = builder.create()
-        popupDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        popupDialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         return popupDialog
     }
 
