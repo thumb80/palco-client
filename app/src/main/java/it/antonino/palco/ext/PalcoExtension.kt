@@ -1,11 +1,16 @@
 package it.antonino.palco.ext
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.location.Geocoder
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.KeyCharacterMap
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +22,7 @@ import it.antonino.palco.util.Constant.concertoDateFormat
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 import java.util.Locale
+
 
 fun SharedPreferences?.getShared(context: Context): SharedPreferences {
     val masterKey = MasterKey.Builder(context)
@@ -116,5 +122,30 @@ fun RecyclerView.setAccessibility() {
         }
     }
 }
+
+fun Context.hasSoftwareKeys(): Boolean {
+    val hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey()
+    val hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
+    return !(hasMenuKey || hasBackKey)
+}
+
+fun Activity.getNavigationBarHeight(): Int {
+    val usableMetrics = DisplayMetrics()
+    val realMetrics = DisplayMetrics()
+
+    val display = this.windowManager.defaultDisplay
+    display.getMetrics(usableMetrics)
+    display.getRealMetrics(realMetrics)
+
+    val usableHeight = usableMetrics.heightPixels
+    val realHeight = realMetrics.heightPixels
+
+    return if (realHeight > usableHeight) {
+        realHeight - usableHeight
+    } else {
+        0
+    }
+}
+
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()

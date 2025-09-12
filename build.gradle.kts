@@ -18,4 +18,5 @@ buildscript {
         set("mockito_kotlin_version","4.0.0")
         set("mockkVersion","1.4.1")
     }
+    val agp_version by extra("8.9.3")
 }

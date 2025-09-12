@@ -3,11 +3,15 @@ package it.antonino.palco.ui
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -39,6 +43,8 @@ import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.DotsItemDecoration
 import it.antonino.palco.ext.compareDate
+import it.antonino.palco.ext.getNavigationBarHeight
+import it.antonino.palco.ext.hasSoftwareKeys
 import it.antonino.palco.ext.isActualMonth
 import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
@@ -67,7 +73,6 @@ class EventsFragment: Fragment() {
     private lateinit var binding: FragmentEventsBinding
     private lateinit var workCanzoniRequestId: UUID
     private lateinit var workGothRequestId: UUID
-    private lateinit var workRockolRequestId: UUID
     private lateinit var richPath: PathView
     private lateinit var threeDotPath: PathView
 
@@ -109,6 +114,12 @@ class EventsFragment: Fragment() {
         binding = FragmentEventsBinding.inflate(layoutInflater)
         richPath = binding.animation
         threeDotPath = binding.threeDots
+        if (requireContext().hasSoftwareKeys()) {
+            val layoutParams = ConstraintLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            layoutParams.bottomMargin = requireActivity().getNavigationBarHeight()
+            binding.concertiRecycler.layoutParams = layoutParams
+            binding.threeDots.visibility = GONE
+        }
         return binding.root
     }
 

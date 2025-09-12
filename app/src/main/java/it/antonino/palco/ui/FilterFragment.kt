@@ -14,19 +14,28 @@ import com.google.android.material.tabs.TabLayoutMediator
 import it.antonino.palco.R
 import it.antonino.palco.adapter.FilterConcertsAdapter
 import it.antonino.palco.databinding.FragmentFilterBinding
+import it.antonino.palco.databinding.FragmentFilterSoftkeysBinding
+import it.antonino.palco.ext.hasSoftwareKeys
 import it.antonino.palco.util.Constant
 
 class FilterFragment : Fragment()  {
 
     private lateinit var binding: FragmentFilterBinding
+    private lateinit var bindingSoftKeys: FragmentFilterSoftkeysBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFilterBinding.inflate(layoutInflater)
-        return binding.root
+        if (requireContext().hasSoftwareKeys()) {
+            bindingSoftKeys = FragmentFilterSoftkeysBinding.inflate(layoutInflater)
+            return bindingSoftKeys.root
+        } else {
+            binding = FragmentFilterBinding.inflate(layoutInflater)
+            return binding.root
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

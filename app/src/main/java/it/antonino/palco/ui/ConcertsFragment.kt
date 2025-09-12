@@ -13,19 +13,27 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentConcertiBinding
+import it.antonino.palco.databinding.FragmentConcertiSoftkeysBinding
+import it.antonino.palco.ext.hasSoftwareKeys
 import it.antonino.palco.model.ConcertsAdapter
 
 class ConcertsFragment: Fragment() {
 
     private lateinit var binding: FragmentConcertiBinding
+    private lateinit var bindingSoftKeys: FragmentConcertiSoftkeysBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentConcertiBinding.inflate(inflater)
-        return binding.root
+        if (requireContext().hasSoftwareKeys()) {
+            bindingSoftKeys = FragmentConcertiSoftkeysBinding.inflate(layoutInflater)
+            return bindingSoftKeys.root
+        } else {
+            binding = FragmentConcertiBinding.inflate(inflater)
+            return binding.root
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -14,9 +14,8 @@ class PalcoActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(binding.root)
+        WindowCompat.enableEdgeToEdge(window)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, AdviceFragment())
