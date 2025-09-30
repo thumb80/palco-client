@@ -2,10 +2,9 @@ package it.antonino.palco
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import it.antonino.palco.databinding.ActivityMainBinding
 import it.antonino.palco.ui.AdviceFragment
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.WindowCompat
 
 class PalcoActivity: AppCompatActivity() {
 

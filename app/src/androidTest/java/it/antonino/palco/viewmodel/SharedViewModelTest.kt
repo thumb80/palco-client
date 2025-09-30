@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.testing.TestListenableWorkerBuilder
-import it.antonino.palco.PalcoApplication.Companion.concerti
+import it.antonino.palco.PalcoApplication.Companion.concerts
 import it.antonino.palco.PalcoApplication.Companion.file
 import it.antonino.palco.model.Concerto
-import it.antonino.palco.workers.Scrape02Worker
+import it.antonino.palco.workers.SecondBatchWorker
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -25,8 +25,8 @@ class SharedViewModelTest: KoinTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        concerti = arrayListOf()
-        val worker = TestListenableWorkerBuilder<Scrape02Worker>(context).build()
+        concerts = arrayListOf()
+        val worker = TestListenableWorkerBuilder<SecondBatchWorker>(context).build()
         runBlocking {
             worker.doWork()
         }
@@ -43,8 +43,8 @@ class SharedViewModelTest: KoinTest {
     }
 
     @Test
-    fun getAllConcertiTest() {
-        assertNotNull(viewModel.getAllConcerti())
+    fun getAllConcertsTest() {
+        assertNotNull(viewModel.getAllConcerts())
     }
 
     @Test

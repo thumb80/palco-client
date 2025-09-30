@@ -17,12 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import com.google.gson.stream.JsonToken
+import com.google.gson.stream.MalformedJsonException
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 import java.util.Locale
-
 
 fun SharedPreferences?.getShared(context: Context): SharedPreferences {
     val masterKey = MasterKey.Builder(context)
@@ -68,9 +71,9 @@ fun String.getGeoPosition(context: Context): Pair<Double, Double>? {
 fun String?.getDate(): Date? {
     return try {
         this?.let {
-            Constant.concertoDateFormat.parse(it)
+            concertoDateFormat.parse(it)
         }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         return null
     }
 }
@@ -83,7 +86,7 @@ fun Date?.isActualMonth(): Boolean? {
     val currentDate = Constant.actualDateFormat.format(Date(System.currentTimeMillis()))
     return try {
         this?.let { Constant.actualDateFormat.format(it).equals(currentDate, true) }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         return null
     }
 }
@@ -146,6 +149,4 @@ fun Activity.getNavigationBarHeight(): Int {
         0
     }
 }
-
-
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()

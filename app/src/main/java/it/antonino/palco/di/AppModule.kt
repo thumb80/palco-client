@@ -4,14 +4,14 @@ import it.antonino.palco.network.DiscogsAPI
 import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.network.WikiPediaAPI
 import it.antonino.palco.util.Constant
+import it.antonino.palco.util.Constant.WIKIPEDIA_URL
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.workers.Scrape01Worker
-import it.antonino.palco.workers.Scrape02Worker
+import it.antonino.palco.workers.FirstBatchWorker
+import it.antonino.palco.workers.SecondBatchWorker
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -47,7 +47,7 @@ val appModule = module {
                     )
                     .cache(Cache(androidContext().cacheDir, Constant.cacheSize))
                     .build())
-            .baseUrl("https://it.wikipedia.org")
+            .baseUrl(WIKIPEDIA_URL)
             .build()
     }
     // Interfaces
@@ -63,9 +63,9 @@ val appModule = module {
     viewModelOf(::SharedViewModel)
     // WorkManager
     worker {
-        Scrape01Worker(get(), get())
+        FirstBatchWorker(get(), get())
     }
     worker {
-        Scrape02Worker(get(), get())
+        SecondBatchWorker(get(), get())
     }
 }

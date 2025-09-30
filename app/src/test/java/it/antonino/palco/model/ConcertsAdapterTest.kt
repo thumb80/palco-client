@@ -1,10 +1,8 @@
 package it.antonino.palco.model
 
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
 import it.antonino.palco.PalcoApplication
 import it.antonino.palco.di.appModule
-import it.antonino.palco.ui.EventsFragment
-import it.antonino.palco.ui.FilterFragment
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class ConcertsAdapterTest {
 
     @Mock
-    private lateinit var fragmentManager: FragmentManager
+    private lateinit var fragmentActivity: FragmentActivity
     @Mock
     private lateinit var context: PalcoApplication
 
@@ -37,13 +35,9 @@ class ConcertsAdapterTest {
     }
 
     @Test
-    fun concertiAdapterTest() {
-        val concertsAdapter = ConcertsAdapter(fragmentManager)
-        assert(concertsAdapter.count == 2)
-        assert(concertsAdapter.getItem(0) is EventsFragment)
-        assert(concertsAdapter.getItem(1) is FilterFragment)
-        //assert(concertiAdapter.getPageTitle(0) == "Eventi")
-        //assert(concertiAdapter.getPageTitle(1) == "Filtri")
+    fun concertsAdapterTest() {
+        val concertsAdapter = ConcertsAdapter(fragmentActivity)
+        assert(concertsAdapter.itemCount == 2)
     }
 
 }

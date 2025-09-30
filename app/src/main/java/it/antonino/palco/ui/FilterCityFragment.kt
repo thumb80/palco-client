@@ -18,19 +18,16 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eftimoff.androipathview.PathView
-import it.antonino.palco.PalcoApplication.Companion.file
+import it.antonino.palco.PalcoApplication.Companion.file_1
+import it.antonino.palco.PalcoApplication.Companion.file_2
 import it.antonino.palco.R
-import it.antonino.palco.model.CustomFilterCityAdapter
 import it.antonino.palco.databinding.FragmentFilterCityBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.setAccessibility
-import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.CityListAdapter
 import it.antonino.palco.model.Concerto
+import it.antonino.palco.model.CustomFilterCityAdapter
 import it.antonino.palco.viewmodel.SharedViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FilterCityFragment : Fragment() {
@@ -51,7 +48,7 @@ class FilterCityFragment : Fragment() {
         binding = FragmentFilterCityBinding.inflate(layoutInflater)
 
         viewModel.concerti.observe(viewLifecycleOwner) {
-            viewModel.getAllCities()
+            viewModel.getAllCities(requireContext())
             binding.animation.visibility = View.INVISIBLE
         }
 
@@ -66,8 +63,8 @@ class FilterCityFragment : Fragment() {
 
         val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
 
-        if (file?.exists() == true && prefs?.getBoolean("isNewDay", false) == false) {
-            viewModel.getAllCities()
+        if ((file_1.exists() || file_2.exists()) && prefs?.getBoolean("isNewDay", false) == false) {
+            viewModel.getAllCities(requireContext())
             binding.animation.visibility = View.INVISIBLE
         }
 
@@ -131,8 +128,8 @@ class FilterCityFragment : Fragment() {
                     binding.filterHeaderCityReset.visibility = View.VISIBLE
                     binding.filterHeaderCity.text = getString(R.string.filter_city_selected, org.apache.commons.text.StringEscapeUtils.unescapeJava(it))
                     binding.filterHeaderCityReset.text = getString(R.string.filter_city_reset)
-                    viewModel.getAllByCity(it)
-                    viewModel.concertiFilterCity.observe(viewLifecycleOwner, concertsObserver)
+                    viewModel.getAllByCity(requireContext(),it)
+                    viewModel.concertsFilterCity.observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
                     context,
@@ -150,13 +147,13 @@ class FilterCityFragment : Fragment() {
 
     }
 
-    private val concertsObserver = Observer<ArrayList<Concerto>> {
+    private val concertsObserver = Observer<ArrayList<Concerto?>> {
 
         when(it.isNotEmpty()) {
             true -> {
                 showConcerti()
 
-                val concerti = it.sortedBy { item -> item.time }
+                val concerti = it.sortedBy { item -> item?.time }
                 val sortedByDateItems: ArrayList<Concerto?> = arrayListOf()
                 concerti.forEach {
                     sortedByDateItems.add(it)

@@ -3,7 +3,6 @@ package it.antonino.palco.ui
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,13 +30,9 @@ import com.eftimoff.androipathview.PathView
 import com.github.sundeepk.compactcalendarview.CompactCalendarView
 import com.github.sundeepk.compactcalendarview.domain.Event
 import com.google.gson.JsonArray
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.Strictness
-import com.google.gson.stream.JsonReader
-import it.antonino.palco.PalcoApplication
-import it.antonino.palco.PalcoApplication.Companion.file
+import it.antonino.palco.PalcoApplication.Companion.file_1
+import it.antonino.palco.PalcoApplication.Companion.file_2
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.CustomDialog
@@ -50,14 +45,16 @@ import it.antonino.palco.ext.setAccessibility
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.model.CustomAdapter
 import it.antonino.palco.model.CustomSnapHelper
-import it.antonino.palco.util.Constant
+import it.antonino.palco.util.Constant.blueColorRGB
 import it.antonino.palco.util.Constant.concertoDateFormat
+import it.antonino.palco.util.Constant.greenColorRGB
+import it.antonino.palco.util.Constant.monthDateFormat
+import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.workers.Scrape01Worker
-import it.antonino.palco.workers.Scrape02Worker
+import it.antonino.palco.workers.FirstBatchWorker
+import it.antonino.palco.workers.SecondBatchWorker
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import java.io.StringReader
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -71,8 +68,8 @@ class EventsFragment: Fragment() {
     private var layoutManager: LinearLayoutManager? = null
     private var dotsItemDecoration: DotsItemDecoration? = null
     private lateinit var binding: FragmentEventsBinding
-    private lateinit var workCanzoniRequestId: UUID
-    private lateinit var workGothRequestId: UUID
+    private lateinit var firstBatchRequestId: UUID
+    private lateinit var secondBatchRequestId: UUID
     private lateinit var richPath: PathView
     private lateinit var threeDotPath: PathView
 
@@ -86,9 +83,7 @@ class EventsFragment: Fragment() {
         super.onCreate(savedInstanceState)
 
         binding = FragmentEventsBinding.inflate(layoutInflater)
-
         currentDayInstance = Calendar.getInstance(TimeZone.getDefault())
-
         dotsItemDecoration = DotsItemDecoration(
             resources.getDimension(R.dimen.dp_4).toInt(),
             resources.getDimension(R.dimen.dp_6).toInt(),
@@ -127,7 +122,7 @@ class EventsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.monthView.text = currentDayInstance?.time?.let {
-            Constant.monthDateFormat.format(it).replaceFirstChar { mTime ->
+            monthDateFormat.format(it).replaceFirstChar { mTime ->
                 if (mTime.isLowerCase()) mTime.titlecase(Locale.getDefault()) else mTime.toString()
             }
         }
@@ -153,7 +148,7 @@ class EventsFragment: Fragment() {
 
             override fun onMonthScroll(firstDayOfNewMonth: Date?) {
                 selectedDayInstance = firstDayOfNewMonth
-                binding.monthView.text = Constant.monthDateFormat
+                binding.monthView.text = monthDateFormat
                     .format(firstDayOfNewMonth?.time)
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
                 if (firstDayOfNewMonth?.isActualMonth() == true) {
@@ -188,7 +183,7 @@ class EventsFragment: Fragment() {
         }
 
         viewModel.concerti.observe(viewLifecycleOwner) {
-            collectConcerti(it)
+            collectConcerts(it)
         }
 
         viewModel.isNewDay.observe(viewLifecycleOwner) {
@@ -196,28 +191,15 @@ class EventsFragment: Fragment() {
                 hideAll()
                 startAnimation()
                 startThreeDots()
-                setScrapeCanzoniBatch()
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isTargetHour.collect { isTarget ->
-                    if (isTarget) {
-                        hideAll()
-                        startAnimation()
-                        startThreeDots()
-                        setScrapeCanzoniBatch()
-                    }
-                }
+                startFirstBatch()
             }
         }
 
         val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
 
-        if (file?.exists() == true && prefs?.getBoolean("isNewDay", false) == false)
-            viewModel.setConcerti(
-                viewModel.getAllConcerti()
+        if ((file_1.exists() || file_2.exists()) && prefs?.getBoolean("isNewDay", false) == false)
+            viewModel.setConcerts(
+                viewModel.getAllConcerts(requireContext())
             )
 
     }
@@ -225,9 +207,7 @@ class EventsFragment: Fragment() {
     private fun displayCurrentEvents(
         currentDate: Date?
     ) {
-
         val events: List<Event> = binding.calendarView.getEvents(currentDate).orEmpty()
-
         if (events.isNotEmpty()) {
             val concerts = JsonArray(events.size )
             for (event in events)
@@ -254,7 +234,6 @@ class EventsFragment: Fragment() {
                 dialog.show(childFragmentManager,null)
 
             }
-
             binding.concertiRecycler.adapter = adapter
             hideEmpty()
         }
@@ -265,19 +244,21 @@ class EventsFragment: Fragment() {
 
     }
 
-    private fun collectConcerti(
-        concerti: ArrayList<Concerto>
+    private fun collectConcerts(
+        concerts: ArrayList<Concerto?>
     ) {
         binding.calendarView.removeAllEvents()
-        for (concerto in concerti) {
-            val time: Long = concertoDateFormat.parse(concerto.time)?.time ?: 0L
-            val event = Event(
-                Color.rgb(Constant.redColorRGB, Constant.greenColorRGB, Constant.blueColorRGB),
-                time,
-                concerto
-            )
-            if (concertoDateFormat.parse(concerto.time)?.compareDate() == false)
-                binding.calendarView.addEvent(event)
+        concerts.forEach {
+            if (it?.time != null) {
+                val time: Long = concertoDateFormat.parse(it.time)?.time ?: 0L
+                val event = Event(
+                    Color.rgb(redColorRGB, greenColorRGB, blueColorRGB),
+                    time,
+                    it
+                )
+                if (concertoDateFormat.parse(it.time)?.compareDate() == false)
+                    binding.calendarView.addEvent(event)
+            }
         }
         if (selectedDayInstance == null)
             displayCurrentEvents(currentDayInstance?.time)
@@ -312,45 +293,44 @@ class EventsFragment: Fragment() {
         binding.threeDots.visibility = View.VISIBLE
     }
 
-    private fun setScrapeCanzoniBatch() {
+    private fun startFirstBatch() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<Scrape01Worker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<FirstBatchWorker>()
             .setConstraints(constraints)
             .build()
-        workCanzoniRequestId = scrapeWork.id
+        firstBatchRequestId = scrapeWork.id
         WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-            "it-antonino-scrape-canzoni",
+            "it-antonino-batch-01",
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
 
         enableCalendarTouch(false)
 
-        checkCanzoniWorker()
+        checkFirstWorker()
     }
 
-    private fun setScrapeGothBatch() {
+    private fun startSecondBatch() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<Scrape02Worker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<SecondBatchWorker>()
             .setConstraints(constraints)
             .build()
-        workGothRequestId = scrapeWork.id
+        secondBatchRequestId = scrapeWork.id
         WorkManager.getInstance(requireContext()).enqueueUniqueWork(
-            "it-antonino-scrape-goth",
+            "it-antonino-batch-02",
             ExistingWorkPolicy.REPLACE,
             scrapeWork
         )
 
-        checkGothWorker()
+        checkSecondWorker()
     }
 
-    private fun checkCanzoniWorker() {
-
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workCanzoniRequestId)
+    private fun checkFirstWorker() {
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(firstBatchRequestId)
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
@@ -360,12 +340,11 @@ class EventsFragment: Fragment() {
                         Log.d(tag, "checkCanzoniWorker running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        setScrapeGothBatch()
+                        startSecondBatch()
                         Log.d(tag, "checkCanzoniWorker success in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        PalcoApplication.concerti = arrayListOf()
-                        setScrapeGothBatch()
+                        startSecondBatch()
                         Log.d(tag, "checkCanzoniWorker failed/blocked in ${workInfo.runAttemptCount}")
                     }
                     else -> Log.d(tag, "checkCanzoniWorker canceled in ${workInfo?.runAttemptCount}")
@@ -373,9 +352,8 @@ class EventsFragment: Fragment() {
             })
     }
 
-    private fun checkGothWorker() {
-
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(workGothRequestId)
+    private fun checkSecondWorker() {
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(secondBatchRequestId)
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
@@ -386,20 +364,20 @@ class EventsFragment: Fragment() {
                     }
                     WorkInfo.State.SUCCEEDED -> {
                         viewModel.setBatchEnded(true)
-                        val concerti = viewModel.getAllConcerti()
-                        viewModel.setConcerti(
-                            concerti
+                        val concerts = viewModel.getAllConcerts(requireContext())
+                        viewModel.setConcerts(
+                            concerts
                         )
                         binding.animation.visibility = View.INVISIBLE
                         binding.threeDots.visibility = View.INVISIBLE
                         binding.courtesyMessage.visibility = View.INVISIBLE
-                        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerts.size.toString()), Toast.LENGTH_SHORT).show()
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        if (viewModel.getAllConcerti().isNotEmpty()) {
+                        if (viewModel.getAllConcerts(requireContext()).isNotEmpty()) {
                             viewModel.setBatchEnded(true)
-                            val concerti = viewModel.getAllConcerti()
-                            viewModel.setConcerti(
+                            val concerti = viewModel.getAllConcerts(requireContext())
+                            viewModel.setConcerts(
                                 concerti
                             )
                             binding.animation.visibility = View.INVISIBLE

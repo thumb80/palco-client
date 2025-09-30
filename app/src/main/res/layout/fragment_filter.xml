@@ -16,7 +16,7 @@
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="@dimen/dp_8"
         app:tabIndicatorColor="@color/colorPrimary"
-        app:tabTextAppearance="@style/customTabText"/>
+        app:tabTextAppearance="@style/customTabTextFilter"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/filter_pager"

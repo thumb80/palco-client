@@ -54,15 +54,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -72,6 +63,7 @@ android {
 
     buildToolsVersion = "35.0.0"
     ndkVersion = "25.1.8937393"
+
 
 }
 
@@ -100,6 +92,7 @@ tasks {
 
 chaquopy {
     defaultConfig {
+        buildPython("/usr/local/bin/python3")
         pip {
             install("bs4")
             install("numpy")
@@ -110,6 +103,9 @@ chaquopy {
 }
 
 dependencies {
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("androidx.datastore:datastore:1.1.7")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")
@@ -119,7 +115,7 @@ dependencies {
     implementation("androidx.security:security-crypto-ktx:${rootProject.extra["crypto_version"]}")
     implementation("androidx.work:work-runtime:${rootProject.extra["work_version"]}")
     implementation("androidx.work:work-runtime-ktx:${rootProject.extra["work_version"]}")
-    implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("org.apache.commons:commons-text:1.14.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("com.github.sundeepk:compact-calendar-view:3.0.0")
@@ -129,11 +125,12 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.eftimoff:android-pathview:1.0.8@aar")
     implementation("androidx.test.ext:junit-ktx:1.3.0")
-    implementation("androidx.work:work-testing:2.10.3")
+    implementation("androidx.work:work-testing:2.10.4")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.5")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation("androidx.security:security-crypto:1.1.0")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
@@ -143,9 +140,9 @@ dependencies {
     testImplementation("io.insert-koin:koin-test-junit4:4.0.2")
     testImplementation("android.arch.core:core-testing:1.1.1")
     androidTestImplementation("io.insert-koin:koin-test-jvm:4.0.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
+    androidTestImplementation("androidx.test:runner:1.7.0")
 }
 
 java {

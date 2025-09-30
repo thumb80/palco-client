@@ -97,9 +97,15 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
-    <style name="customTabText" parent="TextAppearance.Design.Tab">
+    <style name="customTabTextConcerts" parent="TextAppearance.Design.Tab">
         <item name="fontFamily">@font/gotham_medium</item>
         <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="customTabTextFilter" parent="TextAppearance.Design.Tab">
+        <item name="fontFamily">@font/gotham_medium</item>
+        <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:textStyle">bold</item>
     </style>
 

@@ -53,9 +53,9 @@ class SharedViewModelTest: KoinTest {
     }
 
     @Test
-    fun setConcertiTest() {
-        val concerti = arrayListOf(Concerto("Test", "Test", "Test", "Test"))
-        viewModel.setConcerti(concerti)
+    fun setConcertsTest() {
+        val concerts: ArrayList<Concerto?> = arrayListOf(Concerto("Test", "Test", "Test", "Test"))
+        viewModel.setConcerts(concerts)
         assertNotNull(viewModel.concerti.value)
     }
 }

@@ -19,12 +19,12 @@ class ScrapeWorkersTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        PalcoApplication.concerti = arrayListOf()
+        PalcoApplication.concerts = arrayListOf()
     }
 
     @Test
     fun scrapeGothTest() {
-        val worker = TestListenableWorkerBuilder<Scrape02Worker>(context).build()
+        val worker = TestListenableWorkerBuilder<SecondBatchWorker>(context).build()
         runBlocking {
             val result = worker.doWork()
             assertNotNull(result)

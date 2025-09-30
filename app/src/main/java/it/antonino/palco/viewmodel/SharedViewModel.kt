@@ -11,25 +11,23 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import it.antonino.palco.PalcoApplication
-import it.antonino.palco.PalcoApplication.Companion.file
+import it.antonino.palco.PalcoApplication.Companion.file_1
+import it.antonino.palco.PalcoApplication.Companion.file_2
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.network.NetworkRepository
+import it.antonino.palco.util.Constant.FIRST_BATCH
+import it.antonino.palco.util.Constant.MODULE_BATCH
+import it.antonino.palco.util.Constant.SECOND_BATCH
+import it.antonino.palco.util.decryptJsonFromFile
+import it.antonino.palco.util.encryptJsonToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.threeten.bp.LocalDateTime
 import java.io.File
 import java.lang.reflect.Type
-import java.nio.charset.Charset
 
 class SharedViewModel(private val networkRepository: NetworkRepository): ViewModel() {
-
-    private val _isTargetHour = MutableStateFlow(false)
-    val isTargetHour: StateFlow<Boolean> = _isTargetHour
 
     private var _isNewDay: MutableLiveData<Boolean> = MutableLiveData()
     val isNewDay: LiveData<Boolean> = _isNewDay
@@ -37,8 +35,8 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
     private var _batchEnded: MutableLiveData<Boolean> = MutableLiveData()
     val batchEnded: LiveData<Boolean> = _batchEnded
 
-    private var _concerti: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
-    val concerti: LiveData<ArrayList<Concerto>> = _concerti
+    private var _concerti: MutableLiveData<ArrayList<Concerto?>> = MutableLiveData()
+    val concerti: LiveData<ArrayList<Concerto?>> = _concerti
 
     private var _cities: MutableLiveData<ArrayList<String>> = MutableLiveData()
     val cities: LiveData<ArrayList<String>> = _cities
@@ -46,14 +44,13 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
     private var _artists: MutableLiveData<ArrayList<String>> = MutableLiveData()
     val artists: LiveData<ArrayList<String>> = _artists
 
-    private var _concertiFilterCity: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
-    val concertiFilterCity: LiveData<ArrayList<Concerto>> = _concertiFilterCity
+    private var _concertsFilterCity: MutableLiveData<ArrayList<Concerto?>> = MutableLiveData()
+    val concertsFilterCity: LiveData<ArrayList<Concerto?>> = _concertsFilterCity
 
-    private var _concertiFilterArtist: MutableLiveData<ArrayList<Concerto>> = MutableLiveData()
-    val concertiFilterArtist: LiveData<ArrayList<Concerto>> = _concertiFilterArtist
+    private var _concertsFilterArtist: MutableLiveData<ArrayList<Concerto?>> = MutableLiveData()
+    val concertsFilterArtist: LiveData<ArrayList<Concerto?>> = _concertsFilterArtist
 
-    private val targetHour = 4
-    private val tagetMinute = 20
+    private val gson = Gson().newBuilder().create()
 
     init {
         scheduleNextCheck()
@@ -61,16 +58,10 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
     fun scheduleNextCheck() {
         viewModelScope.launch {
-            checkHour()
-            delay(60_000L)
+
+            delay(300_000L)
             scheduleNextCheck()
         }
-    }
-
-    fun checkHour() {
-        val currentHour = LocalDateTime.now().hour
-        val currntMinute = LocalDateTime.now().minute
-        _isTargetHour.value = currentHour == targetHour && currntMinute == tagetMinute
     }
 
     fun setIsNewDay(value: Boolean) {
@@ -81,32 +72,53 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
         _batchEnded.postValue(value)
     }
 
-    fun setConcerti(value: ArrayList<Concerto>) {
+    fun setConcerts(value: ArrayList<Concerto?>) {
         _concerti.postValue(value)
     }
 
-    fun getAllConcerti(): ArrayList<Concerto> {
+    fun getAllConcerts(context: Context): ArrayList<Concerto?> {
         val itemType = object : TypeToken<List<Concerto>>() {}.type
-        val concerti: ArrayList<Concerto> = Gson().fromJson(file?.readText(), itemType)
-        return concerti
+        val json_1 = if (file_1.exists()) decryptJsonFromFile(context, file_1) else ""
+        val json_2 = if (file_2.exists()) decryptJsonFromFile(context, file_2) else ""
+        var file = File("")
+        if (json_2.isNotEmpty())
+            file = file_2
+        else if (json_1.isNotEmpty())
+            file = file_1
+        val concerts: ArrayList<Concerto?> = gson.fromJson(decryptJsonFromFile(context, file), itemType)
+        return concerts
     }
 
-    fun getAllCities(): ArrayList<String> {
+    fun getAllCities(context: Context): ArrayList<String> {
         val itemType = object : TypeToken<List<Concerto>>() {}.type
-        val concerti: ArrayList<Concerto> = Gson().fromJson(file?.readText(), itemType)
+        var file = File("")
+        val json_1 = if (file_1.exists()) decryptJsonFromFile(context, file_1) else ""
+        val json_2 = if (file_2.exists()) decryptJsonFromFile(context, file_2) else ""
+        if (json_2.isNotEmpty())
+            file = file_2
+        else if (json_1.isNotEmpty())
+            file = file_1
+        val concerts: ArrayList<Concerto> = gson.fromJson(decryptJsonFromFile(context, file), itemType)
         val ret: ArrayList<String> = arrayListOf()
-        concerti.forEach {
+        concerts.forEach {
             ret.add(it.city)
         }
         _cities.postValue(ret)
         return ret
     }
 
-    fun getAllArtist(): ArrayList<String> {
+    fun getAllArtist(context: Context): ArrayList<String> {
         val itemType = object : TypeToken<List<Concerto>>() {}.type
-        val concerti: ArrayList<Concerto> = Gson().fromJson(file?.readText(), itemType)
+        var file = File("")
+        val json_1 = if (file_1.exists()) decryptJsonFromFile(context, file_1) else ""
+        val json_2 = if (file_2.exists()) decryptJsonFromFile(context, file_2) else ""
+        if (json_2.isNotEmpty())
+            file = file_2
+        else if (json_1.isNotEmpty())
+            file = file_1
+        val concerts: ArrayList<Concerto> = gson.fromJson(decryptJsonFromFile(context, file), itemType)
         val ret: ArrayList<String> = arrayListOf()
-        concerti.forEach {
+        concerts.forEach {
             if (!ret.contains(it.artist))
                 ret.add(it.artist)
         }
@@ -114,90 +126,97 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
         return ret
     }
 
-    fun getAllByCity(city: String): ArrayList<Concerto> {
+    fun getAllByCity(context: Context, city: String): ArrayList<Concerto?> {
         val itemType = object : TypeToken<List<Concerto>>() {}.type
-        val concerti: ArrayList<Concerto> = Gson().fromJson(file?.readText(), itemType)
-        val ret: ArrayList<Concerto> = arrayListOf()
-        concerti.forEach {
+        var file = File("")
+        val json_1 = if (file_1.exists()) decryptJsonFromFile(context, file_1) else ""
+        val json_2 = if (file_2.exists()) decryptJsonFromFile(context, file_2) else ""
+        if (json_2.isNotEmpty())
+            file = file_2
+        else if (json_1.isNotEmpty())
+            file = file_1
+        val concerts: ArrayList<Concerto> = gson.fromJson(decryptJsonFromFile(context, file), itemType)
+        val ret: ArrayList<Concerto?> = arrayListOf()
+        concerts.forEach {
             if (it.city == city)
                 ret.add(it)
         }
-        _concertiFilterCity.postValue(ret)
+        _concertsFilterCity.postValue(ret)
         return ret
     }
 
-    fun getAllByArtist(artist: String): ArrayList<Concerto> {
+    fun getAllByArtist(context: Context, artist: String): ArrayList<Concerto?> {
         val itemType = object : TypeToken<List<Concerto>>() {}.type
-        val concerti: ArrayList<Concerto> = Gson().fromJson(file?.readText(), itemType)
-        var ret: ArrayList<Concerto> = arrayListOf()
-        concerti.forEach {
+        var file = File("")
+        val json_1 = if (file_1.exists()) decryptJsonFromFile(context, file_1) else ""
+        val json_2 = if (file_2.exists()) decryptJsonFromFile(context, file_2) else ""
+        if (json_2.isNotEmpty())
+            file = file_2
+        else if (json_1.isNotEmpty())
+            file = file_1
+        val concerts: ArrayList<Concerto> = gson.fromJson(decryptJsonFromFile(context, file), itemType)
+        val ret: ArrayList<Concerto?> = arrayListOf()
+        concerts.forEach {
             if (it.artist == artist)
                 ret.add(it)
         }
-        _concertiFilterArtist.postValue(ret)
+        _concertsFilterArtist.postValue(ret)
         return ret
     }
 
-    fun scrape01(context: Context) {
+    fun firstBatch(context: Context) {
         runBlocking(Dispatchers.IO) {
             if (!Python.isStarted())
                 Python.start(AndroidPlatform(context))
             val py = Python.getInstance()
-            val pyObj = py.getModule("batch")
-            val message = pyObj.callAttr("scrape01")
-            println(message)
-            val gson: Gson = Gson().newBuilder().create()
+            val pyObj = py.getModule(MODULE_BATCH)
+            val message = pyObj.callAttr(FIRST_BATCH)
             val collectionType: Type =
                 object : TypeToken<ArrayList<Concerto?>?>() {}.type
-            val concerti: Collection<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
-                Charset.forName("UTF-8"))), collectionType)
-            PalcoApplication.concerti = concerti as ArrayList<Concerto>
-            if (file?.exists() == true)
-                file?.writeText("")
-            file?.writeText(Gson().toJson(concerti))
+            val concerts = message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "")
+            val jsonString: ArrayList<Concerto> = gson.fromJson(concerts, collectionType)
+            encryptJsonToFile(context, file_1, gson.toJson(jsonString))
         }
     }
 
-    fun scrape02(context: Context) {
+    fun secondBatch(context: Context) {
         runBlocking(Dispatchers.IO) {
             if (!Python.isStarted())
                 Python.start(AndroidPlatform(context))
             val py = Python.getInstance()
-            val pyObj = py.getModule("batch")
-            val message = pyObj.callAttr("scrape02")
-            val gson: Gson = Gson().newBuilder().create()
+            val pyObj = py.getModule(MODULE_BATCH)
+            val message = pyObj.callAttr(SECOND_BATCH)
             val collectionType: Type =
                 object : TypeToken<ArrayList<Concerto?>?>() {}.type
-            val concerti: ArrayList<Concerto> = gson.fromJson(String(message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "").toByteArray(
-                Charset.forName("UTF-8"))), collectionType)
-            val temp : MutableList<Concerto> = mutableListOf()
+            val concertString = message.repr().replaceRange(0, 1, "").replaceRange(message.repr().length - 2 , message.repr().length - 1, "")
+            val concerts: ArrayList<Concerto> = gson.fromJson(concertString, collectionType)
+            val allConcerts : MutableList<Concerto> = mutableListOf()
             try {
-                concerti.forEach {
-                    if (containsSpecificJsonValues(file, it))
-                        temp.add(it)
+                val itemType = object : TypeToken<List<Concerto>>() {}.type
+                val json = decryptJsonFromFile(context, file_1)
+                val jsonMap: ArrayList<Concerto> = gson.fromJson(json, itemType)
+                concerts.forEach {
+                    if (!jsonMap.contains(it))
+                        jsonMap.add(it)
                 }
-                PalcoApplication.concerti.addAll(temp)
+                allConcerts.addAll(jsonMap)
             } catch (e: Exception) {
-                PalcoApplication.concerti.addAll(concerti)
+                println(e.message)
+                allConcerts.addAll(concerts)
             }
-            file?.writeText(Gson().toJson(PalcoApplication.concerti))
+            encryptJsonToFile(context, file_2, gson.toJson(allConcerts))
         }
     }
 
-    fun containsSpecificJsonValues(file: File?, requiredValues: Concerto): Boolean {
+    fun containsSpecificJsonValues(context: Context, file: File, requiredValues: Concerto): Boolean {
         return try {
-            val content = file?.readText()
-            val gson = Gson()
             val itemType = object : TypeToken<List<Concerto>>() {}.type
-            val jsonMap: ArrayList<Concerto> = gson.fromJson(content, itemType) // Parse JSON as a map
-
-            jsonMap.forEach {
-                if (it.artist.contains(requiredValues.artist, true) || (it.artist.split(" ")[0].contains(requiredValues.artist.split(" ")[0], true)))
-                    return false
-            }
-
+            val json = decryptJsonFromFile(context, file)
+            val jsonMap: ArrayList<Concerto> = gson.fromJson(json, itemType) // Parse JSON as a map
+            if (jsonMap.contains(requiredValues))
+                return false
             return true
-        } catch (e: JsonSyntaxException) {
+        } catch (_: JsonSyntaxException) {
             false
         }
     }

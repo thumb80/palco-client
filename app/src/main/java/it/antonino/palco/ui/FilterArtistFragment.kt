@@ -11,25 +11,22 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.eftimoff.androipathview.PathView
-import it.antonino.palco.PalcoApplication.Companion.file
+import it.antonino.palco.PalcoApplication.Companion.file_1
+import it.antonino.palco.PalcoApplication.Companion.file_2
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.databinding.FragmentFilterArtistBinding
 import it.antonino.palco.ext.CustomDialog
 import it.antonino.palco.ext.setAccessibility
-import it.antonino.palco.ext.toPx
 import it.antonino.palco.model.ArtistListAdapter
 import it.antonino.palco.model.Concerto
 import it.antonino.palco.viewmodel.SharedViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class FilterArtistFragment : Fragment() {
@@ -49,7 +46,7 @@ class FilterArtistFragment : Fragment() {
         binding = FragmentFilterArtistBinding.inflate(layoutInflater)
 
         viewModel.concerti.observe(viewLifecycleOwner) {
-            viewModel.getAllArtist()
+            viewModel.getAllArtist(requireContext())
             binding.animation.visibility = View.INVISIBLE
         }
 
@@ -64,8 +61,8 @@ class FilterArtistFragment : Fragment() {
 
         val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
 
-        if (file?.exists() == true && prefs?.getBoolean("isNewDay", false) == false) {
-            viewModel.getAllArtist()
+        if ((file_1.exists() || file_2.exists()) && prefs?.getBoolean("isNewDay", false) == false) {
+            viewModel.getAllArtist(requireContext())
             binding.animation.visibility = View.INVISIBLE
         }
 
@@ -109,7 +106,7 @@ class FilterArtistFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (binding.animation.visibility == View.INVISIBLE)
+                if (binding.animation.isInvisible)
                     artistAdapter?.filter?.filter(newText)
                 return true
             }
@@ -129,8 +126,8 @@ class FilterArtistFragment : Fragment() {
                     binding.filterHeaderArtistReset.visibility = View.VISIBLE
                     binding.filterHeaderArtist.text = getString(R.string.filter_artist_selected, org.apache.commons.text.StringEscapeUtils.unescapeJava(artist))
                     binding.filterHeaderArtistReset.text = getString(R.string.filter_artist_reset)
-                    viewModel.getAllByArtist(artist)
-                    viewModel.concertiFilterArtist.observe(viewLifecycleOwner, concertsObserver)
+                    viewModel.getAllByArtist(requireContext(),  artist)
+                    viewModel.concertsFilterArtist.observe(viewLifecycleOwner, concertsObserver)
                 }
                 val layoutManager = LinearLayoutManager(
                     context,
@@ -148,13 +145,13 @@ class FilterArtistFragment : Fragment() {
 
     }
 
-    private val concertsObserver = Observer<ArrayList<Concerto>> {
+    private val concertsObserver = Observer<ArrayList<Concerto?>> {
 
         when(it.isNotEmpty()) {
             true -> {
                 showConcerti()
 
-                val concerti = it.sortedBy { item -> item.time }
+                val concerti = it.sortedBy { item -> item?.time }
                 val sortedByDateItems: ArrayList<Concerto?> = arrayListOf()
                 concerti.forEach {
                     sortedByDateItems.add(it)
