@@ -68,6 +68,26 @@ class CustomFilterCityAdapter(
                 if (it?.isJsonNull == false && it.get("results")?.asJsonArray?.size() != 0)  {
                     artistThumb = it.get("results")?.asJsonArray?.get(0)?.asJsonObject?.get("cover_image")?.asString
                     concertRow.addArtistThumb(artistThumb)
+
+                    val labelId = it.get("results")
+                        ?.asJsonArray
+                        ?.get(0)
+                        ?.asJsonObject
+                        ?.get("resource_url")?.asString?.substringAfterLast("/")
+
+                    viewModel.getArtistInfos(labelId).observeForever {
+                        if (it?.isJsonNull == false) {
+                            try {
+                                artistInfo = it.get("profile")?.asString
+                                concertRow.addArtistInfo(artistInfo)
+                            } catch (e: Exception) {
+                                artistInfo = null
+                            }
+                        } else {
+                            artistInfo = null
+                        }
+                    }
+
                     if (artistThumb?.contains(".gif") == true){
                         binding.artistImage
                             .setImageDrawable(
@@ -92,24 +112,6 @@ class CustomFilterCityAdapter(
                             null
                         )
                     )
-                }
-            }
-
-            viewModel.getArtistInfos(mArtist).observeForever {
-                if (it?.isJsonNull == false) {
-                    var artistInfoExtract: JsonElement? = null
-                    try {
-                        artistInfoExtract = it.get("query")
-                            ?.asJsonObject?.entrySet()?.iterator()?.next()
-                            ?.value?.asJsonObject?.entrySet()?.first()?.value
-                            ?.asJsonObject?.get("extract")
-                        artistInfo = if (artistInfoExtract != null && artistInfoExtract.asString?.isNotEmpty() == true) artistInfoExtract.asString else null
-                        concertRow.addArtistInfo(artistInfo)
-                    } catch (e: Exception) {
-                        artistInfo = null
-                    }
-                } else {
-                    artistInfo = null
                 }
             }
 

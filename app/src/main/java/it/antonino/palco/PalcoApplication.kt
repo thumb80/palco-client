@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import com.jakewharton.threetenabp.AndroidThreeTen
 import it.antonino.palco.di.appModule
 import it.antonino.palco.ext.getShared
+import it.antonino.palco.util.Constant.FILE_NAME_1
+import it.antonino.palco.util.Constant.FILE_NAME_2
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
@@ -30,8 +32,8 @@ class PalcoApplication: Application() {
         AndroidThreeTen.init(this);
         sharedPreferences = sharedPreferences.getShared(this)
 
-        file_1 = File(this.filesDir, "concerts_1.json")
-        file_2 = File(this.filesDir, "concerts_2.json")
+        file_1 = File(this.filesDir, FILE_NAME_1)
+        file_2 = File(this.filesDir, FILE_NAME_2)
 
     }
 

@@ -15,6 +15,8 @@ import it.antonino.palco.ext.getDate
 import it.antonino.palco.util.Constant.roundRadius
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.java.KoinJavaComponent.inject
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 private val viewModel: SharedViewModel by inject(SharedViewModel::class.java)
 
@@ -59,6 +61,26 @@ class CustomAdapter(
                         ?.get(0)
                         ?.asJsonObject
                         ?.get("cover_image")?.asString
+
+                    val labelId = it.get("results")
+                        ?.asJsonArray
+                        ?.get(0)
+                        ?.asJsonObject
+                        ?.get("resource_url")?.asString?.substringAfterLast("/")
+
+                    viewModel.getArtistInfos(labelId).observeForever {
+                        if (it?.isJsonNull == false) {
+                            try {
+                                artistInfo = it.get("profile")?.asString
+                                concertRow.addArtistInfo(artistInfo)
+                            } catch (e: Exception) {
+                                artistInfo = null
+                            }
+                        } else {
+                            artistInfo = null
+                        }
+                    }
+
                     if (artistThumb?.contains(".gif") == true) {
                         binding.roundedImageView.setImageDrawable(
                             ResourcesCompat.getDrawable(
@@ -88,24 +110,6 @@ class CustomAdapter(
                             null
                         )
                     )
-                }
-            }
-
-            viewModel.getArtistInfos(org.apache.commons.text.StringEscapeUtils.unescapeJava(artist)).observeForever {
-                if (it?.isJsonNull == false) {
-                    var artistInfoExtract: JsonElement? = null
-                    try {
-                        artistInfoExtract = it.get("query")
-                            ?.asJsonObject?.entrySet()?.iterator()?.next()
-                            ?.value?.asJsonObject?.entrySet()?.first()?.value
-                            ?.asJsonObject?.get("extract")
-                        artistInfo = if (artistInfoExtract != null && artistInfoExtract.asString?.isNotEmpty() == true) artistInfoExtract.asString else null
-                        concertRow.addArtistInfo(artistInfo)
-                    } catch (e: Exception) {
-                        artistInfo = null
-                    }
-                } else {
-                    artistInfo = null
                 }
             }
 

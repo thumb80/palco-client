@@ -38,4 +38,14 @@
     <string name="batch_error_string">C\'è stato un problema nel recupero dei concerti</string>
     <string name="batch_error_hint">Riprova</string>
     <string name="courtesy_message">Attendere... sto recuperando gli eventi</string>
+    <string name="update_dialog_title">Aggiornamento disponibile</string>
+    <string name="update_dialog_content">Una nuova versione è disponibile, vuoi aggiornare adesso?</string>
+    <string name="force_update_dialog_title">Aggiornamento richiesto</string>
+    <string name="force_update_dialog_content">Una nuova versione è disponibile, si prega di aggiornare per continuare</string>
+    <string name="ok">Sì</string>
+    <string name="ko">No</string>
+    <string name="force_update">Aggiorna</string>
+    <string name="no_internet_title">Nessuna connessione</string>
+    <string name="no_internet_content">Per usare questa app è necessaria una connessione a Internet.</string>
+    <string name="no_internet_action">Esci</string>
 </resources>

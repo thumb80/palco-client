@@ -52,18 +52,6 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
     private val gson = Gson().newBuilder().create()
 
-    init {
-        scheduleNextCheck()
-    }
-
-    fun scheduleNextCheck() {
-        viewModelScope.launch {
-
-            delay(300_000L)
-            scheduleNextCheck()
-        }
-    }
-
     fun setIsNewDay(value: Boolean) {
         _isNewDay.postValue(value)
     }
@@ -221,10 +209,10 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
         }
     }
 
-    fun getArtistInfos(artist: String?): LiveData<JsonObject?> {
+    fun getArtistInfos(labelId: String?): LiveData<JsonObject?> {
         var responseObject = MutableLiveData<JsonObject?>()
         viewModelScope.launch {
-            responseObject = networkRepository.getArtistInfos(artist)
+            responseObject = networkRepository.getArtistInfos(labelId)
         }
         return responseObject
     }

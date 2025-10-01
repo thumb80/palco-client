@@ -23,7 +23,7 @@ android {
         applicationId = "it.antonino.palco"
         minSdk = 24
         targetSdk = 36
-        versionCode = 59
+        versionCode = 60
         versionName = "4.20"
 
         buildConfigField("String", "DiscogsApiKey", discogsApiKey)
@@ -131,6 +131,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("org.osmdroid:osmdroid-android:6.1.20")
     implementation("androidx.security:security-crypto:1.1.0")
+    implementation("com.google.firebase:firebase-config-ktx:22.1.2")
     testImplementation("junit:junit:${rootProject.extra["junit_version"]}")
     testImplementation("androidx.test:core:${rootProject.extra["androidx_test_version"]}")
     testImplementation("org.mockito:mockito-core:${rootProject.extra["mockito_version"]}")
@@ -147,6 +148,6 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(18)
     }
 }

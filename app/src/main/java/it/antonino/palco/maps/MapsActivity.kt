@@ -41,7 +41,7 @@ class MapsActivity: AppCompatActivity() {
 
         val startPoint = GeoPoint(latitude, longitude)
         mapView.setZoomRounding(true)
-        mapView.controller.setZoom(20.0)
+        mapView.controller.setZoom(17.0)
         mapView.controller.setCenter(startPoint)
 
         // Aggiungi un marker

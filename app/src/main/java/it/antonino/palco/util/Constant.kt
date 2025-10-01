@@ -16,8 +16,10 @@ object Constant {
     const val blueColorRGB = 36
     const val cacheSize = (5 * 1024 * 1024).toLong()
     const val roundRadius = 12
-    const val WIKIPEDIA_URL = "https://it.wikipedia.org"
-    const val FILE_NAME = "concerts.json"
+    const val DISCOGS_BASE_URL = "https://api.discogs.com"
+
+    const val FILE_NAME_1 = "concerts_1.json"
+    const val FILE_NAME_2 = "concerts_2.json"
     const val MODULE_BATCH = "batch"
     const val FIRST_BATCH = "firstBatch"
     const val SECOND_BATCH = "secondBatch"

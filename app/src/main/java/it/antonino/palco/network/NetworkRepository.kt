@@ -7,14 +7,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class NetworkRepository(
-    private val discogsAPI: DiscogsAPI,
-    private val wikipediaAPI: WikiPediaAPI
+    private val discogsAPI: DiscogsAPI
 ) {
 
     companion object : SingletonHolder<
             NetworkRepository,
-            DiscogsAPI,
-            WikiPediaAPI
+            DiscogsAPI
             >(::NetworkRepository)
 
 
@@ -38,9 +36,9 @@ class NetworkRepository(
         return responseObject
     }
 
-    fun getArtistInfos(artist: String?): MutableLiveData<JsonObject?> {
+    fun getArtistInfos(labelId: String?): MutableLiveData<JsonObject?> {
         val responseObject = MutableLiveData<JsonObject?>()
-        wikipediaAPI.getArtistInfos(artist).enqueue(
+        discogsAPI.getArtistInfos(labelId = labelId).enqueue(
             object : Callback<JsonObject?> {
                 override fun onResponse(call: Call<JsonObject?>, response: Response<JsonObject?>) {
                     responseObject.postValue(response.body())
@@ -56,13 +54,13 @@ class NetworkRepository(
     }
 }
 
-open class SingletonHolder<out T, in A,B>(creator: (A, B) -> T) {
+open class SingletonHolder<out T, in A>(creator: (A) -> T) {
 
-    private var creator: ((A,B) -> T)? = creator
+    private var creator: ((A) -> T)? = creator
     @Volatile
     private var instance: T? = null
 
-    fun getInstance(arg: A, arg2: B): T {
+    fun getInstance(arg: A): T {
         val i = instance
         if (i != null) {
             return i
@@ -73,7 +71,7 @@ open class SingletonHolder<out T, in A,B>(creator: (A, B) -> T) {
             if (i2 != null) {
                 i2
             } else {
-                val created = creator!!(arg,arg2)
+                val created = creator!!(arg)
                 instance = created
                 creator = null
                 created
