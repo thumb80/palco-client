@@ -3,28 +3,28 @@ package it.antonino.palco.util
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import androidx.core.net.toUri
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import it.antonino.palco.BuildConfig
 import it.antonino.palco.R
-import androidx.core.net.toUri
 
 object VersionCheck {
 
-    fun checkForUpdate(context: Context) {
+    var latestVersionCode: Int = -1
+
+    fun checkForUpdate(context: Context, callback: () -> Unit, closeAppCallback: () -> Unit) {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
 
-        // Set default values (optional)
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3600 // fetch every hour
+            minimumFetchIntervalInSeconds = 3 // fetch every hour
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
 
-        // Fetch remote config
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val latestVersionCode = remoteConfig.getString("latest_version_code")
+                    latestVersionCode = remoteConfig.getLong("latest_version_code").toInt()
                     val latestVersion = remoteConfig.getString("latest_version")
                     val forceUpdate = remoteConfig.getBoolean("force_update")
                     val updateUrl = remoteConfig.getString("update_url")
@@ -32,15 +32,25 @@ object VersionCheck {
                     val currentVersion = BuildConfig.VERSION_NAME
                     val currentVersionCode = BuildConfig.VERSION_CODE
 
-                    if (isUpdateAvailable(currentVersion,
-                            currentVersionCode.toString(),
+                    println("currentVersion : $currentVersion")
+                    println("latestVersionCode : $latestVersionCode")
+                    println("currentVersionCode : $currentVersionCode")
+                    println("latestVersionCode : $latestVersionCode")
+                    println("latestVersion : $latestVersion")
+                    println("updateUrl : $updateUrl")
+
+                    if (isUpdateAvailable(
+                            currentVersion,
+                            currentVersionCode,
                             latestVersion,
                             latestVersionCode)) {
                         if (forceUpdate) {
-                            showForceUpdateDialog(context, updateUrl)
+                            showForceUpdateDialog(context, updateUrl, closeAppCallback)
                         } else {
-                            showOptionalUpdateDialog(context, updateUrl)
+                            showOptionalUpdateDialog(context, updateUrl, callback)
                         }
+                    } else {
+                        callback.invoke()
                     }
                 }
             }
@@ -48,35 +58,36 @@ object VersionCheck {
 
     private fun isUpdateAvailable(
         current: String,
-        currentVersionCode: String,
+        currentVersionCode: Int,
         latest: String,
-        latestVersionCode: String): Boolean {
+        latestVersionCode: Int): Boolean {
 
-        if (currentVersionCode != latestVersionCode)
+        if (currentVersionCode < latestVersionCode)
             return true
         return current != latest
     }
 
 
-    private fun showForceUpdateDialog(context: Context, updateUrl: String) {
+    private fun showForceUpdateDialog(context: Context, updateUrl: String, callback: () -> Unit) {
         AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.force_update_dialog_title))
             .setMessage(context.getString(R.string.force_update_dialog_content))
             .setCancelable(false)
             .setPositiveButton(context.getString(R.string.force_update)) { _, _ ->
+                callback.invoke()
                 openPlayStore(context, updateUrl)
             }
             .show()
     }
 
-    private fun showOptionalUpdateDialog(context: Context, updateUrl: String) {
+    private fun showOptionalUpdateDialog(context: Context, updateUrl: String, callback: () -> Unit) {
         AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.update_dialog_title))
             .setMessage(context.getString(R.string.update_dialog_content))
             .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
                 openPlayStore(context, updateUrl)
             }
-            .setNegativeButton(context.getString(R.string.ko), null)
+            .setNegativeButton(context.getString(R.string.ko), { _, _, -> callback.invoke() })
             .show()
     }
 
@@ -85,4 +96,5 @@ object VersionCheck {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
+
 }

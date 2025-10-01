@@ -19,7 +19,6 @@ class ScrapeWorkersTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        PalcoApplication.concerts = arrayListOf()
     }
 
     @Test

@@ -50,6 +50,9 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
     private var _concertsFilterArtist: MutableLiveData<ArrayList<Concerto?>> = MutableLiveData()
     val concertsFilterArtist: LiveData<ArrayList<Concerto?>> = _concertsFilterArtist
 
+    private var _isAppUpdate: MutableLiveData<Boolean> = MutableLiveData()
+    val isAppUpdate: LiveData<Boolean> = _isAppUpdate
+
     private val gson = Gson().newBuilder().create()
 
     fun setIsNewDay(value: Boolean) {
@@ -62,6 +65,10 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
 
     fun setConcerts(value: ArrayList<Concerto?>) {
         _concerti.postValue(value)
+    }
+
+    fun setIsAppUpdate(value: Boolean) {
+        _isAppUpdate.postValue(value)
     }
 
     fun getAllConcerts(context: Context): ArrayList<Concerto?> {
@@ -193,19 +200,6 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 allConcerts.addAll(concerts)
             }
             encryptJsonToFile(context, file_2, gson.toJson(allConcerts))
-        }
-    }
-
-    fun containsSpecificJsonValues(context: Context, file: File, requiredValues: Concerto): Boolean {
-        return try {
-            val itemType = object : TypeToken<List<Concerto>>() {}.type
-            val json = decryptJsonFromFile(context, file)
-            val jsonMap: ArrayList<Concerto> = gson.fromJson(json, itemType) // Parse JSON as a map
-            if (jsonMap.contains(requiredValues))
-                return false
-            return true
-        } catch (_: JsonSyntaxException) {
-            false
         }
     }
 

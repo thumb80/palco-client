@@ -195,6 +195,15 @@ class EventsFragment: Fragment() {
             }
         }
 
+        viewModel.isAppUpdate.observe(viewLifecycleOwner) {
+            if (it) {
+                hideAll()
+                startAnimation()
+                startThreeDots()
+                startFirstBatch()
+            }
+        }
+
         val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
 
         if ((file_1.exists() || file_2.exists()) && prefs?.getBoolean("isNewDay", false) == false)

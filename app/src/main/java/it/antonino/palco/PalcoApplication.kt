@@ -2,6 +2,7 @@ package it.antonino.palco
 
 import android.app.Application
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.jakewharton.threetenabp.AndroidThreeTen
 import it.antonino.palco.di.appModule
 import it.antonino.palco.ext.getShared
@@ -30,6 +31,7 @@ class PalcoApplication: Application() {
         }
 
         AndroidThreeTen.init(this);
+
         sharedPreferences = sharedPreferences.getShared(this)
 
         file_1 = File(this.filesDir, FILE_NAME_1)

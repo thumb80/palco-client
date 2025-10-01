@@ -48,4 +48,5 @@
     <string name="no_internet_title">Nessuna connessione</string>
     <string name="no_internet_content">Per usare questa app è necessaria una connessione a Internet.</string>
     <string name="no_internet_action">Esci</string>
+    <string name="package_name">it.antonino.palco</string>
 </resources>
