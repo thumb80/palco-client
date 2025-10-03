@@ -79,7 +79,7 @@ class PalcoExtensionTest: KoinTest {
     @Test
     fun getSharedTest() {
         val appContext = ApplicationProvider.getApplicationContext<Context>()
-        assertNotNull(sharedPreferences.getShared(appContext))
+        assertNotNull(getShared(appContext))
     }
 
     @Test

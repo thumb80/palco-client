@@ -7,8 +7,8 @@ import it.antonino.palco.network.NetworkRepository
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.DISCOGS_BASE_URL
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.workers.FirstBatchWorker
-import it.antonino.palco.workers.SecondBatchWorker
+import it.antonino.palco.workers.BatchWorker_01
+import it.antonino.palco.workers.BatchWorker_02
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -66,10 +66,10 @@ val appModule = module {
     viewModelOf(::SharedViewModel)
     // WorkManager
     worker {
-        FirstBatchWorker(get(), get())
+        BatchWorker_01(get(), get())
     }
     worker {
-        SecondBatchWorker(get(), get())
+        BatchWorker_02(get(), get())
     }
 }
 

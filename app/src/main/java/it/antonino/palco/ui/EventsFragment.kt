@@ -14,10 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Constraints
@@ -33,6 +30,8 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import it.antonino.palco.PalcoApplication.Companion.file_1
 import it.antonino.palco.PalcoApplication.Companion.file_2
+import it.antonino.palco.PalcoApplication.Companion.file_3
+import it.antonino.palco.PalcoApplication.Companion.file_4
 import it.antonino.palco.R
 import it.antonino.palco.databinding.FragmentEventsBinding
 import it.antonino.palco.ext.CustomDialog
@@ -51,15 +50,17 @@ import it.antonino.palco.util.Constant.greenColorRGB
 import it.antonino.palco.util.Constant.monthDateFormat
 import it.antonino.palco.util.Constant.redColorRGB
 import it.antonino.palco.viewmodel.SharedViewModel
-import it.antonino.palco.workers.FirstBatchWorker
-import it.antonino.palco.workers.SecondBatchWorker
-import kotlinx.coroutines.launch
+import it.antonino.palco.workers.BatchWorker_01
+import it.antonino.palco.workers.BatchWorker_02
+import it.antonino.palco.workers.BatchWorker_03
+import it.antonino.palco.workers.BatchWorker_04
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.util.UUID
+import kotlin.toString
 
 class EventsFragment: Fragment() {
 
@@ -70,6 +71,8 @@ class EventsFragment: Fragment() {
     private lateinit var binding: FragmentEventsBinding
     private lateinit var firstBatchRequestId: UUID
     private lateinit var secondBatchRequestId: UUID
+    private lateinit var thirdBatchRequestId: UUID
+    private lateinit var fourthBatchRequestId: UUID
     private lateinit var richPath: PathView
     private lateinit var threeDotPath: PathView
 
@@ -206,7 +209,7 @@ class EventsFragment: Fragment() {
 
         val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
 
-        if ((file_1.exists() || file_2.exists()) && prefs?.getBoolean("isNewDay", false) == false)
+        if ((file_1.exists() || file_2.exists() || file_3.exists() || file_4.exists()) && prefs?.getBoolean("isNewDay", false) == false)
             viewModel.setConcerts(
                 viewModel.getAllConcerts(requireContext())
             )
@@ -306,7 +309,7 @@ class EventsFragment: Fragment() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<FirstBatchWorker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<BatchWorker_01>()
             .setConstraints(constraints)
             .build()
         firstBatchRequestId = scrapeWork.id
@@ -318,14 +321,16 @@ class EventsFragment: Fragment() {
 
         enableCalendarTouch(false)
 
-        checkFirstWorker()
+        checkWorker(firstBatchRequestId) {
+            startSecondBatch()
+        }
     }
 
     private fun startSecondBatch() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val scrapeWork = OneTimeWorkRequestBuilder<SecondBatchWorker>()
+        val scrapeWork = OneTimeWorkRequestBuilder<BatchWorker_02>()
             .setConstraints(constraints)
             .build()
         secondBatchRequestId = scrapeWork.id
@@ -335,74 +340,91 @@ class EventsFragment: Fragment() {
             scrapeWork
         )
 
-        checkSecondWorker()
+        checkWorker(secondBatchRequestId) {
+            startThirdBatch()
+        }
     }
 
-    private fun checkFirstWorker() {
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(firstBatchRequestId)
+    private fun startThirdBatch() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val scrapeWork = OneTimeWorkRequestBuilder<BatchWorker_03>()
+            .setConstraints(constraints)
+            .build()
+        thirdBatchRequestId = scrapeWork.id
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            "it-antonino-batch-03",
+            ExistingWorkPolicy.REPLACE,
+            scrapeWork
+        )
+
+        checkWorker(thirdBatchRequestId) {
+            startFourthBatch()
+        }
+    }
+
+    private fun startFourthBatch() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val scrapeWork = OneTimeWorkRequestBuilder<BatchWorker_04>()
+            .setConstraints(constraints)
+            .build()
+        fourthBatchRequestId = scrapeWork.id
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            "it-antonino-batch-04",
+            ExistingWorkPolicy.REPLACE,
+            scrapeWork
+        )
+
+        checkFinalWorker(fourthBatchRequestId, {
+            handleSuccessBatchState()
+        }, {
+            handleBlockedBatchState()
+        })
+    }
+
+    private fun checkWorker(requestID: UUID, callback: () -> Unit) {
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(requestID)
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
-                        Log.d(tag, "checkCanzoniWorker enqueued in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkWorker ${requestID.mostSignificantBits} enqueued in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.RUNNING -> {
-                        Log.d(tag, "checkCanzoniWorker running in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkWorker ${requestID.mostSignificantBits} running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        startSecondBatch()
-                        Log.d(tag, "checkCanzoniWorker success in ${workInfo.runAttemptCount}")
+                        callback.invoke()
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        startSecondBatch()
-                        Log.d(tag, "checkCanzoniWorker failed/blocked in ${workInfo.runAttemptCount}")
+                        callback.invoke()
+                        Log.d(tag, "checkWorker ${requestID.mostSignificantBits} failed/blocked in ${workInfo.runAttemptCount}")
                     }
-                    else -> Log.d(tag, "checkCanzoniWorker canceled in ${workInfo?.runAttemptCount}")
+                    else -> Log.d(tag, "checkWorker ${requestID.mostSignificantBits} canceled in ${workInfo?.runAttemptCount}")
                 }
             })
     }
 
-    private fun checkSecondWorker() {
-        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(secondBatchRequestId)
+    private fun checkFinalWorker(requestID: UUID, callbacSuccessk: () -> Unit, callbackFailure: () -> Unit) {
+        WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(requestID)
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
                     WorkInfo.State.ENQUEUED -> {
-                        Log.d(tag, "checkGothWorker enqueued in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkWorker ${requestID.mostSignificantBits} enqueued in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.RUNNING -> {
-                        Log.d(tag, "checkGothWorker running in ${workInfo.runAttemptCount}")
+                        Log.d(tag, "checkWorker ${requestID.mostSignificantBits} running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        viewModel.setBatchEnded(true)
-                        val concerts = viewModel.getAllConcerts(requireContext())
-                        viewModel.setConcerts(
-                            concerts
-                        )
-                        binding.animation.visibility = View.INVISIBLE
-                        binding.threeDots.visibility = View.INVISIBLE
-                        binding.courtesyMessage.visibility = View.INVISIBLE
-                        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerts.size.toString()), Toast.LENGTH_SHORT).show()
+                        callbacSuccessk.invoke()
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
-                        if (viewModel.getAllConcerts(requireContext()).isNotEmpty()) {
-                            viewModel.setBatchEnded(true)
-                            val concerti = viewModel.getAllConcerts(requireContext())
-                            viewModel.setConcerts(
-                                concerti
-                            )
-                            binding.animation.visibility = View.INVISIBLE
-                            binding.threeDots.visibility = View.INVISIBLE
-                            binding.courtesyMessage.visibility = View.INVISIBLE
-                            Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
-                        } else {
-                            viewModel.setBatchEnded(false)
-                            binding.animation.visibility = View.INVISIBLE
-                            binding.threeDots.visibility = View.INVISIBLE
-                            binding.courtesyMessage.visibility = View.INVISIBLE
-                            Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
-                        }
-                        Log.d(tag, "checkGothWorker failed/blocked in ${workInfo.runAttemptCount}")
+                        callbackFailure.invoke()
+                        Log.d(tag, "checkWorker ${requestID.mostSignificantBits} failed/blocked in ${workInfo.runAttemptCount}")
                     }
-                    else -> Log.d(tag, "checkGothWorker canceled in ${workInfo?.runAttemptCount}")
+                    else -> Log.d(tag, "checkWorker ${requestID.mostSignificantBits} canceled in ${workInfo?.runAttemptCount}")
                 }
             })
     }
@@ -433,6 +455,38 @@ class EventsFragment: Fragment() {
             .delay(0)
             .duration(3000)
             .start()
+    }
+
+    private fun handleSuccessBatchState() {
+        viewModel.setBatchEnded(true)
+        val concerts = viewModel.getAllConcerts(requireContext())
+        viewModel.setConcerts(
+            concerts
+        )
+        binding.animation.visibility = View.INVISIBLE
+        binding.threeDots.visibility = View.INVISIBLE
+        binding.courtesyMessage.visibility = View.INVISIBLE
+        Toast.makeText(requireContext(), getString(R.string.db_initialized, concerts.size.toString()), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleBlockedBatchState() {
+        if (viewModel.getAllConcerts(requireContext()).isNotEmpty()) {
+            viewModel.setBatchEnded(true)
+            val concerti = viewModel.getAllConcerts(requireContext())
+            viewModel.setConcerts(
+                concerti
+            )
+            binding.animation.visibility = View.INVISIBLE
+            binding.threeDots.visibility = View.INVISIBLE
+            binding.courtesyMessage.visibility = View.INVISIBLE
+            Toast.makeText(requireContext(), getString(R.string.db_initialized, concerti.size.toString()), Toast.LENGTH_SHORT).show()
+        } else {
+            viewModel.setBatchEnded(false)
+            binding.animation.visibility = View.INVISIBLE
+            binding.threeDots.visibility = View.INVISIBLE
+            binding.courtesyMessage.visibility = View.INVISIBLE
+            Toast.makeText(requireContext(), getString(R.string.db_not_init), Toast.LENGTH_LONG).show()
+        }
     }
 
 }

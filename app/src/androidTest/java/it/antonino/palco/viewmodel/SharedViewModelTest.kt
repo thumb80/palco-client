@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.testing.TestListenableWorkerBuilder
-import it.antonino.palco.workers.SecondBatchWorker
+import it.antonino.palco.workers.BatchWorker_02
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -22,7 +22,7 @@ class SharedViewModelTest: KoinTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        val worker = TestListenableWorkerBuilder<SecondBatchWorker>(context).build()
+        val worker = TestListenableWorkerBuilder<BatchWorker_02>(context).build()
         runBlocking {
             worker.doWork()
         }

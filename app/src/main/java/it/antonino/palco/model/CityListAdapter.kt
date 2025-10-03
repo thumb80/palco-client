@@ -13,14 +13,14 @@ import it.antonino.palco.ext.toPx
 import java.util.Locale
 
 
-class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> Unit)
+class CityListAdapter(val city: ArrayList<String?>?, val  listener: (String?) -> Unit)
     : RecyclerView.Adapter<CityListAdapter.CityListViewHolder>(), Filterable{
 
 
     private lateinit var binding: CityListBinding
     var cities: ArrayList<String?>? = null
 
-    val initialCityDataList = ArrayList<String>().apply {
+    val initialCityDataList = ArrayList<String?>().apply {
         city?.let { addAll(it) }
     }
 
@@ -66,7 +66,7 @@ class CityListAdapter(val city: ArrayList<String>?, val  listener: (String) -> U
             } else {
                 val query = constraint.toString().trim().lowercase()
                 initialCityDataList.forEach {
-                    if (it.lowercase(Locale.ROOT).contains(query)) {
+                    if (it?.lowercase(Locale.ROOT)?.contains(query) == true) {
                         filteredList.add(it)
                     }
                 }

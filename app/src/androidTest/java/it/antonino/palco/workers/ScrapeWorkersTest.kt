@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.work.testing.TestListenableWorkerBuilder
-import it.antonino.palco.PalcoApplication
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +22,7 @@ class ScrapeWorkersTest {
 
     @Test
     fun scrapeGothTest() {
-        val worker = TestListenableWorkerBuilder<SecondBatchWorker>(context).build()
+        val worker = TestListenableWorkerBuilder<BatchWorker_02>(context).build()
         runBlocking {
             val result = worker.doWork()
             assertNotNull(result)

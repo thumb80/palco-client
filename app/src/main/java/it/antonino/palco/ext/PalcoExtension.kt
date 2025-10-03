@@ -17,17 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.google.gson.stream.JsonToken
-import com.google.gson.stream.MalformedJsonException
 import it.antonino.palco.util.Constant
 import it.antonino.palco.util.Constant.concertoDateFormat
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 import java.util.Locale
 
-fun SharedPreferences?.getShared(context: Context): SharedPreferences {
+fun getShared(context: Context): SharedPreferences {
     val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()

@@ -17,12 +17,15 @@ object Constant {
     const val cacheSize = (5 * 1024 * 1024).toLong()
     const val roundRadius = 12
     const val DISCOGS_BASE_URL = "https://api.discogs.com"
-
     const val FILE_NAME_1 = "concerts_1.json"
     const val FILE_NAME_2 = "concerts_2.json"
+    const val FILE_NAME_3 = "concerts_3.json"
+    const val FILE_NAME_4 = "concerts_4.json"
     const val MODULE_BATCH = "batch"
-    const val FIRST_BATCH = "firstBatch"
-    const val SECOND_BATCH = "secondBatch"
+    const val FIRST_BATCH = "Batch_01"
+    const val SECOND_BATCH = "Batch_02"
+    const val THIRD_BATCH = "Batch_03"
+    const val FOURTH_BATCH = "Batch_04"
 
     private const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 

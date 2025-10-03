@@ -13,13 +13,13 @@ import it.antonino.palco.ext.toPx
 import java.util.*
 
 
-class ArtistListAdapter(val artists: ArrayList<String>, val  listener: (String) -> Unit)
+class ArtistListAdapter(val artists: ArrayList<String?>, val  listener: (String?) -> Unit)
     : RecyclerView.Adapter<ArtistListAdapter.ArtistListViewHolder>(), Filterable {
 
     private lateinit var binding: ArtistListBinding
     var artistsFiltered: ArrayList<String?>? = null
 
-    val initialArtistDataList = ArrayList<String>().apply {
+    val initialArtistDataList = ArrayList<String?>().apply {
         artists.let {
             it.forEach {
                 add(it)
@@ -32,7 +32,7 @@ class ArtistListAdapter(val artists: ArrayList<String>, val  listener: (String) 
     ): RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(artist: String) {
+        fun bind(artist: String?) {
             binding.artistItem.text = org.apache.commons.text.StringEscapeUtils.unescapeJava(artist)
             binding.root.setOnClickListener {
                 listener.invoke(artist)
@@ -69,7 +69,7 @@ class ArtistListAdapter(val artists: ArrayList<String>, val  listener: (String) 
             } else {
                 val query = constraint.toString().trim().lowercase()
                 initialArtistDataList.forEach {
-                    if (it.lowercase(Locale.ROOT).contains(query)) {
+                    if (it?.lowercase(Locale.ROOT)?.contains(query) == true) {
                         filteredList.add(it)
                     }
                 }

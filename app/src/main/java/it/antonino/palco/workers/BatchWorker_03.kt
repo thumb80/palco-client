@@ -6,10 +6,11 @@ import androidx.work.WorkerParameters
 import it.antonino.palco.viewmodel.SharedViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.java.KoinJavaComponent
+import kotlin.getValue
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
-class FirstBatchWorker(
+class BatchWorker_03(
     appContext: Context,
     workerParams: WorkerParameters
 ): CoroutineWorker(appContext, workerParams), KoinComponent
@@ -17,7 +18,7 @@ class FirstBatchWorker(
     val context = appContext
 
     override suspend fun doWork(): Result {
-        viewModel.firstBatch(context)
+        viewModel.Batch_03(context)
         return Result.success()
     }
 

@@ -9,7 +9,7 @@ import org.koin.java.KoinJavaComponent
 
 private val viewModel: SharedViewModel by KoinJavaComponent.inject(SharedViewModel::class.java)
 
-class SecondBatchWorker(
+class BatchWorker_02(
     appContext: Context,
     workerParams: WorkerParameters
 ): CoroutineWorker(appContext, workerParams), KoinComponent
@@ -17,7 +17,7 @@ class SecondBatchWorker(
     val context = appContext
 
     override suspend fun doWork(): Result {
-        viewModel.secondBatch(context)
+        viewModel.Batch_02(context)
         return Result.success()
     }
 

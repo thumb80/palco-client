@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.eftimoff.androipathview.PathView
 import it.antonino.palco.PalcoApplication.Companion.file_1
 import it.antonino.palco.PalcoApplication.Companion.file_2
+import it.antonino.palco.PalcoApplication.Companion.file_3
+import it.antonino.palco.PalcoApplication.Companion.file_4
 import it.antonino.palco.R
 import it.antonino.palco.adapter.CustomFilterArtistAdapter
 import it.antonino.palco.databinding.FragmentFilterArtistBinding
@@ -61,7 +63,7 @@ class FilterArtistFragment : Fragment() {
 
         val prefs = context?.getSharedPreferences("dailyTaskPrefs", Context.MODE_PRIVATE)
 
-        if ((file_1.exists() || file_2.exists()) && prefs?.getBoolean("isNewDay", false) == false) {
+        if ((file_1.exists() || file_2.exists() || file_3.exists() || file_4.exists()) && prefs?.getBoolean("isNewDay", false) == false) {
             viewModel.getAllArtist(requireContext())
             binding.animation.visibility = View.INVISIBLE
         }
@@ -114,7 +116,7 @@ class FilterArtistFragment : Fragment() {
 
     }
 
-    private val artistObserver = Observer<ArrayList<String>> {
+    private val artistObserver = Observer<ArrayList<String?>> {
 
         when (it.isNotEmpty()) {
             true -> {
