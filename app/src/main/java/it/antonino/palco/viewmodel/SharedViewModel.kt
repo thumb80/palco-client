@@ -153,7 +153,7 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 val json = decryptJsonFromFile(context, file_1)
                 val jsonMap: ArrayList<Concerto> = gson.fromJson(json, itemType)
                 concerts.forEach {
-                    if (!jsonMap.contains(it))
+                    if (!containsConcert(jsonMap, it))
                         jsonMap.add(it)
                 }
                 allConcerts.addAll(jsonMap)
@@ -182,7 +182,7 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 val json = decryptJsonFromFile(context, file_2)
                 val jsonMap: ArrayList<Concerto> = gson.fromJson(json, itemType)
                 concerts.forEach {
-                    if (!jsonMap.contains(it))
+                    if (!containsConcert(jsonMap, it))
                         jsonMap.add(it)
                 }
                 allConcerts.addAll(jsonMap)
@@ -211,7 +211,7 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
                 val json = decryptJsonFromFile(context, file_3)
                 val jsonMap: ArrayList<Concerto> = gson.fromJson(json, itemType)
                 concerts.forEach {
-                    if (!jsonMap.contains(it))
+                    if (!containsConcert(jsonMap, it))
                         jsonMap.add(it)
                 }
                 allConcerts.addAll(jsonMap)
@@ -237,6 +237,13 @@ class SharedViewModel(private val networkRepository: NetworkRepository): ViewMod
             responseObject = networkRepository.getArtistThumb(artist)
         }
         return responseObject
+    }
+
+    fun containsConcert(jsonInput: ArrayList<Concerto>, concerto: Concerto): Boolean {
+        return jsonInput.all { concertToCheck ->
+            concerto.artist == concertToCheck.artist &&
+                    concerto.time == concertToCheck.time
+        }
     }
 
     fun getEventsFromFile(context: Context): ArrayList<Concerto?> {

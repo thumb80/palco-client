@@ -88,6 +88,7 @@ class EventsFragment: Fragment() {
         binding = FragmentEventsBinding.inflate(layoutInflater)
         currentDayInstance = Calendar.getInstance(TimeZone.getDefault())
         dotsItemDecoration = DotsItemDecoration(
+            requireContext(),
             resources.getDimension(R.dimen.dp_4).toInt(),
             resources.getDimension(R.dimen.dp_6).toInt(),
             resources.getDimension(R.dimen.dp_8).toInt(),
@@ -407,7 +408,7 @@ class EventsFragment: Fragment() {
             })
     }
 
-    private fun checkFinalWorker(requestID: UUID, callbacSuccessk: () -> Unit, callbackFailure: () -> Unit) {
+    private fun checkFinalWorker(requestID: UUID, callbackSuccess: () -> Unit, callbackFailure: () -> Unit) {
         WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(requestID)
             .observe(requireActivity(), Observer { workInfo ->
                 when (workInfo?.state) {
@@ -418,7 +419,7 @@ class EventsFragment: Fragment() {
                         Log.d(tag, "checkWorker ${requestID.mostSignificantBits} running in ${workInfo.runAttemptCount}")
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        callbacSuccessk.invoke()
+                        callbackSuccess.invoke()
                     }
                     WorkInfo.State.BLOCKED, WorkInfo.State.FAILED -> {
                         callbackFailure.invoke()

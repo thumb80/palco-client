@@ -59,9 +59,6 @@ class PalcoActivity: AppCompatActivity() {
 
         val currentVersionCode = BuildConfig.VERSION_CODE
 
-        println("CurrentVersionCode : $currentVersionCode")
-        println("latestVersionCode : ${VersionCheck.latestVersionCode}")
-
         if (currentVersionCode < VersionCheck.latestVersionCode) {
             clearAppData(context)
             sharedPreferences?.edit { putInt("last_version_code", VersionCheck.latestVersionCode) }

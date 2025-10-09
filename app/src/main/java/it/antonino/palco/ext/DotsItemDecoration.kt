@@ -1,5 +1,6 @@
 package it.antonino.palco.ext
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -8,14 +9,15 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import it.antonino.palco.R
 import it.antonino.palco.util.Constant.maximumCardNumber
-import org.jetbrains.annotations.NotNull
 
 class DotsItemDecoration(
+    private val context: Context,
     radius: Int,
     padding: Int,
     indicatorHeight: Int,
-    space: Int,
+    private val space: Int,
     @ColorInt colorInactive: Int,
     @ColorInt colorActive: Int
 ) : RecyclerView.ItemDecoration() {
@@ -25,14 +27,29 @@ class DotsItemDecoration(
     private val radius: Int
     private val inactivePaint = Paint()
     private val activePaint = Paint()
-    private val space = space
-
     var activePosition = 0
 
+    init {
+        val strokeWidth = Resources.getSystem().displayMetrics.density * 1
+        this.radius = radius
+        inactivePaint.strokeCap = Paint.Cap.ROUND
+        inactivePaint.strokeWidth = strokeWidth
+        inactivePaint.style = Paint.Style.STROKE
+        inactivePaint.isAntiAlias = true
+        inactivePaint.color = colorInactive
+        activePaint.strokeCap = Paint.Cap.ROUND
+        activePaint.strokeWidth = strokeWidth
+        activePaint.style = Paint.Style.FILL
+        activePaint.isAntiAlias = true
+        activePaint.color = colorActive
+        indicatorItemPadding = padding
+        this.indicatorHeight = indicatorHeight
+    }
+
     override fun onDrawOver(
-        @NotNull c: Canvas,
-        @NotNull parent: RecyclerView,
-        @NotNull state: RecyclerView.State
+        c: Canvas,
+        parent: RecyclerView,
+        state: RecyclerView.State
     ) {
         super.onDrawOver(c, parent, state)
         val adapter = parent.adapter ?: return
@@ -51,7 +68,7 @@ class DotsItemDecoration(
         }
         else if (itemCount > maximumCardNumber) {
             val indicatorStart = parent.width / 2f
-            drawActive(c, indicatorStart, indicatorPosY, itemCount)
+            drawActive(c, indicatorStart, indicatorPosY, itemCount, context)
         }
 
         else {
@@ -70,10 +87,6 @@ class DotsItemDecoration(
             // find offset of active page if the user is scrolling
             parent.layoutManager!!.findViewByPosition(activePosition) ?: return
             drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
-            /*if (activePosition == 0)
-                drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition)
-            else
-                drawActiveDot(c, indicatorStartX, indicatorPosY, activePosition - 1)*/
         }
     }
 
@@ -110,21 +123,22 @@ class DotsItemDecoration(
         c: Canvas,
         indicatorStartX: Float,
         indicatorPosY: Float,
-        itemCount: Int
+        itemCount: Int,
+        context: Context
     ) {
         val paint = Paint()
         paint.color = activePaint.color
         paint.style = Paint.Style.FILL
         paint.textSize = indicatorHeight.toFloat()
         paint.textAlign = Paint.Align.CENTER
-        c.drawText("Ci sono $itemCount concerti", indicatorStartX, indicatorPosY, paint)
+        c.drawText(context.getString(R.string.dots_item_text, itemCount), indicatorStartX, indicatorPosY, paint)
     }
 
     override fun getItemOffsets(
-        @NotNull outRect: Rect,
-        @NotNull view: View,
-        @NotNull parent: RecyclerView,
-        @NotNull state: RecyclerView.State
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
     ) {
 
         outRect.right = space
@@ -132,20 +146,4 @@ class DotsItemDecoration(
 
     }
 
-    init {
-        val strokeWidth = Resources.getSystem().displayMetrics.density * 1
-        this.radius = radius
-        inactivePaint.strokeCap = Paint.Cap.ROUND
-        inactivePaint.strokeWidth = strokeWidth
-        inactivePaint.style = Paint.Style.STROKE
-        inactivePaint.isAntiAlias = true
-        inactivePaint.color = colorInactive
-        activePaint.strokeCap = Paint.Cap.ROUND
-        activePaint.strokeWidth = strokeWidth
-        activePaint.style = Paint.Style.FILL
-        activePaint.isAntiAlias = true
-        activePaint.color = colorActive
-        indicatorItemPadding = padding
-        this.indicatorHeight = indicatorHeight
-    }
 }

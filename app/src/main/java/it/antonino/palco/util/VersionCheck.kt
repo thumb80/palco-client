@@ -17,7 +17,7 @@ object VersionCheck {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
 
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 3 // fetch every hour
+            minimumFetchIntervalInSeconds = 1
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
 
@@ -31,13 +31,6 @@ object VersionCheck {
 
                     val currentVersion = BuildConfig.VERSION_NAME
                     val currentVersionCode = BuildConfig.VERSION_CODE
-
-                    println("currentVersion : $currentVersion")
-                    println("latestVersionCode : $latestVersionCode")
-                    println("currentVersionCode : $currentVersionCode")
-                    println("latestVersionCode : $latestVersionCode")
-                    println("latestVersion : $latestVersion")
-                    println("updateUrl : $updateUrl")
 
                     if (isUpdateAvailable(
                             currentVersion,
